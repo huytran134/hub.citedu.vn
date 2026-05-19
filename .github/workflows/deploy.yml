@@ -65,4 +65,5 @@ jobs:
           cd /home/u969193399/cithub
           tar -xzf next-build.tar.gz
           rm next-build.tar.gz
-          pm2 reload cithub --update-env
+          pm2 reload cithub --update-env || pm2 start npm --name cithub -- start
+          pm2 save
