@@ -74,7 +74,18 @@ export default async function AdminLeadsPage({
         defaultSource={source}
         users={users}
       />
-      <LeadKanbanBoard initialLeads={leads as KanbanLead[]} users={users} />
+      <LeadKanbanBoard
+        initialLeads={leads.map((l) => ({
+          ...l,
+          created_at: l.created_at.toISOString(),
+          notes: l.notes.map((n) => ({
+            ...n,
+            created_at: n.created_at.toISOString(),
+            next_followup_at: n.next_followup_at?.toISOString() ?? null,
+          })),
+        }))}
+        users={users}
+      />
     </div>
   )
 }
