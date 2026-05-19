@@ -37,21 +37,14 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_APP_URL: https://hub.citedu.vn
 
-      - name: Debug build output
-        if: always()
-        run: |
-          echo "=== Working directory ==="
-          pwd
-          echo "=== Root files ==="
-          ls -la
-          echo "=== .next exists? ==="
-          ls -la .next/ 2>&1 || echo ".next NOT FOUND"
+      - name: Package build output
+        run: tar -czf next-build.tar.gz .next
 
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
-          path: .next
+          path: next-build.tar.gz
           retention-days: 1
 
   deploy:
@@ -63,10 +56,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: nextjs-build
-          path: /home/u969193399/cithub/.next
+          path: /home/u969193399/cithub
 
-      - name: Reload app
+      - name: Extract & reload
         run: |
           export NVM_DIR="$HOME/.nvm"
           source "$NVM_DIR/nvm.sh"
+          cd /home/u969193399/cithub
+          tar -xzf next-build.tar.gz
+          rm next-build.tar.gz
           pm2 reload cithub --update-env
