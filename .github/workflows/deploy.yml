@@ -22,12 +22,17 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate
         env:
-          DATABASE_URL: postgresql://placeholder:placeholder@localhost/placeholder
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Run migrations
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Build
         run: npm run build
         env:
-          DATABASE_URL: postgresql://placeholder:placeholder@localhost/placeholder
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_APP_URL: https://hub.citedu.vn
@@ -36,7 +41,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
-          path: .next/
+          path: |
+            .next/
+            public/
+            node_modules/.prisma/
           retention-days: 1
 
   deploy:
@@ -44,21 +52,11 @@ jobs:
     needs: build
 
     steps:
-      - name: Pull code & install
-        run: |
-          set -e
-          export NVM_DIR="$HOME/.nvm"
-          source "$NVM_DIR/nvm.sh"
-          cd ~/cithub
-          git pull origin main
-          npm ci
-          npx prisma migrate deploy
-
       - name: Download build output
         uses: actions/download-artifact@v4
         with:
           name: nextjs-build
-          path: /home/u969193399/cithub/.next
+          path: /home/u969193399/cithub
 
       - name: Reload app
         run: |
