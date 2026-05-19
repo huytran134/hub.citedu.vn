@@ -50,8 +50,6 @@ jobs:
           git pull origin main
           npm ci
           npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Download build output
         uses: actions/download-artifact@v4
