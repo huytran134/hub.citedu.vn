@@ -85,9 +85,9 @@ async function createOrGetAuthUser(account: AccountConfig): Promise<string | nul
 
   // Nếu đã tồn tại → lấy UUID hiện tại
   if (
-    error.message.toLowerCase().includes('already') ||
-    error.message.toLowerCase().includes('registered') ||
-    error.message.toLowerCase().includes('exists')
+    error?.message.toLowerCase().includes('already') ||
+    error?.message.toLowerCase().includes('registered') ||
+    error?.message.toLowerCase().includes('exists')
   ) {
     const existingId = await getExistingAuthUserId(account.email)
     if (existingId) {
@@ -96,7 +96,7 @@ async function createOrGetAuthUser(account: AccountConfig): Promise<string | nul
     }
   }
 
-  console.error(`  ❌ Auth: Lỗi — ${error.message}`)
+  console.error(`  ❌ Auth: Lỗi — ${error?.message}`)
   return null
 }
 
