@@ -21,10 +21,13 @@ jobs:
 
       - name: Generate Prisma client
         run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://placeholder:placeholder@localhost/placeholder
 
       - name: Build
         run: npm run build
         env:
+          DATABASE_URL: postgresql://placeholder:placeholder@localhost/placeholder
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_APP_URL: https://hub.citedu.vn
