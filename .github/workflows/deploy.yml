@@ -25,5 +25,5 @@ jobs:
             npm ci
             npx prisma generate
             npx prisma migrate deploy
-            npm run build
+            RAYON_NUM_THREADS=1 npm run build
             pm2 reload cithub --update-env
