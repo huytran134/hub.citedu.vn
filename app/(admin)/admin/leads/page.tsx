@@ -60,7 +60,7 @@ export default async function AdminLeadsPage({
       orderBy: { created_at: 'desc' },
     }),
     prisma.user.findMany({
-      where: { deleted_at: null },
+      where: { is_active: true },
       select: { id: true, full_name: true },
       orderBy: { full_name: 'asc' },
     }),

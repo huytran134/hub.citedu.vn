@@ -64,6 +64,7 @@ export default async function AdminLeadDetailPage({
     }),
     getCurrentUser(),
     prisma.user.findMany({
+      where: { is_active: true },
       select: { id: true, full_name: true },
       orderBy: { full_name: 'asc' },
     }),
