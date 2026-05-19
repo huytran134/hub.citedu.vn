@@ -51,10 +51,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
-          path: |
-            .next/
-            public/
-            node_modules/.prisma/
+          path: .next
           retention-days: 1
 
   deploy:
@@ -66,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: nextjs-build
-          path: /home/u969193399/cithub
+          path: /home/u969193399/cithub/.next
 
       - name: Reload app
         run: |
