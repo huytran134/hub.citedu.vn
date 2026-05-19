@@ -30,18 +30,18 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
 
-      # Copy thư mục .next đã build sang VPS
-      - name: Copy built output to VPS
+      # Copy .next + prisma + package files sang VPS (không cần git pull trên VPS)
+      - name: Copy files to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 65002
-          source: ".next"
+          source: ".next,prisma,public,package.json,package-lock.json"
           target: "~/cithub/"
 
-      # VPS chỉ chạy migration + reload — không build nữa
+      # VPS chỉ install deps + migrate + reload
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -52,8 +52,6 @@ jobs:
           script: |
             set -e
             cd ~/cithub
-
-            git pull origin main
             npm ci
             npx prisma generate
             npx prisma migrate deploy
