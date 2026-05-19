@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { prisma } from '@/lib/prisma'
 import LeadKanbanBoard, { type KanbanLead } from '@/components/custom/LeadKanbanBoard'
 import LeadFilterBar from '@/components/custom/LeadFilterBar'
