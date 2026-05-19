@@ -1,0 +1,712 @@
+// =============================================================================
+// schema.prisma — CiT Hub · Nguồn sự thật duy nhất cho Database
+// Version: 3.0  |  Cập nhật: Tháng 5/2026
+// Stack: Prisma ORM + Supabase Cloud PostgreSQL
+//
+// QUY TẮC BẮT BUỘC KHI SỬA FILE NÀY:
+//   1. Mỗi thay đổi phải chạy: npx prisma migrate dev --name <ten_thay_doi>
+//   2. KHÔNG xóa field đang có dữ liệu — chỉ thêm hoặc đánh dấu @deprecated
+//   3. Mọi thay đổi nghiệp vụ → cập nhật CLAUDE.md trước, schema sau
+//   4. Sau khi sửa: npx prisma generate để cập nhật Prisma Client
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // Supabase Cloud ho tro FK that cua PostgreSQL — khong can relationMode
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+// Role người dùng hệ thống — CHỈ 2 role, không thêm
+enum UserRole {
+  ADMIN    // Quản lý — toàn quyền
+  HOMEROOM // Chủ nhiệm lớp (CNL) — quyền hạn chế theo lớp mình
+}
+
+// Nguồn gốc của Contact/Lead
+enum ContactSource {
+  facebook // Facebook Ads / Fanpage
+  website  // Website citedu.vn
+  hys      // CLB Thanh niên Khởi nghiệp (HYS)
+  referral // Học viên giới thiệu — lưu referrer_id, không tính hoa hồng
+  event    // Sự kiện offline
+  other
+}
+
+// Trạng thái của một Contact trong hệ thống
+enum ContactStatus {
+  lead     // Chưa đăng ký khóa nào — đang trong pipeline tư vấn
+  customer // Đã hoặc đang học ít nhất 1 khóa
+  alumni   // Đã hoàn thành, không còn học tích cực
+  dropped  // Bỏ học, không còn liên hệ
+}
+
+// Trạng thái pipeline tư vấn của một Lead
+enum LeadStage {
+  new        // Mới vào, chưa phân công tư vấn viên
+  consulting // Đang được tư vấn — có LeadNote ghi lại mỗi lần liên hệ
+  won        // Đã chốt — Admin tạo Enrollment từ Lead này
+  lost       // Từ chối — bắt buộc có lost_reason
+}
+
+// Lý do không chốt được Lead — bắt buộc chọn khi stage = lost
+enum LostReason {
+  no_money        // Chưa có tiền / khó khăn tài chính
+  no_time         // Không có thời gian
+  wrong_fit       // Không phù hợp chương trình
+  competitor      // Đã tham gia nơi khác
+  dislike_teacher // Không thích giảng viên
+  not_ready       // Chưa sẵn sàng — hẹn lại sau
+  other           // Khác — kèm ghi chú trong trường note
+}
+
+// Hình thức liên hệ trong mỗi lần tư vấn — dùng trong LeadNote
+enum ContactMethod {
+  call   // Gọi điện thoại
+  zalo   // Nhắn Zalo
+  meetup // Gặp mặt trực tiếp
+  email  // Email
+  other
+}
+
+// Kết quả của lần liên hệ — dùng trong LeadNote
+enum ContactResult {
+  answered        // Đã nghe / đã phản hồi
+  no_answer       // Không bắt máy / không trả lời
+  callback_needed // Hẹn gọi lại sau — xem next_followup_at
+  wrong_number    // Sai số / không liên lạc được
+}
+
+// Nhánh chương trình đào tạo của CiT EDU
+enum ProgramBranch {
+  tu_duy   // Nhánh 1: Tư duy (3 cấp độ, có điều kiện lên cấp)
+  coaching // Nhánh 2: Coaching 1-1 Mật Thất (KHÔNG hoàn tiền)
+  ky_nang  // Nhánh 3: Kỹ năng bổ trợ (không điều kiện tiên quyết)
+}
+
+// Hình thức tổ chức lớp học
+enum ClassFormat {
+  offline
+  online
+  hybrid
+}
+
+// Trạng thái của lớp học
+enum ClassStatus {
+  forming   // Đang tuyển sinh — chưa khai giảng
+  active    // Đang học
+  completed // Đã kết thúc
+  cancelled // Đã hủy
+}
+
+// Trạng thái đăng ký của học viên trong lớp
+enum EnrollmentStatus {
+  waitlist  // Chờ mở lớp — chưa đóng tiền, chỉ xác nhận miệng
+  active    // Đang học — đã hoặc đang đóng học phí
+  suspended // Bảo lưu tạm thời — xem suspended_reason + suspended_until
+  completed // Hoàn thành khóa học
+  dropped   // Thôi học — kiểm tra công nợ trước khi cho phép
+}
+
+// Trạng thái điểm danh trong mỗi buổi học
+enum AttendanceStatus {
+  present     // Có mặt đầy đủ
+  absent      // Vắng mặt
+  late        // Đi trễ
+  leave_early // Về sớm
+}
+
+// Hình thức thanh toán
+enum PaymentMethod {
+  cash          // Tiền mặt
+  bank_transfer // Chuyển khoản ngân hàng
+}
+
+// Trạng thái phiếu thu — luồng 2 bước: CNL tạo → Admin duyệt
+enum PaymentStatus {
+  pending  // CNL đã tạo, đang chờ Admin duyệt
+  approved // Admin đã duyệt — tính vào công nợ, paid_at được nhập
+  rejected // Admin từ chối — kèm rejection_reason
+}
+
+// Trạng thái lệnh hoàn tiền — luồng 2 bước: CNL tạo → Admin duyệt
+enum RefundStatus {
+  pending  // Đang chờ Admin duyệt
+  approved // Admin đã duyệt — đã hoàn tiền thực tế
+  rejected // Admin từ chối — kèm rejection_reason
+}
+
+// Mục đích của MagicLink
+enum MagicLinkContext {
+  onboarding // Form khai giảng — học viên điền thông tin đầu khóa
+  evaluation // Form đánh giá cuối buổi học
+}
+
+// =============================================================================
+// MODEL: User — Profile người dùng hệ thống
+// Liên kết 1-1 với auth.users của Supabase (qua id = Supabase Auth UID)
+// KHÔNG tạo bảng Session/Account/VerificationToken — Supabase Auth tự quản lý
+// =============================================================================
+model User {
+  id         String   @id // = auth.users.id của Supabase (UUID)
+  email      String   @unique
+  full_name  String
+  role       UserRole
+  phone      String?
+  avatar_url String?
+  is_active  Boolean  @default(true) // false = tạm khóa tài khoản
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations — những gì User này đã tạo/xử lý
+  contacts_created      Contact[]     @relation("ContactCreatedBy")
+  contacts_deleted      Contact[]     @relation("ContactDeletedBy")
+  contact_notes_created ContactNote[] @relation("ContactNoteCreatedBy")
+  contact_notes_deleted ContactNote[] @relation("ContactNoteDeletedBy")
+  leads_created         Lead[]        @relation("LeadCreatedBy")
+  leads_assigned        Lead[]        @relation("LeadAssignedTo")
+  leads_deleted         Lead[]        @relation("LeadDeletedBy")
+  lead_notes_created    LeadNote[]    @relation("LeadNoteCreatedBy")
+  lead_notes_deleted    LeadNote[]    @relation("LeadNoteDeletedBy")
+  classes_created       Class[]       @relation("ClassCreatedBy")
+  classes_deleted       Class[]       @relation("ClassDeletedBy")
+  classes_as_homeroom   Class[]       @relation("ClassHomeroom")
+  sessions_created      ClassSession[] @relation("SessionCreatedBy")
+  sessions_deleted      ClassSession[] @relation("SessionDeletedBy")
+  enrollments_created   Enrollment[]  @relation("EnrollmentCreatedBy")
+  enrollments_deleted   Enrollment[]  @relation("EnrollmentDeletedBy")
+  payments_created      Payment[]     @relation("PaymentCreatedBy")
+  payments_approved     Payment[]     @relation("PaymentApprovedBy")
+  payments_deleted      Payment[]     @relation("PaymentDeletedBy")
+  refunds_created       Refund[]      @relation("RefundCreatedBy")
+  refunds_approved      Refund[]      @relation("RefundApprovedBy")
+  refunds_deleted       Refund[]      @relation("RefundDeletedBy")
+  magic_links_created   MagicLink[]   @relation("MagicLinkCreatedBy")
+  programs_created      Program[]     @relation("ProgramCreatedBy")
+  lessons_created       Lesson[]      @relation("LessonCreatedBy")
+
+  @@map("users")
+}
+
+// =============================================================================
+// MODEL: Contact — Mọi người đã biết đến CiT EDU
+// Nguyên tắc: 1 SĐT = 1 Contact duy nhất (Smart Match)
+// =============================================================================
+model Contact {
+  id    String @id @default(cuid())
+  phone String @unique // Khóa định danh chính — Smart Match dựa vào đây
+  name  String
+
+  email         String?
+  zalo_id       String?
+  date_of_birth DateTime?
+  address       String?
+  gender        String? // "male" | "female" | "other"
+
+  source ContactSource @default(other)
+  status ContactStatus @default(lead)
+
+  referrer_id String?
+  referrer    Contact?  @relation("ContactReferrals", fields: [referrer_id], references: [id])
+  referrals   Contact[] @relation("ContactReferrals")
+
+  deleted_at    DateTime?
+  deleted_by_id String?
+  deleted_by    User?    @relation("ContactDeletedBy", fields: [deleted_by_id], references: [id])
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String
+  created_by    User     @relation("ContactCreatedBy", fields: [created_by_id], references: [id])
+
+  notes       ContactNote[]
+  leads       Lead[]
+  enrollments Enrollment[]
+  magic_links MagicLink[]
+
+  @@index([phone])
+  @@index([status])
+  @@index([source])
+  @@index([deleted_at])
+  @@map("contacts")
+}
+
+// =============================================================================
+// MODEL: ContactNote — Ghi chú về CON NGƯỜI
+// =============================================================================
+model ContactNote {
+  id         String  @id @default(cuid())
+  contact_id String
+  contact    Contact @relation(fields: [contact_id], references: [id])
+  content    String
+
+  deleted_at    DateTime?
+  deleted_by_id String?
+  deleted_by    User?    @relation("ContactNoteDeletedBy", fields: [deleted_by_id], references: [id])
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String
+  created_by    User     @relation("ContactNoteCreatedBy", fields: [created_by_id], references: [id])
+
+  @@index([contact_id])
+  @@index([deleted_at])
+  @@map("contact_notes")
+}
+
+// =============================================================================
+// MODEL: Lead — Pipeline tư vấn
+// =============================================================================
+model Lead {
+  id         String  @id @default(cuid())
+  contact_id String
+  contact    Contact @relation(fields: [contact_id], references: [id])
+
+  stage       LeadStage  @default(new)
+  lost_reason LostReason?
+  lost_note   String?
+
+  assigned_to_id String?
+  assigned_to    User?    @relation("LeadAssignedTo", fields: [assigned_to_id], references: [id])
+  assigned_at    DateTime?
+
+  interested_program_id String?
+  interested_program    Program? @relation(fields: [interested_program_id], references: [id])
+
+  deleted_at    DateTime?
+  deleted_by_id String?
+  deleted_by    User?    @relation("LeadDeletedBy", fields: [deleted_by_id], references: [id])
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String
+  created_by    User     @relation("LeadCreatedBy", fields: [created_by_id], references: [id])
+
+  notes       LeadNote[]
+  enrollments Enrollment[]
+
+  @@index([contact_id])
+  @@index([stage])
+  @@index([assigned_to_id])
+  @@index([deleted_at])
+  @@map("leads")
+}
+
+// =============================================================================
+// MODEL: LeadNote — Ghi chú MỖI LẦN LIÊN HỆ tư vấn
+// next_followup_at → Dashboard "Lead cần gọi lại hôm nay"
+// =============================================================================
+model LeadNote {
+  id      String @id @default(cuid())
+  lead_id String
+  lead    Lead   @relation(fields: [lead_id], references: [id])
+
+  content        String
+  contact_method ContactMethod
+  contact_result ContactResult
+
+  next_followup_at DateTime?
+
+  deleted_at    DateTime?
+  deleted_by_id String?
+  deleted_by    User?    @relation("LeadNoteDeletedBy", fields: [deleted_by_id], references: [id])
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String
+  created_by    User     @relation("LeadNoteCreatedBy", fields: [created_by_id], references: [id])
+
+  @@index([lead_id])
+  @@index([next_followup_at])
+  @@index([deleted_at])
+  @@map("lead_notes")
+}
+
+// =============================================================================
+// MODEL: Program — Chương trình đào tạo
+// =============================================================================
+model Program {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  branch      ProgramBranch
+  level       Int?
+
+  // Giá niêm yết — CÔNG NỢ tính từ Enrollment.agreed_price, KHÔNG phải price này
+  price BigInt
+
+  duration_days  Int?
+  sessions_count Int?
+  is_active      Boolean @default(true)
+
+  deleted_at    DateTime?
+  deleted_by_id String?
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String
+  created_by    User     @relation("ProgramCreatedBy", fields: [created_by_id], references: [id])
+
+  prerequisites    ProgramPrerequisite[] @relation("ProgramRequires")
+  required_for     ProgramPrerequisite[] @relation("ProgramIsPrerequisite")
+  lessons          Lesson[]
+  classes          Class[]
+  leads_interested Lead[]
+
+  @@index([branch])
+  @@index([level])
+  @@index([deleted_at])
+  @@map("programs")
+}
+
+// =============================================================================
+// MODEL: ProgramPrerequisite — Điều kiện lên cấp
+// Cùng logic_group = OR · Khác logic_group = AND
+// =============================================================================
+model ProgramPrerequisite {
+  id String @id @default(cuid())
+
+  program_id String
+  program    Program @relation("ProgramRequires", fields: [program_id], references: [id])
+
+  prerequisite_id String
+  prerequisite    Program @relation("ProgramIsPrerequisite", fields: [prerequisite_id], references: [id])
+
+  logic_group Int @default(1)
+
+  created_at DateTime @default(now())
+
+  @@unique([program_id, prerequisite_id])
+  @@index([program_id])
+  @@map("program_prerequisites")
+}
+
+// =============================================================================
+// MODEL: Lesson — Bài giảng của từng chương trình
+// =============================================================================
+model Lesson {
+  id         String  @id @default(cuid())
+  program_id String
+  program    Program @relation(fields: [program_id], references: [id])
+
+  session_number       Int
+  title                String
+  objectives           String?
+  content              String?
+  materials_url        String?
+  discussion_questions String?
+  notes_for_teacher    String?
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String
+  created_by    User     @relation("LessonCreatedBy", fields: [created_by_id], references: [id])
+
+  class_sessions ClassSession[]
+
+  @@unique([program_id, session_number])
+  @@index([program_id])
+  @@map("lessons")
+}
+
+// =============================================================================
+// MODEL: Class — Lớp học cụ thể (instance của Program)
+// =============================================================================
+model Class {
+  id         String  @id @default(cuid())
+  program_id String
+  program    Program @relation(fields: [program_id], references: [id])
+
+  name         String
+  format       ClassFormat @default(offline)
+  status       ClassStatus @default(forming)
+  max_students Int         @default(30)
+
+  start_date DateTime?
+  end_date   DateTime?
+  location   String?
+  zoom_link  String?
+
+  homeroom_id String?
+  homeroom    User?   @relation("ClassHomeroom", fields: [homeroom_id], references: [id])
+
+  deleted_at    DateTime?
+  deleted_by_id String?
+  deleted_by    User?   @relation("ClassDeletedBy", fields: [deleted_by_id], references: [id])
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String
+  created_by    User    @relation("ClassCreatedBy", fields: [created_by_id], references: [id])
+
+  sessions    ClassSession[]
+  enrollments Enrollment[]
+  magic_links MagicLink[]
+
+  @@index([program_id])
+  @@index([status])
+  @@index([homeroom_id])
+  @@index([deleted_at])
+  @@map("classes")
+}
+
+// =============================================================================
+// MODEL: ClassSession — Từng buổi học trong lớp
+// =============================================================================
+model ClassSession {
+  id       String @id @default(cuid())
+  class_id String
+  class    Class  @relation(fields: [class_id], references: [id])
+
+  lesson_id String?
+  lesson    Lesson? @relation(fields: [lesson_id], references: [id])
+
+  session_number    Int
+  title             String?
+  scheduled_at      DateTime
+  duration_min      Int       @default(120)
+  started_at        DateTime?
+  ended_at          DateTime?
+  session_zoom_link String?
+  material_url      String?
+  is_completed      Boolean   @default(false)
+  notes             String?
+
+  deleted_at    DateTime?
+  deleted_by_id String?
+  deleted_by    User?   @relation("SessionDeletedBy", fields: [deleted_by_id], references: [id])
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String
+  created_by    User    @relation("SessionCreatedBy", fields: [created_by_id], references: [id])
+
+  attendances Attendance[]
+  feedbacks   Feedback[]
+  magic_links MagicLink[]
+
+  @@unique([class_id, session_number])
+  @@index([class_id])
+  @@index([scheduled_at])
+  @@index([deleted_at])
+  @@map("class_sessions")
+}
+
+// =============================================================================
+// MODEL: Enrollment — Học viên đăng ký một lớp cụ thể
+// ⭐ agreed_price — CÔNG NỢ = agreed_price - SUM(approved payments)
+//    KHÔNG tính từ Program.price
+// =============================================================================
+model Enrollment {
+  id         String  @id @default(cuid())
+  contact_id String
+  contact    Contact @relation(fields: [contact_id], references: [id])
+
+  class_id String
+  class    Class  @relation(fields: [class_id], references: [id])
+
+  lead_id String?
+  lead    Lead?   @relation(fields: [lead_id], references: [id])
+
+  status EnrollmentStatus @default(waitlist)
+
+  // ⭐ Học phí thỏa thuận — KHÔNG để null, mặc định = Program.price nhưng Admin phải xác nhận
+  agreed_price BigInt
+
+  suspended_at       DateTime?
+  suspended_reason   String?
+  suspended_until    DateTime?
+  dropped_at         DateTime?
+  dropped_reason     String?
+  joined_late        Boolean   @default(false)
+  joined_at_session  Int?
+
+  deleted_at      DateTime?
+  deleted_by_id   String?
+  deleted_by      User?    @relation("EnrollmentDeletedBy", fields: [deleted_by_id], references: [id])
+  deletion_reason String?
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String
+  created_by    User    @relation("EnrollmentCreatedBy", fields: [created_by_id], references: [id])
+
+  payments    Payment[]
+  refunds     Refund[]
+  attendances Attendance[]
+
+  @@unique([contact_id, class_id])
+  @@index([contact_id])
+  @@index([class_id])
+  @@index([status])
+  @@index([deleted_at])
+  @@map("enrollments")
+}
+
+// =============================================================================
+// MODEL: Attendance — Điểm danh từng buổi học
+// KHÔNG có soft delete — lịch sử điểm danh bất biến
+// =============================================================================
+model Attendance {
+  id            String       @id @default(cuid())
+  enrollment_id String
+  enrollment    Enrollment   @relation(fields: [enrollment_id], references: [id])
+  session_id    String
+  session       ClassSession @relation(fields: [session_id], references: [id])
+
+  status AttendanceStatus @default(absent)
+  note   String?
+
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  recorded_by_id String
+
+  @@unique([enrollment_id, session_id])
+  @@index([enrollment_id])
+  @@index([session_id])
+  @@map("attendances")
+}
+
+// =============================================================================
+// MODEL: Feedback — Đánh giá cuối buổi của học viên
+// KHÔNG có soft delete — dữ liệu đánh giá bất biến
+// =============================================================================
+model Feedback {
+  id         String       @id @default(cuid())
+  session_id String
+  session    ClassSession @relation(fields: [session_id], references: [id])
+  contact_id String
+
+  rating       Int
+  strengths    String?
+  improvements String?
+  other_notes  String?
+
+  submitted_at DateTime @default(now())
+  ip_address   String?
+
+  @@unique([session_id, contact_id])
+  @@index([session_id])
+  @@map("feedbacks")
+}
+
+// =============================================================================
+// MODEL: Payment — Phiếu thu học phí
+// Luồng 2 bước: CNL tạo (pending) → Admin duyệt (approved/rejected)
+// ⭐ paid_at: Admin nhập khi duyệt — KHÔNG để null khi approve
+// =============================================================================
+model Payment {
+  id            String     @id @default(cuid())
+  enrollment_id String
+  enrollment    Enrollment @relation(fields: [enrollment_id], references: [id])
+
+  amount BigInt
+  method PaymentMethod
+  status PaymentStatus @default(pending)
+
+  // ⭐ Ngày tiền thực sự nhận — Admin nhập khi duyệt — phục vụ báo cáo cashflow
+  paid_at DateTime?
+
+  approved_by_id   String?
+  approved_by      User?    @relation("PaymentApprovedBy", fields: [approved_by_id], references: [id])
+  approved_at      DateTime?
+  rejection_reason String?
+
+  note           String?
+  receipt_number String?
+
+  deleted_at      DateTime?
+  deleted_by_id   String?
+  deleted_by      User?    @relation("PaymentDeletedBy", fields: [deleted_by_id], references: [id])
+  deletion_reason String?  // BẮT BUỘC khi xóa
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String
+  created_by    User    @relation("PaymentCreatedBy", fields: [created_by_id], references: [id])
+
+  @@index([enrollment_id])
+  @@index([status])
+  @@index([paid_at])
+  @@index([deleted_at])
+  @@map("payments")
+}
+
+// =============================================================================
+// MODEL: Refund — Lệnh hoàn tiền
+// ❌ Nhánh 2 (Coaching): CHẶN tại tầng API — không cho tạo Refund
+// =============================================================================
+model Refund {
+  id            String     @id @default(cuid())
+  enrollment_id String
+  enrollment    Enrollment @relation(fields: [enrollment_id], references: [id])
+
+  amount BigInt
+  reason String
+  status RefundStatus @default(pending)
+
+  approved_by_id   String?
+  approved_by      User?    @relation("RefundApprovedBy", fields: [approved_by_id], references: [id])
+  approved_at      DateTime?
+  rejection_reason String?
+
+  refunded_at   DateTime?
+  refund_method PaymentMethod?
+
+  deleted_at      DateTime?
+  deleted_by_id   String?
+  deleted_by      User?    @relation("RefundDeletedBy", fields: [deleted_by_id], references: [id])
+  deletion_reason String?  // BẮT BUỘC khi xóa
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String
+  created_by    User    @relation("RefundCreatedBy", fields: [created_by_id], references: [id])
+
+  @@index([enrollment_id])
+  @@index([status])
+  @@index([deleted_at])
+  @@map("refunds")
+}
+
+// =============================================================================
+// MODEL: MagicLink — Link định danh ẩn, 1 lần dùng, có TTL
+// Khi verify: expires_at > now() VÀ used_at IS NULL
+// =============================================================================
+model MagicLink {
+  id    String @id @default(cuid())
+  token String @unique @default(cuid())
+
+  contact_id String
+  contact    Contact @relation(fields: [contact_id], references: [id])
+  class_id   String
+  class      Class   @relation(fields: [class_id], references: [id])
+  session_id String?
+  session    ClassSession? @relation(fields: [session_id], references: [id])
+
+  context MagicLinkContext
+
+  // Bắt buộc — mặc định now() + 7 ngày khi tạo
+  expires_at DateTime
+
+  // 1-time use — null = chưa dùng
+  used_at DateTime?
+
+  created_at    DateTime @default(now())
+  created_by_id String
+  created_by    User    @relation("MagicLinkCreatedBy", fields: [created_by_id], references: [id])
+
+  @@index([token])
+  @@index([contact_id])
+  @@index([class_id])
+  @@index([expires_at])
+  @@map("magic_links")
+}
