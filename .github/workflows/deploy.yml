@@ -37,6 +37,16 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_APP_URL: https://hub.citedu.vn
 
+      - name: Debug build output
+        if: always()
+        run: |
+          echo "=== Working directory ==="
+          pwd
+          echo "=== Root files ==="
+          ls -la
+          echo "=== .next exists? ==="
+          ls -la .next/ 2>&1 || echo ".next NOT FOUND"
+
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
