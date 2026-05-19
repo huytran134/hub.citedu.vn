@@ -5,25 +5,62 @@ on:
     branches: [main]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: 65002
-          command_timeout: 30m
-          script: |
-            set -e
-            cd ~/cithub
+      - uses: actions/checkout@v4
 
-            git pull origin main
-            npm ci
-            npx prisma generate
-            npx prisma migrate deploy
-            RAYON_NUM_THREADS=1 npm run build
-            pm2 reload cithub --update-env
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_APP_URL: https://hub.citedu.vn
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next/
+          retention-days: 1
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+      - name: Pull code & install
+        run: |
+          set -e
+          export NVM_DIR="$HOME/.nvm"
+          source "$NVM_DIR/nvm.sh"
+          cd ~/cithub
+          git pull origin main
+          npm ci
+          npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Download build output
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build
+          path: /home/u969193399/cithub/.next
+
+      - name: Reload app
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          source "$NVM_DIR/nvm.sh"
+          pm2 reload cithub --update-env
