@@ -11,6 +11,7 @@
 
 import { createClient } from '@supabase/supabase-js'
 import { PrismaClient, UserRole } from '@prisma/client'
+import ws from 'ws'
 
 const prisma = new PrismaClient()
 
@@ -29,6 +30,8 @@ if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
 // Admin client — dùng service role key để tạo user không cần xác nhận email
 const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
+  // Node.js 20 thiếu native WebSocket — phải truyền thủ công
+  realtime: { transport: ws as unknown as typeof WebSocket },
 })
 
 // ─── Danh sách tài khoản cần tạo ─────────────────────────────────────────────

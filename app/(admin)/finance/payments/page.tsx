@@ -3,17 +3,22 @@
 import { useEffect, useState } from 'react'
 import { formatCurrency } from '@/lib/utils'
 
-interface PendingPayment {
+interface Payment {
   id: string
   amount: number
   method: string
   note: string | null
+  status: 'pending' | 'approved' | 'rejected'
+  paid_at: string | null
+  approved_at: string | null
+  rejection_reason: string | null
   created_at: string
   enrollment: {
     contact: { name: string; phone: string }
     class: { id: string; name: string; homeroom: { full_name: string } | null }
   }
   created_by: { full_name: string }
+  approved_by: { full_name: string } | null
 }
 
 const METHOD_LABEL: Record<string, string> = {
@@ -21,11 +26,25 @@ const METHOD_LABEL: Record<string, string> = {
   bank_transfer: 'Chuyển khoản',
 }
 
+const STATUS_LABEL: Record<string, string> = {
+  pending: 'Chờ duyệt',
+  approved: 'Đã duyệt',
+  rejected: 'Từ chối',
+}
+
+const STATUS_COLOR: Record<string, string> = {
+  pending: 'bg-amber-100 text-amber-700',
+  approved: 'bg-green-100 text-green-700',
+  rejected: 'bg-red-100 text-red-700',
+}
+
+type SubTab = 'pending' | 'approved' | 'rejected'
 type ActionType = 'approve' | 'reject' | null
 
 export default function PaymentsPage() {
-  const [payments, setPayments] = useState<PendingPayment[]>([])
+  const [payments, setPayments] = useState<Payment[]>([])
   const [loading, setLoading] = useState(true)
+  const [subTab, setSubTab] = useState<SubTab>('pending')
   const [activeId, setActiveId] = useState<string | null>(null)
   const [actionType, setActionType] = useState<ActionType>(null)
   const [paidAt, setPaidAt] = useState(todayStr())
@@ -37,9 +56,10 @@ export default function PaymentsPage() {
     return new Date().toISOString().split('T')[0]
   }
 
-  async function fetchPayments() {
+  async function fetchPayments(status: SubTab) {
+    setLoading(true)
     try {
-      const res = await fetch('/api/admin/payments')
+      const res = await fetch(`/api/admin/payments?status=${status}`)
       if (res.ok) {
         const data = await res.json()
         setPayments(data)
@@ -49,7 +69,12 @@ export default function PaymentsPage() {
     }
   }
 
-  useEffect(() => { fetchPayments() }, [])
+  useEffect(() => { fetchPayments(subTab) }, [subTab])
+
+  function switchTab(tab: SubTab) {
+    setSubTab(tab)
+    closeAction()
+  }
 
   function openAction(id: string, type: ActionType) {
     setActiveId(id)
@@ -83,6 +108,7 @@ export default function PaymentsPage() {
         setActionError(data.error || 'Có lỗi xảy ra')
         return
       }
+      // Xóa khỏi danh sách pending sau khi duyệt thành công
       setPayments((prev) => prev.filter((p) => p.id !== id))
       closeAction()
     } catch {
@@ -110,6 +136,7 @@ export default function PaymentsPage() {
         setActionError(data.error || 'Có lỗi xảy ra')
         return
       }
+      // Xóa khỏi danh sách pending sau khi từ chối thành công
       setPayments((prev) => prev.filter((p) => p.id !== id))
       closeAction()
     } catch {
@@ -119,15 +146,41 @@ export default function PaymentsPage() {
     }
   }
 
+  const pendingCount = subTab === 'pending' ? payments.length : 0
   const now = Date.now()
+
+  const SUB_TABS: { key: SubTab; label: string }[] = [
+    { key: 'pending', label: 'Chờ duyệt' },
+    { key: 'approved', label: 'Đã duyệt' },
+    { key: 'rejected', label: 'Đã từ chối' },
+  ]
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Phiếu thu chờ duyệt</h1>
-        <p className="text-gray-500 text-sm mt-1">
-          {loading ? '...' : `${payments.length} phiếu đang chờ duyệt · Sắp xếp theo thứ tự tạo (cũ nhất lên đầu)`}
-        </p>
+      <div className="mb-5">
+        <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Phiếu thu</h1>
+      </div>
+
+      {/* Sub-tabs */}
+      <div className="flex gap-2 mb-5">
+        {SUB_TABS.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => switchTab(t.key)}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              subTab === t.key
+                ? 'bg-navy text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {t.label}
+            {t.key === 'pending' && pendingCount > 0 && (
+              <span className="ml-1.5 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                {pendingCount}
+              </span>
+            )}
+          </button>
+        ))}
       </div>
 
       {loading && (
@@ -138,7 +191,9 @@ export default function PaymentsPage() {
 
       {!loading && payments.length === 0 && (
         <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
-          <p className="text-gray-400 text-lg">✓ Không có phiếu nào chờ duyệt</p>
+          <p className="text-gray-400 text-lg">
+            {subTab === 'pending' ? '✓ Không có phiếu nào chờ duyệt' : 'Không có phiếu nào'}
+          </p>
         </div>
       )}
 
@@ -146,7 +201,7 @@ export default function PaymentsPage() {
         <div className="space-y-3">
           {payments.map((p) => {
             const hoursWaiting = Math.floor((now - new Date(p.created_at).getTime()) / 3600000)
-            const isOverdue = hoursWaiting >= 24
+            const isOverdue = p.status === 'pending' && hoursWaiting >= 24
             const isActive = activeId === p.id
 
             return (
@@ -178,15 +233,31 @@ export default function PaymentsPage() {
                     {p.note && (
                       <p className="text-xs text-gray-500 mt-1 italic">Ghi chú: {p.note}</p>
                     )}
+                    {/* Thông tin sau khi duyệt */}
+                    {p.status === 'approved' && p.paid_at && (
+                      <p className="text-xs text-green-600 mt-1">
+                        Nhận tiền ngày {new Date(p.paid_at).toLocaleDateString('vi-VN')}
+                        {p.approved_by && ` · Duyệt: ${p.approved_by.full_name}`}
+                      </p>
+                    )}
+                    {p.status === 'rejected' && p.rejection_reason && (
+                      <p className="text-xs text-red-600 mt-1">Từ chối: {p.rejection_reason}</p>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-4 flex-shrink-0">
                     <div className="text-right">
                       <p className="font-bold text-lg text-ink">{formatCurrency(p.amount)}</p>
                       <p className="text-xs text-gray-400">{METHOD_LABEL[p.method]}</p>
+                      {p.status !== 'pending' && (
+                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full mt-1 inline-block ${STATUS_COLOR[p.status]}`}>
+                          {STATUS_LABEL[p.status]}
+                        </span>
+                      )}
                     </div>
 
-                    {!isActive && (
+                    {/* Nút hành động — chỉ hiện khi tab pending */}
+                    {p.status === 'pending' && !isActive && (
                       <div className="flex gap-2">
                         <button
                           onClick={() => openAction(p.id, 'approve')}

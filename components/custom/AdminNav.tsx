@@ -9,6 +9,7 @@ interface NavItem {
   label: string
   href: string
   badge?: number
+  badgeWarning?: boolean  // true = badge đổi cam (cảnh báo chậm duyệt > 24h)
 }
 
 function NavLink({ item }: { item: NavItem }) {
@@ -27,7 +28,15 @@ function NavLink({ item }: { item: NavItem }) {
     >
       {item.label}
       {item.badge != null && item.badge > 0 && (
-        <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
+        <span
+          className={cn(
+            'inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-white text-[10px] font-bold rounded-full leading-none transition-colors',
+            item.badgeWarning
+              ? 'bg-amber-500'   // cam: phiếu đã chờ quá 24h
+              : 'bg-red-600',    // đỏ: phiếu mới tạo
+          )}
+          title={item.badgeWarning ? 'Có phiếu chờ quá 24 giờ chưa duyệt!' : undefined}
+        >
           {item.badge > 99 ? '99+' : item.badge}
         </span>
       )}
@@ -39,19 +48,26 @@ export default function AdminNav({
   user,
   pendingPayments = 0,
   pendingRefunds = 0,
+  oldestPendingAt = null,
 }: {
   user: User
   pendingPayments?: number
   pendingRefunds?: number
+  oldestPendingAt?: number | null  // timestamp ms — Date không serialize qua RSC boundary
 }) {
   const totalPending = pendingPayments + pendingRefunds
+
+  // Badge đổi màu cam nếu phiếu pending tồn tại quá 24h (cảnh báo chậm duyệt — CLAUDE.md 5.10)
+  const isOverdue =
+    oldestPendingAt != null &&
+    Date.now() - oldestPendingAt > 24 * 60 * 60 * 1000
 
   const NAV_ITEMS: NavItem[] = [
     { label: 'Tổng quan', href: '/dashboard' },
     { label: 'Contacts', href: '/admin/contacts' },
     { label: 'Leads', href: '/admin/leads' },
     { label: 'Lớp học', href: '/classes' },
-    { label: 'Tài chính', href: '/finance', badge: totalPending },
+    { label: 'Tài chính', href: '/finance', badge: totalPending, badgeWarning: isOverdue },
     { label: 'Báo cáo', href: '/reports' },
   ]
 

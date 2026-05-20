@@ -11,7 +11,8 @@ export async function getCurrentUser(): Promise<User | null> {
     if (!user) return null
 
     return await prisma.user.findUnique({ where: { id: user.id } })
-  } catch {
+  } catch (err) {
+    console.error('getCurrentUser failed:', err)
     return null
   }
 }

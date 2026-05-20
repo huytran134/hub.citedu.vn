@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/auth-helpers'
 import { prisma } from '@/lib/prisma'
 
@@ -29,6 +30,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       rejection_reason: rejection_reason.trim(),
     },
   })
+
+  // Badge tự cập nhật — invalidate layout cache để đếm lại phiếu pending
+  revalidatePath('/finance')
+  revalidatePath('/dashboard')
 
   return NextResponse.json({ ...updated, amount: Number(updated.amount) })
 }
