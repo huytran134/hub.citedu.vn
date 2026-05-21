@@ -73,6 +73,7 @@ export default async function DashboardPage() {
   const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
   const startOfPrevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
   const endOfPrevMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999)
+  const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
 
   const [
     pendingPaymentCount,
@@ -86,6 +87,7 @@ export default async function DashboardPage() {
     thisMonthPayments,
     prevMonthPayments,
     activeClassCount,
+    expiringSoon,
   ] = await Promise.all([
     prisma.payment.count({ where: { status: 'pending' } }),
     prisma.refund.count({ where: { status: 'pending' } }),
@@ -160,6 +162,19 @@ export default async function DashboardPage() {
     // Lớp đang hoạt động
     prisma.class.count({
       where: { status: 'active', deleted_at: null },
+    }),
+
+    // Bảo lưu sắp hết hạn — trong vòng 30 ngày tới
+    prisma.enrollment.findMany({
+      where: {
+        status: 'suspended',
+        suspended_until: { gte: now, lte: in30Days },
+      },
+      orderBy: { suspended_until: 'asc' },
+      include: {
+        contact: { select: { name: true, phone: true } },
+        class: { select: { name: true } },
+      },
     }),
   ])
 
@@ -451,6 +466,53 @@ export default async function DashboardPage() {
         </div>
 
       </div>
+
+      {/* PANEL — Bảo lưu sắp hết hạn (ẩn nếu không có ai) */}
+      {expiringSoon.length > 0 && (
+        <div className="mt-6">
+          <div className="bg-white rounded-xl shadow-sm border border-amber-100 overflow-hidden">
+            <div className="px-5 py-4 border-b border-amber-100 bg-amber-50 flex items-center gap-2">
+              <h2 className="font-semibold text-ink flex items-center gap-2">
+                <span>⚠️</span>
+                Bảo lưu sắp hết hạn
+                <span className="bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                  {expiringSoon.length}
+                </span>
+              </h2>
+            </div>
+            <div className="divide-y divide-gray-50">
+              {expiringSoon.map((enrollment) => {
+                const daysLeft = Math.ceil(
+                  (enrollment.suspended_until!.getTime() - now.getTime()) / 86400000
+                )
+                const urgencyColor =
+                  daysLeft <= 7
+                    ? 'text-red-500'
+                    : daysLeft <= 14
+                      ? 'text-amber-500'
+                      : 'text-blue-400'
+                return (
+                  <div
+                    key={enrollment.id}
+                    className="flex items-center justify-between px-5 py-3.5"
+                  >
+                    <div className="flex-1 min-w-0 pr-3">
+                      <p className="font-medium text-ink truncate">{enrollment.contact.name}</p>
+                      <p className="text-sm text-gray-500 truncate">
+                        {enrollment.contact.phone} · {enrollment.class.name}
+                      </p>
+                    </div>
+                    <span className={`text-sm font-semibold flex-shrink-0 whitespace-nowrap ${urgencyColor}`}>
+                      Còn {daysLeft} ngày
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
