@@ -15,7 +15,6 @@ export default async function ProgramLessonsPage({ params }: { params: { program
       lessons: {
         include: {
           created_by: { select: { full_name: true } },
-          _count: { select: { versions: true } },
         },
         orderBy: { session_number: 'asc' },
       },
@@ -81,7 +80,6 @@ export default async function ProgramLessonsPage({ params }: { params: { program
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-16">Buổi</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Tiêu đề</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Nội dung</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Phiên bản</th>
                 <th className="px-4 py-3 w-20"></th>
               </tr>
             </thead>
@@ -111,9 +109,6 @@ export default async function ProgramLessonsPage({ params }: { params: { program
                         Chưa có
                       </span>
                     )}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-400">
-                    {lesson._count.versions > 0 ? `v${lesson._count.versions}` : '—'}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <Link
