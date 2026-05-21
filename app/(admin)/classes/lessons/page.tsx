@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth-helpers'
+import CreateProgramDialog from './CreateProgramDialog'
 
 const BRANCH_LABEL: Record<string, string> = {
   tu_duy: 'Tư duy',
@@ -28,9 +29,12 @@ export default async function LessonsProgramListPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Bài giảng</h1>
-        <p className="text-gray-500 text-sm mt-1">Chọn chương trình để quản lý nội dung bài giảng</p>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Bài giảng</h1>
+          <p className="text-gray-500 text-sm mt-1">Chọn chương trình để quản lý nội dung bài giảng</p>
+        </div>
+        <CreateProgramDialog />
       </div>
 
       {programs.length === 0 ? (

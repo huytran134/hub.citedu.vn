@@ -26,17 +26,35 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Thiếu thông tin bắt buộc: name, branch, price' }, { status: 400 })
   }
 
-  const program = await prisma.program.create({
-    data: {
-      name,
-      description: description || null,
-      branch,
-      level: level != null ? Number(level) : null,
-      price: BigInt(price),
-      duration_days: duration_days != null ? Number(duration_days) : null,
-      sessions_count: sessions_count != null ? Number(sessions_count) : null,
-      created_by_id: user.id,
-    },
+  const sessionsNum = sessions_count != null ? Number(sessions_count) : null
+
+  const program = await prisma.$transaction(async (tx) => {
+    const created = await tx.program.create({
+      data: {
+        name,
+        description: description || null,
+        branch,
+        level: level != null ? Number(level) : null,
+        price: BigInt(price),
+        duration_days: duration_days != null ? Number(duration_days) : null,
+        sessions_count: sessionsNum,
+        created_by_id: user.id,
+      },
+    })
+
+    // Tự tạo N Lesson rỗng theo sessions_count để Admin nhập nội dung sau
+    if (sessionsNum && sessionsNum > 0) {
+      await tx.lesson.createMany({
+        data: Array.from({ length: sessionsNum }, (_, i) => ({
+          program_id: created.id,
+          session_number: i + 1,
+          title: `Buổi ${i + 1}`,
+          created_by_id: user.id,
+        })),
+      })
+    }
+
+    return created
   })
 
   return NextResponse.json({ ...program, price: Number(program.price) }, { status: 201 })

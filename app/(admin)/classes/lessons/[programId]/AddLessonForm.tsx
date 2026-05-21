@@ -45,9 +45,10 @@ export default function AddLessonForm({
         setError(data.error || 'Có lỗi xảy ra')
         return
       }
-      setForm({ session_number: '', title: '', objectives: '' })
+      const lesson = await res.json()
       setIsOpen(false)
-      router.refresh()
+      // Redirect thẳng vào editor để nhập nội dung ngay
+      router.push(`/classes/lessons/${programId}/${lesson.id}`)
     } catch {
       setError('Không thể kết nối server')
     } finally {
