@@ -58,12 +58,11 @@ jobs:
           name: nextjs-build
           path: /home/u969193399/cithub
 
-      - name: Extract & reload
+      - name: Extract & deploy
         run: |
-          export NVM_DIR="$HOME/.nvm"
-          source "$NVM_DIR/nvm.sh"
           cd /home/u969193399/cithub
           tar -xzf next-build.tar.gz
           rm next-build.tar.gz
-          pm2 reload cithub --update-env || pm2 start npm --name cithub -- start
-          pm2 save
+          rm -rf /home/u969193399/domains/hub.citedu.vn/nodejs/.next
+          cp -r .next /home/u969193399/domains/hub.citedu.vn/nodejs/
+          touch /home/u969193399/domains/hub.citedu.vn/nodejs/tmp/restart.txt
