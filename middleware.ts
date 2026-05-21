@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 const PUBLIC_PATHS = ['/login']
+const PUBLIC_PREFIXES = ['/feedback']
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request })
@@ -35,7 +36,10 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Chưa đăng nhập → redirect về /login (trừ các route public)
-  if (!user && !PUBLIC_PATHS.includes(pathname)) {
+  const isPublic =
+    PUBLIC_PATHS.includes(pathname) ||
+    PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+  if (!user && !isPublic) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 

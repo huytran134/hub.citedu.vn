@@ -20,6 +20,7 @@ export default async function ClassSessionsPage({ params }: { params: { id: stri
         where: { deleted_at: null },
         include: {
           _count: { select: { attendances: true } },
+          lesson: { select: { id: true, title: true } },
         },
         orderBy: { session_number: 'asc' },
       },
@@ -130,12 +131,20 @@ export default async function ClassSessionsPage({ params }: { params: { id: stri
                 </a>
               )}
             </div>
-            <Link
-              href={`/my-classes/${params.id}/sessions/${session.id}/attendance`}
-              className="flex-shrink-0 bg-white text-flame text-sm font-bold px-4 rounded-lg min-h-[44px] flex items-center whitespace-nowrap shadow-sm"
-            >
-              Điểm danh ngay
-            </Link>
+            <div className="flex flex-col gap-2 flex-shrink-0">
+              <Link
+                href={`/my-classes/${params.id}/sessions/${session.id}/attendance`}
+                className="bg-white text-flame text-sm font-bold px-4 rounded-lg min-h-[44px] flex items-center whitespace-nowrap shadow-sm"
+              >
+                Điểm danh ngay
+              </Link>
+              <Link
+                href={`/my-classes/${params.id}/sessions/${session.id}/lesson`}
+                className="bg-white/20 text-white text-sm font-semibold px-4 rounded-lg min-h-[44px] flex items-center whitespace-nowrap text-center justify-center hover:bg-white/30 transition-colors"
+              >
+                Xem bài giảng
+              </Link>
+            </div>
           </div>
         </div>
       ))}
@@ -195,13 +204,20 @@ export default async function ClassSessionsPage({ params }: { params: { id: stri
                       )}
                     </div>
 
-                    {/* Nút Điểm danh — 44px, flame color */}
-                    <Link
-                      href={`/my-classes/${params.id}/sessions/${session.id}/attendance`}
-                      className="flex-shrink-0 bg-flame text-white text-sm font-semibold px-4 rounded-lg min-h-[44px] flex items-center hover:bg-flame/90 transition-colors whitespace-nowrap"
-                    >
-                      Điểm danh
-                    </Link>
+                    <div className="flex flex-col gap-2 flex-shrink-0">
+                      <Link
+                        href={`/my-classes/${params.id}/sessions/${session.id}/attendance`}
+                        className="bg-flame text-white text-sm font-semibold px-4 rounded-lg min-h-[44px] flex items-center hover:bg-flame/90 transition-colors whitespace-nowrap"
+                      >
+                        Điểm danh
+                      </Link>
+                      <Link
+                        href={`/my-classes/${params.id}/sessions/${session.id}/lesson`}
+                        className="border border-gray-200 text-gray-500 text-sm font-medium px-4 rounded-lg min-h-[44px] flex items-center hover:border-flame/40 hover:text-flame transition-colors whitespace-nowrap justify-center"
+                      >
+                        Bài giảng
+                      </Link>
+                    </div>
                   </div>
                 </div>
               )
@@ -248,6 +264,12 @@ export default async function ClassSessionsPage({ params }: { params: { id: stri
                   sessionId={session.id}
                   initialValue={session.session_zoom_link}
                 />
+                <Link
+                  href={`/my-classes/${params.id}/sessions/${session.id}/lesson`}
+                  className="mt-3 w-full border border-gray-200 text-gray-500 text-sm font-medium px-4 rounded-lg min-h-[44px] flex items-center hover:border-flame/40 hover:text-flame transition-colors justify-center"
+                >
+                  Xem bài giảng
+                </Link>
               </div>
             ))}
           </div>

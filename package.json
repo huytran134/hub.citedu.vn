@@ -12,6 +12,7 @@
     "db:seed": "tsx --env-file=.env.local prisma/seed.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.97.1",
     "@prisma/client": "^5.14.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@supabase/ssr": "^0.3.0",

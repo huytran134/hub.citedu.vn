@@ -5,6 +5,7 @@ const SOFT_DELETE_MODELS = new Set([
   'Contact', 'ContactNote', 'Lead', 'LeadNote',
   'Program', 'Class', 'ClassSession',
   'Enrollment', 'Payment', 'Refund',
+  'Lesson',
 ])
 
 const FILTER_ACTIONS = new Set([

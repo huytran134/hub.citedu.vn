@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma'
 import AttendanceBoard from '@/components/custom/AttendanceBoard'
 import SessionZoomLinkInput from '@/components/custom/SessionZoomLinkInput'
 import SessionNotesInput from '@/components/custom/SessionNotesInput'
+import SessionDetailTabs from '@/components/custom/SessionDetailTabs'
 import type { StudentAttendance } from '@/components/custom/AttendanceBoard'
 
 export default async function AttendancePage({
@@ -101,6 +102,9 @@ export default async function AttendancePage({
           {students.length} học viên · Bấm 1 nút = lưu ngay
         </p>
       </div>
+
+      {/* Tab nav */}
+      <SessionDetailTabs classId={params.id} sessionId={params.sessionId} />
 
       {/* Input link Zoom/Meet — CNL nhập trước buổi học */}
       <div className="mb-5 bg-white rounded-xl shadow-sm border border-gray-100 px-4 py-4">
