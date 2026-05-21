@@ -63,6 +63,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          port: 65002
           source: next-build.tar.gz
           target: /home/u969193399/cithub/
 
@@ -72,6 +73,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          port: 65002
           script: |
             cd /home/u969193399/cithub
             tar -xzf next-build.tar.gz
