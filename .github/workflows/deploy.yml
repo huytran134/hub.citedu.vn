@@ -40,7 +40,7 @@ jobs:
       - name: Package build output
         run: tar -czf next-build.tar.gz .next
 
-      - name: Upload build output
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
@@ -48,21 +48,34 @@ jobs:
           retention-days: 1
 
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest   # Chạy trên GitHub server, không cần self-hosted runner
     needs: build
 
     steps:
-      - name: Download build output
+      - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: nextjs-build
-          path: /home/u969193399/cithub
 
-      - name: Extract & deploy
-        run: |
-          cd /home/u969193399/cithub
-          tar -xzf next-build.tar.gz
-          rm next-build.tar.gz
-          rm -rf /home/u969193399/domains/hub.citedu.vn/nodejs/.next
-          cp -r .next /home/u969193399/domains/hub.citedu.vn/nodejs/
-          touch /home/u969193399/domains/hub.citedu.vn/nodejs/tmp/restart.txt
+      - name: Copy build to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: next-build.tar.gz
+          target: /home/u969193399/cithub/
+
+      - name: Extract & restart app
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /home/u969193399/cithub
+            tar -xzf next-build.tar.gz
+            rm next-build.tar.gz
+            rm -rf /home/u969193399/domains/hub.citedu.vn/nodejs/.next
+            cp -r .next /home/u969193399/domains/hub.citedu.vn/nodejs/
+            touch /home/u969193399/domains/hub.citedu.vn/nodejs/tmp/restart.txt
