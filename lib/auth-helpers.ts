@@ -33,7 +33,7 @@ export async function requireAdmin(): Promise<AuthResult> {
     }
   }
 
-  if (!user.is_active) {
+  if (user.is_active === false) {
     return {
       user: null,
       response: NextResponse.json({ error: 'Tài khoản đã bị vô hiệu hóa' }, { status: 403 }),
@@ -62,7 +62,7 @@ export async function requireHomeroom(): Promise<AuthResult> {
     }
   }
 
-  if (!user.is_active) {
+  if (user.is_active === false) {
     return {
       user: null,
       response: NextResponse.json({ error: 'Tài khoản đã bị vô hiệu hóa' }, { status: 403 }),
