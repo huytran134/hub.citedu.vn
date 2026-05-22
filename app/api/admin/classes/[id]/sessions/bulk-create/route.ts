@@ -23,7 +23,7 @@ export async function POST(
     where: { id: params.id },
     include: {
       program: { select: { branch: true } },
-      _count: { select: { sessions: true } },
+      _count: { select: { sessions: { where: { deleted_at: null } } } },
     },
   })
 
