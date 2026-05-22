@@ -15,19 +15,19 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      <div className="text-sm text-gray-400 mb-4">Cài đặt</div>
-      <h1 className="text-2xl font-bold text-ink mb-6">Cài đặt hệ thống</h1>
+      <div className="text-sm text-gray-400 dark:text-gray-500 mb-4">Cài đặt</div>
+      <h1 className="text-2xl font-bold text-ink dark:text-gray-100 mb-6">Cài đặt hệ thống</h1>
 
       <div className="space-y-6">
         {/* Card 1: Giao diện */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-          <h2 className="text-base font-semibold text-ink mb-4">Giao diện</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
+          <h2 className="text-base font-semibold text-ink dark:text-gray-100 mb-4">Giao diện</h2>
           <ThemeToggle />
         </div>
 
         {/* Card 2: Quản lý người dùng */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-          <h2 className="text-base font-semibold text-ink mb-4">Quản lý người dùng</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
+          <h2 className="text-base font-semibold text-ink dark:text-gray-100 mb-4">Quản lý người dùng</h2>
           <SettingsUsersClient
             users={users}
             currentUserId={currentUser?.id ?? ''}
