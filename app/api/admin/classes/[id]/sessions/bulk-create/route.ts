@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/auth-helpers'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 export async function POST(
   request: NextRequest,
@@ -26,8 +27,8 @@ export async function POST(
 
   // Validate từng session trước khi insert
   for (const s of sessions) {
-    if (!s.session_number || !s.scheduled_at) {
-      return NextResponse.json({ error: 'Dữ liệu buổi học thiếu session_number hoặc scheduled_at' }, { status: 400 })
+    if (!s.scheduled_at) {
+      return NextResponse.json({ error: 'Dữ liệu buổi học thiếu scheduled_at' }, { status: 400 })
     }
     const d = new Date(s.scheduled_at)
     if (isNaN(d.getTime())) {
@@ -55,30 +56,22 @@ export async function POST(
       )
     }
 
-    // Chỉ chặn bulk create nhiều buổi nếu lớp đã có lịch (tránh tạo trùng toàn bộ lịch)
-    // Thêm 1 buổi lẻ (sessions.length === 1) thì luôn cho phép
-    if (sessions.length > 1) {
-      let activeCount = 0
-      try {
-        activeCount = await prisma.classSession.count({
-          where: { class_id: params.id },
-        })
-      } catch (countErr) {
-        // Cột deleted_at chưa có trên DB hoặc bảng chưa migrate đầy đủ → bỏ qua check
-        console.warn('[bulk-create sessions] count() failed, skipping duplicate check:', countErr)
-      }
-      if (activeCount > 0) {
-        return NextResponse.json(
-          { error: 'Lớp đã có lịch học. Dùng "Thêm buổi" để thêm từng buổi riêng lẻ.' },
-          { status: 409 }
-        )
-      }
-    }
+    // Lấy session_number lớn nhất hiện có để đánh số tiếp nối
+    const lastSession = await prisma.classSession.findFirst({
+      where: { class_id: params.id },
+      orderBy: { session_number: 'desc' },
+    })
+    const startingSessionNumber = (lastSession?.session_number ?? 0) + 1
+
+    // Sắp xếp theo ngày giờ rồi gán session_number tiếp nối — bỏ qua số thứ tự client gửi lên
+    const sorted = [...sessions].sort(
+      (a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime()
+    )
 
     const result = await prisma.classSession.createMany({
-      data: sessions.map((s) => ({
+      data: sorted.map((s, i) => ({
         class_id: params.id,
-        session_number: s.session_number,
+        session_number: startingSessionNumber + i,
         scheduled_at: new Date(s.scheduled_at),
         title: s.title ?? null,
         created_by_id: user!.id,
@@ -86,7 +79,7 @@ export async function POST(
       skipDuplicates: true,
     })
 
-    // Trả về danh sách buổi vừa tạo để client cập nhật ngay
+    // Trả về toàn bộ danh sách buổi để client refresh ngay
     let created: Awaited<ReturnType<typeof prisma.classSession.findMany>> = []
     try {
       created = await prisma.classSession.findMany({
@@ -94,7 +87,7 @@ export async function POST(
         orderBy: { session_number: 'asc' },
       })
     } catch {
-      // Bảng chưa có cột deleted_at — sessions đã tạo xong, client tự refresh sẽ thấy
+      // Bảng chưa migrate xong — sessions đã tạo, client tự refresh sẽ thấy
     }
 
     return NextResponse.json({ sessions: created, created: result.count }, { status: 201 })
@@ -105,6 +98,15 @@ export async function POST(
       sessionCount: sessions?.length,
       error,
     })
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return NextResponse.json(
+          { error: 'Lịch học bị trùng — lớp này đã có buổi học với số thứ tự này' },
+          { status: 409 }
+        )
+      }
+    }
 
     const message = error instanceof Error ? error.message : 'Lỗi server không xác định'
     return NextResponse.json(

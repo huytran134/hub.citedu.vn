@@ -253,9 +253,9 @@ function ScheduleDialog({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                    {preview.map((s) => (
+                    {preview.map((s, i) => (
                       <tr key={s.session_number}>
-                        <td className="px-3 py-2 font-medium text-ink dark:text-gray-100">#{s.session_number}</td>
+                        <td className="px-3 py-2 font-medium text-ink dark:text-gray-100">#{existingCount + i + 1}</td>
                         <td className="px-3 py-2 text-gray-600 dark:text-gray-300">{formatDateTime(s.scheduled_at)}</td>
                       </tr>
                     ))}
@@ -587,12 +587,20 @@ export default function AdminSessionsClient({
         <div>
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm text-gray-500">{sessions.length} buổi học</p>
-            <button
-              onClick={() => setShowAddDialog(true)}
-              className="text-sm font-semibold text-flame border border-flame/30 hover:bg-flame/5 px-4 py-2 rounded-lg transition-colors"
-            >
-              + Thêm buổi
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowScheduleDialog(true)}
+                className="text-sm font-semibold text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 px-4 py-2 rounded-lg transition-colors"
+              >
+                Tạo lịch thêm
+              </button>
+              <button
+                onClick={() => setShowAddDialog(true)}
+                className="text-sm font-semibold text-flame border border-flame/30 hover:bg-flame/5 px-4 py-2 rounded-lg transition-colors"
+              >
+                + Thêm buổi
+              </button>
+            </div>
           </div>
 
           {deleteError && (
