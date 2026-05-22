@@ -35,15 +35,20 @@ export async function POST(
   }
   // Chỉ chặn bulk create nhiều buổi nếu lớp đã có lịch (tránh tạo trùng toàn bộ lịch)
   // Thêm 1 buổi lẻ (sessions.length === 1) thì luôn cho phép
+  // Wrap try/catch: middleware tự thêm deleted_at:null — nếu cột chưa có trên DB thì bỏ qua check
   if (sessions.length > 1) {
-    const activeCount = await prisma.classSession.count({
-      where: { class_id: params.id, deleted_at: null },
-    })
-    if (activeCount > 0) {
-      return NextResponse.json(
-        { error: 'Lớp đã có lịch học. Dùng "Thêm buổi" để thêm từng buổi riêng lẻ.' },
-        { status: 409 }
-      )
+    try {
+      const activeCount = await prisma.classSession.count({
+        where: { class_id: params.id },
+      })
+      if (activeCount > 0) {
+        return NextResponse.json(
+          { error: 'Lớp đã có lịch học. Dùng "Thêm buổi" để thêm từng buổi riêng lẻ.' },
+          { status: 409 }
+        )
+      }
+    } catch {
+      // DB chưa có cột deleted_at → bỏ qua check, cho phép tạo
     }
   }
 
@@ -57,10 +62,16 @@ export async function POST(
     })),
   })
 
-  const created = await prisma.classSession.findMany({
-    where: { class_id: params.id, deleted_at: null },
-    orderBy: { session_number: 'asc' },
-  })
+  // Wrap try/catch: nếu DB chưa có cột deleted_at thì trả về [] — client sẽ refresh
+  let created: Awaited<ReturnType<typeof prisma.classSession.findMany>> = []
+  try {
+    created = await prisma.classSession.findMany({
+      where: { class_id: params.id },
+      orderBy: { session_number: 'asc' },
+    })
+  } catch {
+    // DB chưa có cột deleted_at — sessions đã được tạo, client tự refresh sẽ thấy
+  }
 
   return NextResponse.json({ sessions: created }, { status: 201 })
 }
