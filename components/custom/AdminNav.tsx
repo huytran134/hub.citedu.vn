@@ -69,6 +69,7 @@ export default function AdminNav({
     { label: 'Lớp học', href: '/classes' },
     { label: 'Tài chính', href: '/finance', badge: totalPending, badgeWarning: isOverdue },
     { label: 'Báo cáo', href: '/reports' },
+    { label: 'Cài đặt', href: '/settings' },
   ]
 
   return (

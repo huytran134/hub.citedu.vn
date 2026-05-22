@@ -1,5 +1,16 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
+
+// Dùng để gọi supabase.auth.admin.* — chỉ dùng ở API routes (server-side)
+// Tuyệt đối không expose SUPABASE_SERVICE_ROLE_KEY ra client
+export function createSupabaseAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } },
+  )
+}
 
 // Dùng trong Server Components, API Routes, Server Actions
 export function createSupabaseServerClient() {
