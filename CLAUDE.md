@@ -562,6 +562,7 @@ lg (≥ 1024px):      Desktop — sidebar cố định · layout đa cột
 ```yaml
 # .github/workflows/deploy.yml
 # Chạy khi push lên branch main
+# GitHub Actions build + push schema lên DB, sau đó SCP .next lên VPS
 
 name: Deploy CiT Hub
 on:
@@ -569,36 +570,39 @@ on:
     branches: [main]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: appleboy/ssh-action@master
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /var/www/cithub
-
-            # Pull code mới
-            git pull origin main
-
-            # Cài đủ dependencies (kể cả devDependencies cho Prisma)
-            npm ci
-
-            # Generate Prisma client từ schema mới nhất
-            npx prisma generate
-
-            # Chạy migration (an toàn — chỉ áp dụng migration chưa chạy)
-            npx prisma migrate deploy
-
-            # Build Next.js
-            npm run build
-
-            # Reload zero-downtime (không ngắt user đang dùng)
-            pm2 reload cithub --update-env
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Generate Prisma client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+      - name: Push schema to database (db push — không cần migration files)
+        run: npx prisma db push --skip-generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_APP_URL: https://hub.citedu.vn
 ```
 
+> **GitHub Secrets cần có:** `DATABASE_URL` · `DIRECT_URL` · `VPS_HOST` · `VPS_USER` · `VPS_SSH_KEY` · `NEXT_PUBLIC_SUPABASE_URL` · `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+>
+> **`DIRECT_URL`** = DATABASE_URL nhưng bỏ `?pgbouncer=true&connection_limit=1` — dùng cho Prisma schema operations (db push, generate).
+>
 > **Keep-Alive không dùng GitHub Actions** — xem Mục 5.11 (cronjob trên VPS).
 
 ---
