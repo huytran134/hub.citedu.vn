@@ -6,26 +6,27 @@ import { prisma } from '@/lib/prisma'
 function generateScheduleDates(
   startDateStr: string,  // "YYYY-MM-DD"
   weekdays: number[],    // [1,4] = Thứ 2 & Thứ 5 (JS: 0=CN, 1=T2...6=T7)
-  startTime: string,     // "08:00"
+  startTime: string,     // "HH:MM" giờ Việt Nam (UTC+7)
   totalSessions: number
 ): Array<{ session_number: number; scheduled_at: string }> {
   const [year, month, day] = startDateStr.split('-').map(Number)
   const [hours, minutes] = startTime.split(':').map(Number)
+  const pad = (n: number) => n.toString().padStart(2, '0')
+
+  // VN = UTC+7, select bắt đầu 07:00 → utcHours luôn >= 0
+  const utcHours = hours - 7
 
   const result: Array<{ session_number: number; scheduled_at: string }> = []
-  const current = new Date(year, month - 1, day)
+  // Dùng Date.UTC để tránh timezone server ảnh hưởng getDay()
+  const current = new Date(Date.UTC(year, month - 1, day))
 
   let sessionNum = 1
   while (result.length < totalSessions) {
-    if (weekdays.includes(current.getDay())) {
-      const scheduledAt = new Date(current)
-      scheduledAt.setHours(hours, minutes, 0, 0)
-      result.push({
-        session_number: sessionNum++,
-        scheduled_at: scheduledAt.toISOString(),
-      })
+    if (weekdays.includes(current.getUTCDay())) {
+      const isoStr = `${current.getUTCFullYear()}-${pad(current.getUTCMonth() + 1)}-${pad(current.getUTCDate())}T${pad(utcHours)}:${pad(minutes)}:00.000Z`
+      result.push({ session_number: sessionNum++, scheduled_at: isoStr })
     }
-    current.setDate(current.getDate() + 1)
+    current.setUTCDate(current.getUTCDate() + 1)
   }
 
   return result

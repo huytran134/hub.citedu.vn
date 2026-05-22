@@ -83,7 +83,8 @@ function ScheduleDialog({
   onClose: () => void
   onCreated: () => void
 }) {
-  const [startDate, setStartDate] = useState('')
+  const [startDateDisplay, setStartDateDisplay] = useState('')  // DD/MM/YYYY
+  const [startDate, setStartDate] = useState('')               // YYYY-MM-DD gửi lên API
   const [startTime, setStartTime] = useState('08:00')
   const [selectedDays, setSelectedDays] = useState<number[]>([])
   const [totalSessions, setTotalSessions] = useState(20)
@@ -91,6 +92,23 @@ function ScheduleDialog({
   const [isPreviewing, startPreview] = useTransition()
   const [isCreating, startCreate] = useTransition()
   const [error, setError] = useState('')
+
+  function handleDateInput(raw: string) {
+    // Chỉ giữ chữ số, tự thêm "/" sau 2 ký tự và 5 ký tự
+    const digits = raw.replace(/\D/g, '').slice(0, 8)
+    let formatted = digits
+    if (digits.length > 4) formatted = `${digits.slice(0,2)}/${digits.slice(2,4)}/${digits.slice(4)}`
+    else if (digits.length > 2) formatted = `${digits.slice(0,2)}/${digits.slice(2)}`
+    setStartDateDisplay(formatted)
+    setPreview(null)
+    // Parse DD/MM/YYYY → YYYY-MM-DD khi đủ 8 chữ số
+    if (digits.length === 8) {
+      const d = digits.slice(0, 2), m = digits.slice(2, 4), y = digits.slice(4)
+      setStartDate(`${y}-${m}-${d}`)
+    } else {
+      setStartDate('')
+    }
+  }
 
   function toggleDay(day: number) {
     setSelectedDays((prev) =>
@@ -101,7 +119,7 @@ function ScheduleDialog({
 
   function handlePreview() {
     setError('')
-    if (!startDate) return setError('Vui lòng chọn ngày bắt đầu')
+    if (!startDate) return setError('Vui lòng nhập ngày bắt đầu theo định dạng DD/MM/YYYY')
     if (!selectedDays.length) return setError('Vui lòng chọn ít nhất 1 thứ trong tuần')
     if (!totalSessions || totalSessions < 1) return setError('Số buổi phải ít nhất là 1')
 
@@ -151,9 +169,12 @@ function ScheduleDialog({
           <div>
             <label className="block text-sm font-medium text-ink mb-1.5">Ngày bắt đầu</label>
             <input
-              type="date"
-              value={startDate}
-              onChange={(e) => { setStartDate(e.target.value); setPreview(null) }}
+              type="text"
+              inputMode="numeric"
+              placeholder="DD/MM/YYYY"
+              value={startDateDisplay}
+              onChange={(e) => handleDateInput(e.target.value)}
+              maxLength={10}
               className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             />
           </div>
