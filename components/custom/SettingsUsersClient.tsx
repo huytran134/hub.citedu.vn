@@ -260,6 +260,109 @@ function EditUserDialog({
   )
 }
 
+// ─── Dialog đổi mật khẩu ─────────────────────────────────────────────────────
+
+function ResetPasswordDialog({
+  user,
+  onClose,
+}: {
+  user: UserRow
+  onClose: () => void
+}) {
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
+  const [isPending, startTransition] = useTransition()
+
+  function handleSubmit() {
+    setError('')
+    if (newPassword.length < 8) return setError('Mật khẩu tối thiểu 8 ký tự')
+    if (newPassword !== confirmPassword) return setError('Mật khẩu xác nhận không khớp')
+
+    startTransition(async () => {
+      const res = await fetch(`/api/admin/settings/users/${user.id}/reset-password`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: newPassword }),
+      })
+      let data: { error?: string } = {}
+      try { data = await res.json() } catch { /* empty */ }
+      if (!res.ok) return setError(data.error ?? 'Lỗi đổi mật khẩu')
+      setSuccess(true)
+      setTimeout(onClose, 1200)
+    })
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-ink">Đổi mật khẩu</h2>
+            <p className="text-sm text-gray-400 mt-0.5">{user.full_name}</p>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-ink text-xl leading-none">×</button>
+        </div>
+
+        <div className="px-6 py-5 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-ink mb-1.5">
+              Mật khẩu mới <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Tối thiểu 8 ký tự"
+              autoFocus
+              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-ink mb-1.5">
+              Xác nhận mật khẩu <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Nhập lại mật khẩu mới"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+            />
+          </div>
+
+          {error && (
+            <p className="text-red-600 text-sm bg-red-50 px-3 py-2 rounded-lg">{error}</p>
+          )}
+          {success && (
+            <p className="text-green-600 text-sm bg-green-50 px-3 py-2 rounded-lg">
+              ✓ Đã đổi mật khẩu thành công
+            </p>
+          )}
+        </div>
+
+        <div className="px-6 py-4 border-t border-gray-100 flex gap-3 justify-end">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-ink transition-colors"
+          >
+            Hủy
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={isPending || success}
+            className="px-5 py-2 bg-navy hover:bg-navy/90 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-50"
+          >
+            {isPending ? 'Đang đổi...' : 'Đổi mật khẩu'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Component chính ──────────────────────────────────────────────────────────
 
 export default function SettingsUsersClient({
@@ -272,6 +375,7 @@ export default function SettingsUsersClient({
   const router = useRouter()
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [editingUser, setEditingUser] = useState<UserRow | null>(null)
+  const [resetPasswordUser, setResetPasswordUser] = useState<UserRow | null>(null)
   const [confirmToggleUser, setConfirmToggleUser] = useState<UserRow | null>(null)
   const [toggleError, setToggleError] = useState('')
   const [isToggling, startToggle] = useTransition()
@@ -381,6 +485,12 @@ export default function SettingsUsersClient({
                       Sửa
                     </button>
                     <button
+                      onClick={() => setResetPasswordUser(u)}
+                      className="text-xs font-medium text-navy hover:text-navy/70 border border-navy/20 hover:border-navy/40 px-3 py-1.5 rounded-lg transition-colors"
+                    >
+                      Đổi MK
+                    </button>
+                    <button
                       onClick={() => { setToggleError(''); setConfirmToggleUser(u) }}
                       disabled={u.id === currentUserId}
                       className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors ${
@@ -456,6 +566,13 @@ export default function SettingsUsersClient({
           user={editingUser}
           onClose={() => setEditingUser(null)}
           onSaved={handleSaved}
+        />
+      )}
+
+      {resetPasswordUser && (
+        <ResetPasswordDialog
+          user={resetPasswordUser}
+          onClose={() => setResetPasswordUser(null)}
         />
       )}
     </>
