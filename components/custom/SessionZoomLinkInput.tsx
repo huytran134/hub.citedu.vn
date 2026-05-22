@@ -33,16 +33,16 @@ export default function SessionZoomLinkInput({ sessionId, initialValue }: Props)
 
   return (
     <div className="mt-2">
-      <label className="text-xs text-gray-400 mb-1 block">Link Zoom/Meet</label>
+      <label className="text-xs text-muted-foreground/70 mb-1 block">Link Zoom/Meet</label>
       <input
         type="url"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={handleBlur}
         placeholder="https://zoom.us/j/... hoặc meet.google.com/..."
-        className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2.5 text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-flame/50 focus:ring-1 focus:ring-flame/20 min-h-[44px]"
+        className="w-full text-sm border border-border rounded-lg px-3 py-2.5 text-foreground bg-background placeholder:text-muted-foreground/70 focus:outline-none focus:border-flame/50 focus:ring-1 focus:ring-flame/20 min-h-[44px]"
       />
-      {saving && <p className="text-xs text-gray-400 mt-1">Đang lưu...</p>}
+      {saving && <p className="text-xs text-muted-foreground/70 mt-1">Đang lưu...</p>}
       {!saving && savedValue && savedValue === value.trim() && (
         <p className="text-xs text-green-600 mt-1">✓ Đã lưu</p>
       )}

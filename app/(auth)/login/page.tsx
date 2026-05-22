@@ -50,9 +50,9 @@ export default function LoginPage() {
           <p className="text-white/60 mt-2 text-sm">Hệ thống quản lý nội bộ CiT EDU</p>
         </div>
 
-        <form onSubmit={handleLogin} className="bg-white rounded-xl p-8 shadow-2xl space-y-5">
+        <form onSubmit={handleLogin} className="bg-background rounded-xl p-8 shadow-2xl space-y-5 border border-border">
           <div className="space-y-1.5">
-            <label htmlFor="email" className="block text-sm font-medium text-ink">
+            <label htmlFor="email" className="block text-sm font-medium text-foreground">
               Email
             </label>
             <input
@@ -63,14 +63,14 @@ export default function LoginPage() {
               placeholder="email@citedu.vn"
               required
               autoComplete="email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-ink
+              className="w-full px-3 py-2 border border-border rounded-lg text-foreground bg-background
                          focus:outline-none focus:ring-2 focus:ring-flame focus:border-transparent
-                         placeholder:text-gray-400 text-base"
+                         placeholder:text-muted-foreground/70 text-base"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="password" className="block text-sm font-medium text-ink">
+            <label htmlFor="password" className="block text-sm font-medium text-foreground">
               Mật khẩu
             </label>
             <input
@@ -81,9 +81,9 @@ export default function LoginPage() {
               placeholder="••••••••"
               required
               autoComplete="current-password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-ink
+              className="w-full px-3 py-2 border border-border rounded-lg text-foreground bg-background
                          focus:outline-none focus:ring-2 focus:ring-flame focus:border-transparent
-                         placeholder:text-gray-400 text-base"
+                         placeholder:text-muted-foreground/70 text-base"
             />
           </div>
 

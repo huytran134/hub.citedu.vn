@@ -44,13 +44,13 @@ export default async function FeedbackPage({
       : `Buổi ${session.session_number}`
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted/40">
       <div className="max-w-md mx-auto px-4 py-8">
         {/* Brand header */}
         <div className="text-center mb-6">
-          <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">CiT EDU</p>
+          <p className="text-xs font-bold tracking-widest text-muted-foreground/70 uppercase">CiT EDU</p>
           <h1 className="text-xl font-bold text-ink mt-1">Đánh giá buổi học</h1>
-          <p className="text-xs text-gray-400 mt-1">Phản hồi ẩn danh — chỉ mất 1 phút</p>
+          <p className="text-xs text-muted-foreground/70 mt-1">Phản hồi ẩn danh — chỉ mất 1 phút</p>
         </div>
 
         <FeedbackForm
@@ -65,12 +65,12 @@ export default async function FeedbackPage({
 
 function InvalidLink({ message }: { message: string }) {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-muted/40 flex items-center justify-center px-4">
       <div className="max-w-sm w-full text-center">
         <p className="text-4xl mb-4">🔒</p>
         <h1 className="text-lg font-bold text-ink mb-2">Link không khả dụng</h1>
-        <p className="text-sm text-gray-500">{message}</p>
-        <p className="text-xs text-gray-300 mt-4">CiT EDU — hub.citedu.vn</p>
+        <p className="text-sm text-muted-foreground">{message}</p>
+        <p className="text-xs text-muted-foreground/70 mt-4">CiT EDU — hub.citedu.vn</p>
       </div>
     </div>
   )

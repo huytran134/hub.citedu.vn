@@ -15,10 +15,10 @@ export default function GlobalError({
 
   return (
     <html lang="vi">
-      <body className="min-h-screen flex items-center justify-center bg-gray-50">
+      <body className="min-h-screen flex items-center justify-center bg-muted/40">
         <div className="text-center p-8 max-w-sm">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Có lỗi xảy ra</h1>
-          <p className="text-gray-500 text-sm mb-6">
+          <h1 className="text-2xl font-bold text-foreground mb-2">Có lỗi xảy ra</h1>
+          <p className="text-muted-foreground text-sm mb-6">
             Hệ thống gặp sự cố. Vui lòng thử lại hoặc liên hệ quản trị viên.
           </p>
           <button

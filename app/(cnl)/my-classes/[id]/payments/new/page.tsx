@@ -91,8 +91,8 @@ function NewPaymentForm({ classId }: { classId: string }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Thông tin học viên */}
-      <div className="bg-white rounded-xl px-4 py-4 shadow-sm border border-gray-100">
-        <p className="text-xs text-gray-400 mb-1">Học viên</p>
+      <div className="bg-background rounded-xl px-4 py-4 shadow-sm border border-border">
+        <p className="text-xs text-muted-foreground/70 mb-1">Học viên</p>
         <p className="font-semibold text-ink text-lg">{studentName}</p>
         {debt > 0 && (
           <p className="text-sm text-amber-600 mt-1">Còn nợ: {formatCurrency(debt)}</p>
@@ -106,7 +106,7 @@ function NewPaymentForm({ classId }: { classId: string }) {
       )}
 
       {/* Số tiền */}
-      <div className="bg-white rounded-xl px-4 py-4 shadow-sm border border-gray-100">
+      <div className="bg-background rounded-xl px-4 py-4 shadow-sm border border-border">
         <label className="block text-sm font-medium text-ink mb-2">
           Số tiền thu (đ) <span className="text-red-500">*</span>
         </label>
@@ -118,15 +118,15 @@ function NewPaymentForm({ classId }: { classId: string }) {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Nhập số tiền..."
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+          className="w-full border border-border rounded-lg px-4 py-3 text-lg font-semibold bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
         />
         {amount && Number(amount) > 0 && (
-          <p className="text-xs text-gray-400 mt-1">{formatCurrency(Number(amount))}</p>
+          <p className="text-xs text-muted-foreground/70 mt-1">{formatCurrency(Number(amount))}</p>
         )}
       </div>
 
       {/* Hình thức thanh toán */}
-      <div className="bg-white rounded-xl px-4 py-4 shadow-sm border border-gray-100">
+      <div className="bg-background rounded-xl px-4 py-4 shadow-sm border border-border">
         <label className="block text-sm font-medium text-ink mb-3">
           Hình thức <span className="text-red-500">*</span>
         </label>
@@ -139,7 +139,7 @@ function NewPaymentForm({ classId }: { classId: string }) {
               className={`py-3 rounded-lg text-sm font-semibold border-2 transition-colors min-h-[44px] ${
                 method === opt.value
                   ? 'bg-flame text-white border-flame'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-flame/40'
+                  : 'bg-background text-muted-foreground border-border hover:border-flame/40'
               }`}
             >
               {opt.label}
@@ -149,14 +149,14 @@ function NewPaymentForm({ classId }: { classId: string }) {
       </div>
 
       {/* Ghi chú */}
-      <div className="bg-white rounded-xl px-4 py-4 shadow-sm border border-gray-100">
+      <div className="bg-background rounded-xl px-4 py-4 shadow-sm border border-border">
         <label className="block text-sm font-medium text-ink mb-2">Ghi chú (tùy chọn)</label>
         <textarea
           rows={2}
           value={note}
           onChange={(e) => setNote(e.target.value)}
           placeholder="Ví dụ: Đóng đợt 2, còn thiếu X..."
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame resize-none"
+          className="w-full border border-border rounded-lg px-3 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame resize-none"
         />
       </div>
 
@@ -172,7 +172,7 @@ function NewPaymentForm({ classId }: { classId: string }) {
       <button
         type="button"
         onClick={() => router.back()}
-        className="w-full text-gray-500 text-sm py-2 hover:text-gray-700"
+        className="w-full text-muted-foreground text-sm py-2 hover:text-foreground"
       >
         ← Hủy, quay lại
       </button>

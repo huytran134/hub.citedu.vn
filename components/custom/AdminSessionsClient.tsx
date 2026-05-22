@@ -230,7 +230,7 @@ function ScheduleDialog({
               max={100}
               value={totalSessions}
               onChange={(e) => { setTotalSessions(Number(e.target.value)); setPreview(null) }}
-              className="w-32 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-32 border border-border rounded-lg px-3 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             />
           </div>
 
@@ -266,7 +266,7 @@ function ScheduleDialog({
           )}
         </div>
 
-        <div className="px-6 py-4 border-t border-gray-100 flex gap-3 justify-end">
+        <div className="px-6 py-4 border-t border-border flex gap-3 justify-end">
           <button
             onClick={onClose}
             className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-ink dark:hover:text-gray-100 transition-colors"
@@ -351,7 +351,7 @@ function AddSingleSessionDialog({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Tên bài học <span className="text-gray-400 font-normal">(tuỳ chọn)</span></label>
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Tên bài học <span className="text-muted-foreground/70 font-normal">(tuỳ chọn)</span></label>
             <input
               type="text"
               value={title}
@@ -363,8 +363,8 @@ function AddSingleSessionDialog({
           {error && <p className="text-red-600 text-sm">{error}</p>}
         </div>
 
-        <div className="px-6 py-4 border-t border-gray-100 flex gap-3 justify-end">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-ink transition-colors">Hủy</button>
+        <div className="px-6 py-4 border-t border-border flex gap-3 justify-end">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Hủy</button>
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}
@@ -453,12 +453,12 @@ function EditSessionDialog({
               max={480}
               value={durationMin}
               onChange={(e) => setDurationMin(Number(e.target.value))}
-              className="w-32 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-32 border border-border rounded-lg px-3 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Link tài liệu <span className="text-gray-400 font-normal">(Google Drive, YouTube...)</span></label>
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Link tài liệu <span className="text-muted-foreground/70 font-normal">(Google Drive, YouTube...)</span></label>
             <input
               type="url"
               value={materialUrl}
@@ -473,7 +473,7 @@ function EditSessionDialog({
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 space-y-2">
               <p className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wide">Do CNL quản lý</p>
               {session.session_zoom_link && (
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   <span className="font-medium">Zoom:</span>{' '}
                   <a href={session.session_zoom_link} target="_blank" rel="noopener noreferrer" className="text-flame underline truncate">
                     {session.session_zoom_link}
@@ -481,7 +481,7 @@ function EditSessionDialog({
                 </p>
               )}
               {session.notes && (
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   <span className="font-medium">Ghi chú CNL:</span> {session.notes}
                 </p>
               )}
@@ -491,8 +491,8 @@ function EditSessionDialog({
           {error && <p className="text-red-600 text-sm">{error}</p>}
         </div>
 
-        <div className="px-6 py-4 border-t border-gray-100 flex gap-3 justify-end">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-ink transition-colors">Hủy</button>
+        <div className="px-6 py-4 border-t border-border flex gap-3 justify-end">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Hủy</button>
           <button
             onClick={handleSave}
             disabled={isSaving}
@@ -573,8 +573,8 @@ export default function AdminSessionsClient({
       {hasNoSessions ? (
         <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-10 text-center">
           <div className="text-4xl mb-3">📅</div>
-          <p className="text-gray-600 font-medium">Lớp này chưa có lịch học</p>
-          <p className="text-gray-400 text-sm mt-1 mb-5">Tạo lịch tự động theo thứ trong tuần, hoặc thêm từng buổi thủ công</p>
+          <p className="text-foreground/90 font-medium">Lớp này chưa có lịch học</p>
+          <p className="text-muted-foreground/70 text-sm mt-1 mb-5">Tạo lịch tự động theo thứ trong tuần, hoặc thêm từng buổi thủ công</p>
           <button
             onClick={() => setShowScheduleDialog(true)}
             className="bg-flame hover:bg-flame/90 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors"
@@ -586,7 +586,7 @@ export default function AdminSessionsClient({
         /* Trạng thái B — Đã có buổi học */
         <div>
           <div className="flex items-center justify-between mb-4">
-            <p className="text-sm text-gray-500">{sessions.length} buổi học</p>
+            <p className="text-sm text-muted-foreground">{sessions.length} buổi học</p>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowScheduleDialog(true)}
@@ -616,8 +616,8 @@ export default function AdminSessionsClient({
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Buổi</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Ngày giờ</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden md:table-cell">Tên bài</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">Tài liệu</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide hidden md:table-cell">Tên bài</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide hidden lg:table-cell">Tài liệu</th>
                   <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Trạng thái</th>
                   <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Thao tác</th>
                 </tr>
@@ -630,21 +630,21 @@ export default function AdminSessionsClient({
                       <td className="px-4 py-3">
                         <span className="font-bold text-ink text-sm">#{session.session_number}</span>
                         {session.duration_min !== 120 && (
-                          <span className="text-xs text-gray-400 ml-1.5">{session.duration_min}p</span>
+                          <span className="text-xs text-muted-foreground/70 ml-1.5">{session.duration_min}p</span>
                         )}
                       </td>
                       <td className="px-4 py-3">
                         <p className="text-sm text-ink">{formatDate(session.scheduled_at)}</p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-muted-foreground/70">
                           {new Date(session.scheduled_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                           {session.duration_min && ` · ${session.duration_min} phút`}
                         </p>
                       </td>
                       <td className="px-4 py-3 hidden md:table-cell">
-                        <p className="text-sm text-gray-700">
+                        <p className="text-sm text-foreground/90">
                           {session.title
                             ? session.title
-                            : <span className="text-gray-300 italic">Chưa đặt tên</span>}
+                            : <span className="text-muted-foreground/70 italic">Chưa đặt tên</span>}
                         </p>
                       </td>
                       <td className="px-4 py-3 hidden lg:table-cell">
@@ -658,7 +658,7 @@ export default function AdminSessionsClient({
                             Xem tài liệu
                           </a>
                         ) : (
-                          <span className="text-gray-300 text-xs">—</span>
+                          <span className="text-muted-foreground/70 text-xs">—</span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-center">
@@ -673,7 +673,7 @@ export default function AdminSessionsClient({
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => setEditingSession(session)}
-                            className="text-xs font-medium text-gray-500 hover:text-ink border border-gray-200 hover:border-gray-300 px-3 py-1.5 rounded-lg transition-colors"
+                            className="text-xs font-medium text-muted-foreground hover:text-foreground border border-border hover:border-border/80 px-3 py-1.5 rounded-lg transition-colors"
                           >
                             Sửa
                           </button>
@@ -707,7 +707,7 @@ export default function AdminSessionsClient({
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setDeletingId(null)}
-                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-ink"
+                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
               >
                 Hủy
               </button>

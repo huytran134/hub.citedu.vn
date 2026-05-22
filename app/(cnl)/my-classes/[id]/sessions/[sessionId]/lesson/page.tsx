@@ -71,13 +71,13 @@ export default async function LessonViewPage({
       <div className="flex items-center gap-3 mb-5">
         <Link
           href={backHref}
-          className="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:border-flame/40 hover:text-flame transition-colors shadow-sm"
+          className="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-full bg-background border border-border text-muted-foreground hover:border-flame/40 hover:text-flame transition-colors shadow-sm"
           aria-label="Quay lại"
         >
           ←
         </Link>
         <div className="min-w-0">
-          <p className="text-xs text-gray-400 truncate">{cls.name}</p>
+          <p className="text-xs text-muted-foreground/70 truncate">{cls.name}</p>
           <h1 className="font-bold text-ink text-base leading-snug">
             Buổi {session.session_number} — {lesson.title}
           </h1>
@@ -89,18 +89,18 @@ export default async function LessonViewPage({
 
         {/* Mục tiêu */}
         {lesson.objectives && (
-          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+          <section className="bg-background rounded-xl shadow-sm border border-border p-4">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-lg">🎯</span>
               <h2 className="font-semibold text-ink text-sm uppercase tracking-wide">Mục tiêu buổi học</h2>
             </div>
-            <p className="text-sm text-gray-700 leading-relaxed">{lesson.objectives}</p>
+            <p className="text-sm text-foreground/90 leading-relaxed">{lesson.objectives}</p>
           </section>
         )}
 
         {/* Nội dung */}
         {lesson.content && (
-          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+          <section className="bg-background rounded-xl shadow-sm border border-border p-4">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">📋</span>
               <h2 className="font-semibold text-ink text-sm uppercase tracking-wide">Nội dung bài giảng</h2>
@@ -111,7 +111,7 @@ export default async function LessonViewPage({
 
         {/* Câu hỏi thảo luận */}
         {lesson.discussion_questions && (
-          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+          <section className="bg-background rounded-xl shadow-sm border border-border p-4">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">❓</span>
               <h2 className="font-semibold text-ink text-sm uppercase tracking-wide">Câu hỏi thảo luận</h2>
@@ -152,7 +152,7 @@ export default async function LessonViewPage({
         {/* Nút quay lại — 44px, cuối trang */}
         <Link
           href={backHref}
-          className="flex items-center justify-center w-full border border-gray-200 text-gray-500 text-sm font-medium rounded-xl min-h-[44px] hover:border-gray-300 transition-colors"
+          className="flex items-center justify-center w-full border border-border text-muted-foreground text-sm font-medium rounded-xl min-h-[44px] hover:border-border/80 transition-colors"
         >
           ← Quay lại lịch học
         </Link>
@@ -173,7 +173,7 @@ function PlainTextContent({ text, className = '' }: { text: string; className?: 
     .replace(/^\s*\d+\.\s/gm, (m) => m.trimStart()) // numbered list
 
   return (
-    <div className={`text-sm text-gray-700 leading-relaxed space-y-1.5 ${className}`}>
+    <div className={`text-sm text-foreground/90 leading-relaxed space-y-1.5 ${className}`}>
       {cleaned.split('\n').filter((line) => line.trim()).map((line, i) => (
         <p key={i}>{line}</p>
       ))}
@@ -199,26 +199,26 @@ function LessonEmptyShell({
       <div className="flex items-center gap-3 mb-5">
         <Link
           href={backHref}
-          className="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:border-flame/40 hover:text-flame transition-colors shadow-sm"
+          className="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-full bg-background border border-border text-muted-foreground hover:border-flame/40 hover:text-flame transition-colors shadow-sm"
           aria-label="Quay lại"
         >
           ←
         </Link>
         <div className="min-w-0">
-          <p className="text-xs text-gray-400 truncate">{className}</p>
+          <p className="text-xs text-muted-foreground/70 truncate">{className}</p>
           <h1 className="font-bold text-ink text-base">Buổi {sessionNumber} — {sessionLabel}</h1>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-10 text-center">
+      <div className="bg-background rounded-xl shadow-sm border border-border p-10 text-center">
         <p className="text-3xl mb-3">📄</p>
-        <p className="text-gray-500 text-sm">{message}</p>
-        <p className="text-gray-300 text-xs mt-1">Admin sẽ cập nhật bài giảng cho buổi này.</p>
+        <p className="text-muted-foreground text-sm">{message}</p>
+        <p className="text-muted-foreground/70 text-xs mt-1">Admin sẽ cập nhật bài giảng cho buổi này.</p>
       </div>
 
       <Link
         href={backHref}
-        className="mt-4 flex items-center justify-center w-full border border-gray-200 text-gray-500 text-sm font-medium rounded-xl min-h-[44px] hover:border-gray-300 transition-colors"
+        className="mt-4 flex items-center justify-center w-full border border-border text-muted-foreground text-sm font-medium rounded-xl min-h-[44px] hover:border-border/80 transition-colors"
       >
         ← Quay lại lịch học
       </Link>

@@ -102,11 +102,11 @@ function NewRefundForm({ classId }: { classId: string }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Thông tin học viên */}
-      <div className="bg-white rounded-xl px-4 py-4 shadow-sm border border-gray-100">
-        <p className="text-xs text-gray-400 mb-1">Học viên</p>
+      <div className="bg-background rounded-xl px-4 py-4 shadow-sm border border-border">
+        <p className="text-xs text-muted-foreground/70 mb-1">Học viên</p>
         <p className="font-semibold text-ink text-lg">{studentName}</p>
         <div className="mt-2 space-y-0.5 text-sm">
-          <p className="text-gray-500">
+          <p className="text-muted-foreground">
             Học phí TT: <span className="font-medium text-ink">{formatCurrency(agreedPrice)}</span>
           </p>
           <p className="text-green-600">
@@ -125,7 +125,7 @@ function NewRefundForm({ classId }: { classId: string }) {
       )}
 
       {/* Số tiền hoàn */}
-      <div className="bg-white rounded-xl px-4 py-4 shadow-sm border border-gray-100">
+      <div className="bg-background rounded-xl px-4 py-4 shadow-sm border border-border">
         <label className="block text-sm font-medium text-ink mb-2">
           Số tiền hoàn (đ) <span className="text-red-500">*</span>
         </label>
@@ -141,11 +141,11 @@ function NewRefundForm({ classId }: { classId: string }) {
           className={`w-full border rounded-lg px-4 py-3 text-lg font-semibold focus:outline-none focus:ring-2 transition-colors ${
             amountExceedsMax
               ? 'border-red-400 focus:ring-red-200 bg-red-50'
-              : 'border-gray-200 focus:ring-flame/30 focus:border-flame'
+              : 'border-border bg-background text-foreground focus:ring-flame/30 focus:border-flame'
           }`}
         />
         {amount && amountNum > 0 && !amountExceedsMax && (
-          <p className="text-xs text-gray-400 mt-1">{formatCurrency(amountNum)}</p>
+          <p className="text-xs text-muted-foreground/70 mt-1">{formatCurrency(amountNum)}</p>
         )}
         {amountExceedsMax && (
           <p className="text-xs text-red-600 mt-1 font-medium">
@@ -155,7 +155,7 @@ function NewRefundForm({ classId }: { classId: string }) {
       </div>
 
       {/* Lý do hoàn */}
-      <div className="bg-white rounded-xl px-4 py-4 shadow-sm border border-gray-100">
+      <div className="bg-background rounded-xl px-4 py-4 shadow-sm border border-border">
         <label className="block text-sm font-medium text-ink mb-2">
           Lý do hoàn tiền <span className="text-red-500">*</span>
         </label>
@@ -165,12 +165,12 @@ function NewRefundForm({ classId }: { classId: string }) {
           value={reason}
           onChange={(e) => setReason(e.target.value)}
           placeholder="Ví dụ: Nghỉ 3 buổi có lý do, hoàn 60% theo chính sách..."
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame resize-none"
+          className="w-full border border-border rounded-lg px-3 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame resize-none"
         />
       </div>
 
       {/* Hình thức hoàn */}
-      <div className="bg-white rounded-xl px-4 py-4 shadow-sm border border-gray-100">
+      <div className="bg-background rounded-xl px-4 py-4 shadow-sm border border-border">
         <label className="block text-sm font-medium text-ink mb-3">
           Hình thức hoàn <span className="text-red-500">*</span>
         </label>
@@ -183,7 +183,7 @@ function NewRefundForm({ classId }: { classId: string }) {
               className={`py-3 rounded-lg text-sm font-semibold border-2 transition-colors min-h-[44px] ${
                 refundMethod === opt.value
                   ? 'bg-flame text-white border-flame'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-flame/40'
+                  : 'bg-background text-muted-foreground border-border hover:border-flame/40'
               }`}
             >
               {opt.label}
@@ -204,7 +204,7 @@ function NewRefundForm({ classId }: { classId: string }) {
       <button
         type="button"
         onClick={() => router.back()}
-        className="w-full text-gray-500 text-sm py-2 hover:text-gray-700"
+        className="w-full text-muted-foreground text-sm py-2 hover:text-foreground"
       >
         ← Hủy, quay lại
       </button>

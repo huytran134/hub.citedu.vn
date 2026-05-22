@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/auth-helpers'
 import { prisma } from '@/lib/prisma'
-import Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const BRANCH_LABEL: Record<string, string> = {
   tu_duy: 'Tư duy (phát triển tư duy thành đạt và khởi nghiệp)',
@@ -14,8 +14,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const { response } = await requireAdmin()
   if (response) return response
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json({ error: 'Chưa cấu hình ANTHROPIC_API_KEY' }, { status: 503 })
+  if (!process.env.GEMINI_API_KEY) {
+    return NextResponse.json({ error: 'Chưa cấu hình GEMINI_API_KEY' }, { status: 503 })
   }
 
   const lesson = await prisma.lesson.findUnique({
@@ -28,8 +28,6 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const body = await req.json()
   const currentTitle = body.title || lesson.title
   const currentObjectives = body.objectives || lesson.objectives || ''
-
-  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
   const prompt = `Bạn là chuyên gia thiết kế chương trình đào tạo cho CiT EDU — một trung tâm đào tạo về Tư duy Thành đạt & Khởi nghiệp tại Hà Nội, Việt Nam.
 
@@ -51,13 +49,11 @@ Hãy gợi ý nội dung cho buổi học này theo đúng định dạng JSON s
 Viết bằng tiếng Việt. Nội dung phải thực tế, ứng dụng được ngay, phù hợp với học viên người Việt Nam đang học tư duy & khởi nghiệp.`
 
   try {
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 2048,
-      messages: [{ role: 'user', content: prompt }],
-    })
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
 
-    const rawText = message.content[0].type === 'text' ? message.content[0].text : ''
+    const result = await model.generateContent(prompt)
+    const rawText = result.response.text()
 
     // Parse JSON từ response
     const jsonMatch = rawText.match(/\{[\s\S]*\}/)
@@ -73,7 +69,14 @@ Viết bằng tiếng Việt. Nội dung phải thực tế, ứng dụng đư�
 
     return NextResponse.json({ suggestion })
   } catch (err) {
-    console.error('AI suggest error:', err)
-    return NextResponse.json({ error: 'Không thể kết nối AI, thử lại sau' }, { status: 502 })
+    console.error('[Gemini] ai-suggest error:', err)
+
+    const message = err instanceof Error ? err.message : ''
+    const isQuotaError = message.includes('quota') || message.includes('429') || message.includes('RESOURCE_EXHAUSTED')
+
+    return NextResponse.json(
+      { error: isQuotaError ? 'AI đang quá tải, thử lại sau ít phút' : 'Không thể kết nối AI, thử lại sau' },
+      { status: isQuotaError ? 429 : 502 }
+    )
   }
 }

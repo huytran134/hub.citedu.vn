@@ -130,14 +130,14 @@ export default function ProgressionPage() {
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Lên cấp · Upsell</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <p className="text-muted-foreground text-sm mt-1">
           Danh sách học viên đủ điều kiện học chương trình tiếp theo — chưa đăng ký
         </p>
       </div>
 
       {/* Chọn chương trình mục tiêu */}
       <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-5 py-4 mb-5">
-        <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+        <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
           Chương trình mục tiêu
         </label>
         <div className="flex flex-wrap items-start gap-4">
@@ -156,7 +156,7 @@ export default function ProgressionPage() {
 
           {/* Mô tả điều kiện */}
           {selectedProgram && selectedProgram.prerequisites.length > 0 && (
-            <p className="text-sm text-gray-500 pt-2">
+            <p className="text-sm text-muted-foreground pt-2">
               <span className="font-medium">Điều kiện:</span>{' '}
               {describePrerequisites(selectedProgram.prerequisites)}
             </p>
@@ -166,7 +166,7 @@ export default function ProgressionPage() {
 
       {/* Kết quả */}
       {searching ? (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-10 text-center text-gray-400">
+        <div className="bg-background rounded-xl border border-border shadow-sm p-10 text-center text-muted-foreground">
           Đang tìm kiếm...
         </div>
       ) : (
@@ -201,7 +201,7 @@ export default function ProgressionPage() {
               </div>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100">
+                  <tr className="border-b border-border">
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wide">
                       Học viên
                     </th>
@@ -243,7 +243,7 @@ export default function ProgressionPage() {
                           ))}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-center text-gray-500 text-xs">
+                      <td className="px-4 py-3 text-center text-muted-foreground text-xs">
                         {formatDate(row.latest_completion_at)}
                       </td>
                       <td className="px-4 py-3 text-center">

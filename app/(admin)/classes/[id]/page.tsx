@@ -93,7 +93,7 @@ export default async function ClassDetailPage({ params }: { params: { id: string
               {STATUS_LABEL[cls.status]}
             </span>
           </div>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-muted-foreground text-sm mt-1">
             {cls.program.name}
             {cls.homeroom && ` · CNL: ${cls.homeroom.full_name}`}
             {cls.start_date && ` · Khai giảng: ${new Date(cls.start_date).toLocaleDateString('vi-VN')}`}
@@ -165,7 +165,7 @@ export default async function ClassDetailPage({ params }: { params: { id: string
                       </p>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-right text-sm text-gray-700">
+                  <td className="px-4 py-3 text-right text-sm text-foreground/90">
                     {formatCurrency(e.agreedPrice)}
                   </td>
                   <td className="px-4 py-3 text-right text-sm text-green-600 font-medium">

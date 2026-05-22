@@ -175,30 +175,30 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
     <div className="flex gap-6 items-start">
       {/* FORM — cột trái */}
       <div className="flex-1 min-w-0">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-5">
+        <div className="bg-background rounded-xl shadow-sm border border-border p-6 space-y-5">
 
           {/* Tiêu đề */}
           <div>
-            <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
               Tiêu đề buổi học *
             </label>
             <input
               value={form.title}
               onChange={set('title')}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30"
+              className="w-full border border-border rounded-lg px-3 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30"
               placeholder="Nhập tiêu đề buổi học"
             />
           </div>
 
           {/* Mục tiêu */}
           <div>
-            <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
               Mục tiêu buổi học
             </label>
             <input
               value={form.objectives}
               onChange={set('objectives')}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30"
+              className="w-full border border-border rounded-lg px-3 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30"
               placeholder="Học viên hiểu được... / Học viên làm được..."
             />
           </div>
@@ -206,7 +206,7 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
           {/* Nội dung */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Nội dung bài giảng
               </label>
               <div className="flex items-center gap-2">
@@ -219,28 +219,28 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
                     Dùng gợi ý AI →
                   </button>
                 )}
-                <span className="text-xs text-gray-400">Hỗ trợ Markdown</span>
+                <span className="text-xs text-muted-foreground/70">Hỗ trợ Markdown</span>
               </div>
             </div>
             <textarea
               value={form.content}
               onChange={set('content')}
               rows={12}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-flame/30 resize-y"
+              className="w-full border border-border rounded-lg px-3 py-2.5 text-sm font-mono bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30 resize-y"
               placeholder="## Giới thiệu&#10;&#10;Nội dung buổi học...&#10;&#10;## Nội dung chính&#10;&#10;1. Điểm 1&#10;2. Điểm 2&#10;&#10;## Tóm tắt"
             />
           </div>
 
           {/* Link tài liệu */}
           <div>
-            <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
               Link tài liệu
             </label>
             <input
               value={form.materials_url}
               onChange={set('materials_url')}
               type="url"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30"
+              className="w-full border border-border rounded-lg px-3 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30"
               placeholder="https://drive.google.com/..."
             />
           </div>
@@ -248,7 +248,7 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
           {/* Câu hỏi thảo luận */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Câu hỏi thảo luận
               </label>
               {hasAiField('discussion_questions') && (
@@ -265,7 +265,7 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
               value={form.discussion_questions}
               onChange={set('discussion_questions')}
               rows={5}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-flame/30 resize-y"
+              className="w-full border border-border rounded-lg px-3 py-2.5 text-sm font-mono bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30 resize-y"
               placeholder="1. Câu hỏi thảo luận đầu tiên?&#10;2. Câu hỏi thứ hai?&#10;3. ..."
             />
           </div>
@@ -273,7 +273,7 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
           {/* Ghi chú giảng viên */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Ghi chú giảng viên
               </label>
               {hasAiField('notes_for_teacher') && (
@@ -290,20 +290,20 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
               value={form.notes_for_teacher}
               onChange={set('notes_for_teacher')}
               rows={4}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 resize-y"
+              className="w-full border border-border rounded-lg px-3 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30 resize-y"
               placeholder="Lưu ý điểm cần nhấn mạnh, cách xử lý câu hỏi khó..."
             />
           </div>
 
           {/* Ghi chú thay đổi lần này */}
           <div>
-            <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
-              Ghi chú thay đổi <span className="font-normal text-gray-400 normal-case">(không bắt buộc)</span>
+            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+              Ghi chú thay đổi <span className="font-normal text-muted-foreground/70 normal-case">(không bắt buộc)</span>
             </label>
             <input
               value={form.change_note}
               onChange={set('change_note')}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30"
+              className="w-full border border-border rounded-lg px-3 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-flame/30"
               placeholder="VD: Cập nhật nội dung theo phản hồi học viên tháng 5"
             />
           </div>
@@ -330,7 +330,7 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
             <button
               onClick={handleAiSuggest}
               disabled={isAiLoading}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold border border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-600 disabled:opacity-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold border border-border text-muted-foreground hover:border-blue-300 hover:text-blue-600 disabled:opacity-50 transition-colors"
             >
               <span>✨</span>
               {isAiLoading ? 'Đang hỏi AI...' : 'AI gợi ý'}
@@ -338,7 +338,7 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
 
             <button
               onClick={showVersions ? () => setShowVersions(false) : loadVersions}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold border border-gray-200 text-gray-600 hover:border-gray-300 transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold border border-border text-muted-foreground hover:border-border/80 transition-colors"
             >
               <span>🕐</span>
               Lịch sử{versionCount > 0 ? ` (v${versionCount})` : ''}
@@ -350,7 +350,7 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
       {/* PANEL PHẢI — AI gợi ý hoặc Lịch sử */}
       {(showAiPanel || showVersions) && (
         <div className="w-96 flex-shrink-0">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <div className="bg-background rounded-xl shadow-sm border border-border p-5">
             {/* AI Panel */}
             {showAiPanel && (
               <>
@@ -360,15 +360,15 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
                   </h3>
                   <button
                     onClick={() => setShowAiPanel(false)}
-                    className="text-gray-400 hover:text-gray-600 text-lg leading-none"
+                    className="text-muted-foreground/70 hover:text-foreground text-lg leading-none"
                   >
                     ×
                   </button>
                 </div>
 
                 {isAiLoading && (
-                  <div className="flex items-center gap-3 py-8 justify-center text-gray-400">
-                    <div className="w-5 h-5 border-2 border-gray-200 border-t-blue-500 rounded-full animate-spin" />
+                  <div className="flex items-center gap-3 py-8 justify-center text-muted-foreground/70">
+                    <div className="w-5 h-5 border-2 border-border border-t-blue-500 rounded-full animate-spin" />
                     <span className="text-sm">AI đang soạn nội dung...</span>
                   </div>
                 )}
@@ -379,7 +379,7 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
 
                 {aiSuggestion && !isAiLoading && (
                   <div className="space-y-4 text-sm">
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-muted-foreground/70">
                       Bấm "Dùng gợi ý AI →" bên cạnh từng trường để áp dụng vào form.
                       Bạn có thể chỉnh sửa trước khi lưu.
                     </p>
@@ -408,7 +408,7 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
 
                     <button
                       onClick={handleAiSuggest}
-                      className="w-full text-xs text-center text-gray-400 hover:text-blue-500 py-1 border border-dashed border-gray-200 rounded-lg hover:border-blue-300 transition-colors"
+                      className="w-full text-xs text-center text-muted-foreground/70 hover:text-blue-500 py-1 border border-dashed border-border rounded-lg hover:border-blue-300 transition-colors"
                     >
                       Tạo lại gợi ý
                     </button>
@@ -426,7 +426,7 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
                   </h3>
                   <button
                     onClick={() => setShowVersions(false)}
-                    className="text-gray-400 hover:text-gray-600 text-lg leading-none"
+                    className="text-muted-foreground/70 hover:text-foreground text-lg leading-none"
                   >
                     ×
                   </button>
@@ -434,12 +434,12 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
 
                 {versionsLoading && (
                   <div className="flex justify-center py-8">
-                    <div className="w-5 h-5 border-2 border-gray-200 border-t-flame rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-border border-t-flame rounded-full animate-spin" />
                   </div>
                 )}
 
                 {!versionsLoading && versions.length === 0 && (
-                  <p className="text-sm text-gray-400 text-center py-6">Chưa có phiên bản nào được lưu</p>
+                  <p className="text-sm text-muted-foreground/70 text-center py-6">Chưa có phiên bản nào được lưu</p>
                 )}
 
                 {!versionsLoading && versions.length > 0 && (
@@ -447,13 +447,13 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
                     {versions.map((v) => (
                       <div
                         key={v.id}
-                        className="border border-gray-100 rounded-lg p-3 hover:border-gray-200 transition-colors"
+                        className="border border-border rounded-lg p-3 hover:border-border/80 transition-colors"
                       >
                         <div className="flex items-start justify-between gap-2 mb-1">
                           <span className="text-xs font-bold text-navy bg-navy/10 px-2 py-0.5 rounded">
                             v{v.version_number}
                           </span>
-                          <span className="text-xs text-gray-400 text-right">
+                          <span className="text-xs text-muted-foreground/70 text-right">
                             {new Date(v.created_at).toLocaleString('vi-VN', {
                               day: '2-digit', month: '2-digit', year: '2-digit',
                               hour: '2-digit', minute: '2-digit',
@@ -461,9 +461,9 @@ export default function LessonEditor({ lesson }: { lesson: Lesson }) {
                           </span>
                         </div>
                         <p className="text-xs font-medium text-ink mb-0.5">{v.title}</p>
-                        <p className="text-xs text-gray-400">{v.created_by.full_name}</p>
+                        <p className="text-xs text-muted-foreground/70">{v.created_by.full_name}</p>
                         {v.change_note && (
-                          <p className="text-xs text-gray-500 italic mt-1 border-l-2 border-gray-200 pl-2">
+                          <p className="text-xs text-muted-foreground italic mt-1 border-l-2 border-border pl-2">
                             {v.change_note}
                           </p>
                         )}
@@ -524,7 +524,7 @@ function AiSectionPreview({
         </div>
       </div>
       {expanded && (
-        <pre className="p-3 text-xs text-gray-700 whitespace-pre-wrap font-sans max-h-48 overflow-y-auto bg-white">
+        <pre className="p-3 text-xs text-foreground/90 whitespace-pre-wrap font-sans max-h-48 overflow-y-auto bg-background">
           {value}
         </pre>
       )}

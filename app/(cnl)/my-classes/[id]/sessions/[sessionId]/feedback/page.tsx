@@ -20,10 +20,10 @@ function AvgBar({ avg, label }: { avg: number; label: string }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <p className="text-xs text-gray-600">{label}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
         <p className="text-xs font-bold text-ink">{avg.toFixed(1)} / 5</p>
       </div>
-      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-2 bg-muted rounded-full overflow-hidden">
         <div
           className="h-full bg-flame rounded-full transition-all"
           style={{ width: `${pct}%` }}
@@ -107,7 +107,7 @@ export default async function FeedbackResultsPage({
   return (
     <div>
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-gray-400 mb-4 flex-wrap">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground/70 mb-4 flex-wrap">
         <Link href="/my-classes" className="hover:text-flame flex-shrink-0">
           Lớp học
         </Link>
@@ -125,7 +125,7 @@ export default async function FeedbackResultsPage({
       {/* Header */}
       <div className="mb-5">
         <h1 className="text-xl font-bold text-ink">{sessionLabel}</h1>
-        <p className="text-gray-500 text-sm mt-0.5">{cls.name}</p>
+        <p className="text-muted-foreground text-sm mt-0.5">{cls.name}</p>
       </div>
 
       {/* Tab nav */}
@@ -133,19 +133,19 @@ export default async function FeedbackResultsPage({
 
       {/* Tổng quan */}
       {count === 0 ? (
-        <div className="bg-white rounded-xl p-10 text-center shadow-sm border border-gray-100 mb-4">
+        <div className="bg-background rounded-xl p-10 text-center shadow-sm border border-border mb-4">
           <p className="text-3xl mb-3">📊</p>
-          <p className="text-gray-500 text-sm">Chưa có đánh giá nào cho buổi học này.</p>
-          <p className="text-gray-300 text-xs mt-1">Tạo link rồi gửi cho học viên bên dưới.</p>
+          <p className="text-muted-foreground text-sm">Chưa có đánh giá nào cho buổi học này.</p>
+          <p className="text-muted-foreground/70 text-xs mt-1">Tạo link rồi gửi cho học viên bên dưới.</p>
         </div>
       ) : (
         <>
           {/* Summary card */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4">
+          <div className="bg-background rounded-xl shadow-sm border border-border p-4 mb-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="flex-1">
                 <p className="text-3xl font-bold text-flame">{avgOverall.toFixed(1)}</p>
-                <p className="text-xs text-gray-400">điểm trung bình / {count} đánh giá</p>
+                <p className="text-xs text-muted-foreground/70">điểm trung bình / {count} đánh giá</p>
               </div>
               <div className="text-right">
                 <StarDisplay value={Math.round(avgOverall)} />
@@ -161,16 +161,16 @@ export default async function FeedbackResultsPage({
           {/* Comments */}
           {comments.length > 0 && (
             <div className="mb-4">
-              <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+              <h2 className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wide mb-3">
                 Cảm nghĩ ({comments.length})
               </h2>
               <div className="space-y-2">
                 {comments.map((f, i) => (
                   <div
                     key={i}
-                    className="bg-white rounded-xl shadow-sm border border-gray-100 px-4 py-3"
+                    className="bg-background rounded-xl shadow-sm border border-border px-4 py-3"
                   >
-                    <p className="text-sm text-gray-700 leading-relaxed">{f.other_notes}</p>
+                    <p className="text-sm text-foreground/90 leading-relaxed">{f.other_notes}</p>
                   </div>
                 ))}
               </div>

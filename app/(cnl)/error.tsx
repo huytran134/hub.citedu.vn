@@ -16,8 +16,8 @@ export default function CnlError({
   return (
     <div className="min-h-[60vh] flex items-center justify-center p-4">
       <div className="text-center max-w-sm">
-        <h2 className="text-xl font-bold text-gray-800 mb-2">Tải trang thất bại</h2>
-        <p className="text-gray-500 text-sm mb-6">
+        <h2 className="text-xl font-bold text-foreground mb-2">Tải trang thất bại</h2>
+        <p className="text-muted-foreground text-sm mb-6">
           {error.message || 'Có lỗi khi tải dữ liệu. Vui lòng thử lại.'}
         </p>
         <button

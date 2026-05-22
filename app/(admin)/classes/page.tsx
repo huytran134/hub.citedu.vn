@@ -41,7 +41,7 @@ export default async function ClassesPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Lớp học</h1>
-          <p className="text-gray-500 text-sm mt-1">{classes.length} lớp học</p>
+          <p className="text-muted-foreground text-sm mt-1">{classes.length} lớp học</p>
         </div>
         <Link
           href="/classes/new"
@@ -83,13 +83,13 @@ export default async function ClassesPage() {
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-sm text-gray-700">{cls.program.name}</p>
-                    <p className="text-xs text-gray-400">{BRANCH_LABEL[cls.program.branch]}</p>
+                    <p className="text-sm text-foreground/90">{cls.program.name}</p>
+                    <p className="text-xs text-muted-foreground/70">{BRANCH_LABEL[cls.program.branch]}</p>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">
-                    {cls.homeroom?.full_name || <span className="text-gray-300">—</span>}
+                  <td className="px-4 py-3 text-sm text-muted-foreground">
+                    {cls.homeroom?.full_name || <span className="text-muted-foreground/70">—</span>}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">
+                  <td className="px-4 py-3 text-sm text-muted-foreground">
                     {cls._count.enrollments} / {cls.max_students}
                   </td>
                   <td className="px-4 py-3">

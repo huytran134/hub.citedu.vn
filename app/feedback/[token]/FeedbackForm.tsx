@@ -92,7 +92,7 @@ export default function FeedbackForm({
       <div className="text-center py-16 px-6">
         <p className="text-5xl mb-4">🎉</p>
         <h2 className="text-xl font-bold text-ink mb-2">Cảm ơn bạn!</h2>
-        <p className="text-gray-500 text-sm">
+        <p className="text-muted-foreground text-sm">
           Phản hồi của bạn đã được ghi nhận. Đội ngũ CiT EDU sẽ dùng góp ý này để cải thiện chất
           lượng lớp học.
         </p>
@@ -112,7 +112,7 @@ export default function FeedbackForm({
       {CRITERIA.map((criterion) => (
         <div
           key={criterion.key}
-          className="bg-white rounded-xl shadow-sm border border-gray-100 px-4 py-4"
+          className="bg-background rounded-xl shadow-sm border border-border px-4 py-4"
         >
           <p className="font-semibold text-ink text-sm mb-3">{criterion.label}</p>
           <StarRating
@@ -120,7 +120,7 @@ export default function FeedbackForm({
             onChange={(v) => setRatings((prev) => ({ ...prev, [criterion.key]: v }))}
           />
           {ratings[criterion.key] > 0 && (
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-muted-foreground/70 mt-2">
               {['', 'Rất tệ', 'Không tốt', 'Bình thường', 'Tốt', 'Rất tốt'][ratings[criterion.key]]}
             </p>
           )}
@@ -128,10 +128,10 @@ export default function FeedbackForm({
       ))}
 
       {/* Other notes */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 px-4 py-4">
+      <div className="bg-background rounded-xl shadow-sm border border-border px-4 py-4">
         <p className="font-semibold text-ink text-sm mb-2">
           Cảm nghĩ về bài học{' '}
-          <span className="font-normal text-gray-400">(không bắt buộc)</span>
+          <span className="font-normal text-muted-foreground/70">(không bắt buộc)</span>
         </p>
         <textarea
           value={otherNotes}
@@ -139,7 +139,7 @@ export default function FeedbackForm({
           placeholder="Chia sẻ thêm cảm nhận của bạn..."
           rows={3}
           maxLength={500}
-          className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:border-flame/50 resize-none"
+          className="w-full text-sm border border-border rounded-lg px-3 py-2.5 bg-background text-foreground focus:outline-none focus:border-flame/50 resize-none"
         />
       </div>
 
@@ -158,7 +158,7 @@ export default function FeedbackForm({
       </button>
 
       {!allRated && (
-        <p className="text-center text-xs text-gray-400">
+        <p className="text-center text-xs text-muted-foreground/70">
           Vui lòng đánh giá đủ 3 phần trên để gửi.
         </p>
       )}
