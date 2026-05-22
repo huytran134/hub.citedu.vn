@@ -43,8 +43,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Đã đăng nhập mà vào /login → redirect vào app (layout xử lý role)
-  if (user && pathname === '/login') {
+  // Đã đăng nhập mà vào /login hoặc / → redirect vào app (login page xử lý role)
+  if (user && (pathname === '/login' || pathname === '/')) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 

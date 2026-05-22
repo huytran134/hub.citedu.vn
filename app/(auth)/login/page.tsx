@@ -25,8 +25,14 @@ export default function LoginPage() {
         return
       }
 
-      // Admin layout tự redirect CNL về /today nếu không có quyền
-      router.push('/dashboard')
+      // Đọc role từ DB để redirect đúng chỗ
+      const meRes = await fetch('/api/me')
+      if (meRes.ok) {
+        const me = await meRes.json()
+        router.push(me.role === 'ADMIN' ? '/dashboard' : '/today')
+      } else {
+        router.push('/dashboard')
+      }
       router.refresh()
     } catch {
       setError('Có lỗi xảy ra. Vui lòng thử lại.')
