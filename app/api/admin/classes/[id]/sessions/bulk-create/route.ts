@@ -21,10 +21,7 @@ export async function POST(
   // Kiểm tra lớp tồn tại và không phải Nhánh 2
   const cls = await prisma.class.findUnique({
     where: { id: params.id },
-    include: {
-      program: { select: { branch: true } },
-      _count: { select: { sessions: { where: { deleted_at: null } } } },
-    },
+    include: { program: { select: { branch: true } } },
   })
 
   if (!cls) {
@@ -38,11 +35,16 @@ export async function POST(
   }
   // Chỉ chặn bulk create nhiều buổi nếu lớp đã có lịch (tránh tạo trùng toàn bộ lịch)
   // Thêm 1 buổi lẻ (sessions.length === 1) thì luôn cho phép
-  if (cls._count.sessions > 0 && sessions.length > 1) {
-    return NextResponse.json(
-      { error: 'Lớp đã có lịch học. Dùng "Thêm buổi" để thêm từng buổi riêng lẻ.' },
-      { status: 409 }
-    )
+  if (sessions.length > 1) {
+    const activeCount = await prisma.classSession.count({
+      where: { class_id: params.id, deleted_at: null },
+    })
+    if (activeCount > 0) {
+      return NextResponse.json(
+        { error: 'Lớp đã có lịch học. Dùng "Thêm buổi" để thêm từng buổi riêng lẻ.' },
+        { status: 409 }
+      )
+    }
   }
 
   await prisma.classSession.createMany({

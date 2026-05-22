@@ -145,7 +145,8 @@ function ScheduleDialog({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessions: preview }),
       })
-      const data = await res.json()
+      let data: { error?: string } = {}
+      try { data = await res.json() } catch { /* empty body */ }
       if (!res.ok) return setError(data.error ?? 'Lỗi khi tạo lịch')
       onCreated()
     })
