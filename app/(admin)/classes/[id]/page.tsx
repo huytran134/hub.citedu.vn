@@ -109,7 +109,7 @@ export default async function ClassDetailPage({ params }: { params: { id: string
           { label: 'Tổng công nợ', value: formatCurrency(totalDebt), color: totalDebt > 0 ? 'text-amber-600' : 'text-gray-400' },
           { label: 'Buổi đã học', value: `${sessionsCompleted} / ${cls._count.sessions}`, color: 'text-ink' },
         ].map((card) => (
-          <div key={card.label} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <div key={card.label} className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
             <p className="text-xs text-gray-500">{card.label}</p>
             <p className={`text-xl font-bold mt-1 ${card.color}`}>{card.value}</p>
           </div>
@@ -120,8 +120,8 @@ export default async function ClassDetailPage({ params }: { params: { id: string
       <ClassDetailTabs classId={params.id} basePath="/classes" />
 
       {/* Danh sách học viên */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-        <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden mb-6">
+        <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
           <h2 className="font-semibold text-ink">
             Danh sách học viên ({enrollmentsWithDebt.length}/{cls.max_students})
           </h2>
@@ -133,7 +133,7 @@ export default async function ClassDetailPage({ params }: { params: { id: string
           </div>
         ) : (
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-100">
+            <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
               <tr>
                 <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Học viên</th>
                 <th className="text-right px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Học phí TT</th>
@@ -143,9 +143,9 @@ export default async function ClassDetailPage({ params }: { params: { id: string
                 <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Hành động</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
               {enrollmentsWithDebt.map((e) => (
-                <tr key={e.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={e.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                   <td className="px-4 py-3">
                     <p className="font-medium text-ink text-sm">{e.contact.name}</p>
                     <p className="text-xs text-gray-400">{e.contact.phone}</p>

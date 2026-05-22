@@ -189,7 +189,7 @@ export default function ContactNoteTimeline({ contactId, initialNotes, currentUs
                     </div>
                   ) : (
                     <div>
-                      <p className="text-sm text-ink whitespace-pre-wrap bg-gray-50 rounded-lg px-3 py-2.5">
+                      <p className="text-sm text-ink dark:text-gray-200 whitespace-pre-wrap bg-gray-50 dark:bg-gray-700 rounded-lg px-3 py-2.5">
                         {note.content}
                       </p>
                       {(canEdit || canDelete) && (

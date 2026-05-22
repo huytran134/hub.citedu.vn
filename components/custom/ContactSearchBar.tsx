@@ -73,12 +73,12 @@ export default function ContactSearchBar({
         placeholder="Tìm theo tên hoặc SĐT..."
         value={search}
         onChange={(e) => handleSearchChange(e.target.value)}
-        className="flex-1 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+        className="flex-1 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
       />
       <select
         defaultValue={defaultSource}
         onChange={(e) => handleFilterChange('source', e.target.value)}
-        className="border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+        className="border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
       >
         {SOURCE_OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>{o.label}</option>
@@ -87,7 +87,7 @@ export default function ContactSearchBar({
       <select
         defaultValue={defaultStatus}
         onChange={(e) => handleFilterChange('status', e.target.value)}
-        className="border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+        className="border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
       >
         {STATUS_OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>{o.label}</option>

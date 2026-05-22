@@ -15,7 +15,7 @@ export default function CnlBottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex z-10">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 flex z-10">
       {NAV_ITEMS.map((item) => {
         const active = pathname.startsWith(item.href)
         return (
@@ -25,7 +25,7 @@ export default function CnlBottomNav() {
             // Tối thiểu 44px height — WCAG AA cho mobile
             className={cn(
               'flex-1 flex items-center justify-center h-14 text-sm font-medium transition-colors',
-              active ? 'text-flame' : 'text-gray-500 hover:text-flame',
+              active ? 'text-flame' : 'text-gray-500 dark:text-gray-400 hover:text-flame',
             )}
           >
             {item.label}

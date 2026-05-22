@@ -109,7 +109,7 @@ export default function ProgressionPage() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center text-gray-400">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-12 text-center text-gray-400">
         Đang tải...
       </div>
     )
@@ -117,7 +117,7 @@ export default function ProgressionPage() {
 
   if (programs.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-12 text-center">
         <p className="text-gray-400">
           Chưa có chương trình nào có điều kiện tiên quyết được thiết lập.
         </p>
@@ -136,7 +136,7 @@ export default function ProgressionPage() {
       </div>
 
       {/* Chọn chương trình mục tiêu */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-4 mb-5">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-5 py-4 mb-5">
         <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
           Chương trình mục tiêu
         </label>
@@ -144,7 +144,7 @@ export default function ProgressionPage() {
           <select
             value={selectedId}
             onChange={(e) => setSelectedId(e.target.value)}
-            className="border border-gray-200 rounded-lg px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-navy/30 bg-white min-w-[280px]"
+            className="border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-navy/30 bg-white dark:bg-gray-800 text-ink dark:text-gray-100 min-w-[280px]"
           >
             {programs.map((p) => (
               <option key={p.id} value={p.id}>
@@ -185,7 +185,7 @@ export default function ProgressionPage() {
           </div>
 
           {eligible.length === 0 ? (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
+            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-12 text-center">
               <p className="text-gray-400">
                 {alreadyEnrolledCount > 0
                   ? `Tất cả ${alreadyEnrolledCount} học viên đủ điều kiện đã đăng ký chương trình này rồi.`
@@ -193,8 +193,8 @@ export default function ProgressionPage() {
               </p>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="px-5 py-3 border-b border-gray-100 bg-gray-50">
+            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+              <div className="px-5 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
                 <p className="text-xs text-gray-400 uppercase tracking-wide font-medium">
                   Sắp xếp: hoàn thành gần nhất lên đầu — cơ hội upsell cao nhất
                 </p>
@@ -220,7 +220,7 @@ export default function ProgressionPage() {
                   {eligible.map((row) => (
                     <tr
                       key={row.contact_id}
-                      className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors"
+                      className="border-b border-gray-100 dark:border-gray-700 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       <td className="px-4 py-3">
                         <p className="font-semibold text-ink">{row.contact_name}</p>

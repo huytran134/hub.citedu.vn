@@ -242,7 +242,7 @@ export default function ContactForm({ mode, contactId, defaultValues, successRed
           <select
             name="gender"
             defaultValue={defaultValues?.gender ?? ''}
-            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+            className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
           >
             <option value="">Không xác định</option>
             <option value="male">Nam</option>
@@ -277,7 +277,7 @@ export default function ContactForm({ mode, contactId, defaultValues, successRed
           <select
             name="status"
             defaultValue={defaultValues?.status ?? 'lead'}
-            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+            className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
           >
             {STATUS_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>

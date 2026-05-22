@@ -23,7 +23,7 @@ export default function SessionDetailTabs({
         className={`flex-1 text-center text-sm font-semibold rounded-xl min-h-[44px] flex items-center justify-center transition-colors ${
           isAttendance
             ? 'bg-flame text-white shadow-sm'
-            : 'bg-white border border-gray-200 text-gray-500 hover:border-flame/40 hover:text-flame'
+            : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-flame/40 hover:text-flame'
         }`}
       >
         Điểm danh
@@ -33,7 +33,7 @@ export default function SessionDetailTabs({
         className={`flex-1 text-center text-sm font-semibold rounded-xl min-h-[44px] flex items-center justify-center transition-colors ${
           isFeedback
             ? 'bg-flame text-white shadow-sm'
-            : 'bg-white border border-gray-200 text-gray-500 hover:border-flame/40 hover:text-flame'
+            : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-flame/40 hover:text-flame'
         }`}
       >
         Đánh giá

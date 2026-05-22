@@ -66,7 +66,7 @@ function getSessionStatus(scheduledAt: string) {
     date.getMonth() === now.getMonth() &&
     date.getFullYear() === now.getFullYear()
   if (isToday) return { label: 'Hôm nay', color: 'bg-flame/10 text-flame' }
-  if (date < now) return { label: 'Đã qua', color: 'bg-gray-100 text-gray-500' }
+  if (date < now) return { label: 'Đã qua', color: 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400' }
   return { label: 'Sắp tới', color: 'bg-green-100 text-green-700' }
 }
 
@@ -154,12 +154,12 @@ function ScheduleDialog({
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-ink">Tạo lịch học tự động</h2>
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-ink dark:text-gray-100">Tạo lịch học tự động</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-ink transition-colors text-xl leading-none"
+            className="text-gray-400 hover:text-ink dark:hover:text-gray-100 transition-colors text-xl leading-none"
           >
             ×
           </button>
@@ -168,7 +168,7 @@ function ScheduleDialog({
         <div className="px-6 py-5 space-y-5">
           {/* Ngày bắt đầu */}
           <div>
-            <label className="block text-sm font-medium text-ink mb-1.5">Ngày bắt đầu</label>
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Ngày bắt đầu</label>
             <input
               type="text"
               inputMode="numeric"
@@ -176,17 +176,17 @@ function ScheduleDialog({
               value={startDateDisplay}
               onChange={(e) => handleDateInput(e.target.value)}
               maxLength={10}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             />
           </div>
 
           {/* Giờ bắt đầu */}
           <div>
-            <label className="block text-sm font-medium text-ink mb-1.5">Giờ bắt đầu</label>
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Giờ bắt đầu</label>
             <select
               value={startTime}
               onChange={(e) => { setStartTime(e.target.value); setPreview(null) }}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             >
               {Array.from({ length: 28 }, (_, i) => {
                 const totalMinutes = 420 + i * 30 // từ 07:00, bước 30 phút, đến 21:00
@@ -200,7 +200,7 @@ function ScheduleDialog({
 
           {/* Thứ trong tuần */}
           <div>
-            <label className="block text-sm font-medium text-ink mb-2">Học vào các thứ</label>
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-2">Học vào các thứ</label>
             <div className="flex gap-2 flex-wrap">
               {WEEKDAY_LABELS.map(({ value, label }) => (
                 <button
@@ -210,7 +210,7 @@ function ScheduleDialog({
                   className={`w-10 h-10 rounded-lg text-sm font-semibold border transition-colors ${
                     selectedDays.includes(value)
                       ? 'bg-flame text-white border-flame'
-                      : 'bg-white text-gray-600 border-gray-200 hover:border-flame/50'
+                      : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-flame/50'
                   }`}
                 >
                   {label}
@@ -221,7 +221,7 @@ function ScheduleDialog({
 
           {/* Số buổi */}
           <div>
-            <label className="block text-sm font-medium text-ink mb-1.5">
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">
               Tổng số buổi học
             </label>
             <input
@@ -244,19 +244,19 @@ function ScheduleDialog({
               <p className="text-sm font-medium text-ink mb-2">
                 Xem trước — {preview.length} buổi
               </p>
-              <div className="border border-gray-100 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+              <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50 sticky top-0">
+                  <thead className="bg-gray-50 dark:bg-gray-800 sticky top-0">
                     <tr>
-                      <th className="text-left px-3 py-2 text-xs text-gray-500 font-semibold">Buổi</th>
-                      <th className="text-left px-3 py-2 text-xs text-gray-500 font-semibold">Ngày giờ</th>
+                      <th className="text-left px-3 py-2 text-xs text-gray-500 dark:text-gray-400 font-semibold">Buổi</th>
+                      <th className="text-left px-3 py-2 text-xs text-gray-500 dark:text-gray-400 font-semibold">Ngày giờ</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50">
+                  <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                     {preview.map((s) => (
                       <tr key={s.session_number}>
-                        <td className="px-3 py-2 font-medium text-ink">#{s.session_number}</td>
-                        <td className="px-3 py-2 text-gray-600">{formatDateTime(s.scheduled_at)}</td>
+                        <td className="px-3 py-2 font-medium text-ink dark:text-gray-100">#{s.session_number}</td>
+                        <td className="px-3 py-2 text-gray-600 dark:text-gray-300">{formatDateTime(s.scheduled_at)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -269,7 +269,7 @@ function ScheduleDialog({
         <div className="px-6 py-4 border-t border-gray-100 flex gap-3 justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-ink transition-colors"
+            className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-ink dark:hover:text-gray-100 transition-colors"
           >
             Hủy
           </button>
@@ -277,7 +277,7 @@ function ScheduleDialog({
             <button
               onClick={handlePreview}
               disabled={isPreviewing}
-              className="px-5 py-2 bg-gray-100 hover:bg-gray-200 text-ink text-sm font-semibold rounded-lg transition-colors disabled:opacity-50"
+              className="px-5 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-ink dark:text-gray-100 text-sm font-semibold rounded-lg transition-colors disabled:opacity-50"
             >
               {isPreviewing ? 'Đang tính...' : 'Xem trước'}
             </button>
@@ -334,30 +334,30 @@ function AddSingleSessionDialog({
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm">
-        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-ink">Thêm buổi #{nextSessionNumber}</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-ink text-xl leading-none">×</button>
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-sm">
+        <div className="px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-ink dark:text-gray-100">Thêm buổi #{nextSessionNumber}</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-ink dark:hover:text-gray-100 text-xl leading-none">×</button>
         </div>
 
         <div className="px-6 py-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-ink mb-1.5">Ngày & giờ học</label>
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Ngày & giờ học</label>
             <input
               type="datetime-local"
               value={scheduledAt}
               onChange={(e) => setScheduledAt(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-ink mb-1.5">Tên bài học <span className="text-gray-400 font-normal">(tuỳ chọn)</span></label>
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Tên bài học <span className="text-gray-400 font-normal">(tuỳ chọn)</span></label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder={`Buổi ${nextSessionNumber}`}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             />
           </div>
           {error && <p className="text-red-600 text-sm">{error}</p>}
@@ -417,36 +417,36 @@ function EditSessionDialog({
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
-        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-ink">Sửa buổi #{session.session_number}</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-ink text-xl leading-none">×</button>
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md">
+        <div className="px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-ink dark:text-gray-100">Sửa buổi #{session.session_number}</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-ink dark:hover:text-gray-100 text-xl leading-none">×</button>
         </div>
 
         <div className="px-6 py-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-ink mb-1.5">Tên bài học</label>
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Tên bài học</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder={`Buổi ${session.session_number}`}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-ink mb-1.5">Ngày & giờ học</label>
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Ngày & giờ học</label>
             <input
               type="datetime-local"
               value={scheduledAt}
               onChange={(e) => setScheduledAt(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-ink mb-1.5">Thời lượng (phút)</label>
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Thời lượng (phút)</label>
             <input
               type="number"
               min={30}
@@ -458,20 +458,20 @@ function EditSessionDialog({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-ink mb-1.5">Link tài liệu <span className="text-gray-400 font-normal">(Google Drive, YouTube...)</span></label>
+            <label className="block text-sm font-medium text-ink dark:text-gray-200 mb-1.5">Link tài liệu <span className="text-gray-400 font-normal">(Google Drive, YouTube...)</span></label>
             <input
               type="url"
               value={materialUrl}
               onChange={(e) => setMaterialUrl(e.target.value)}
               placeholder="https://..."
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             />
           </div>
 
           {/* Readonly fields — CNL manages these */}
           {(session.session_zoom_link || session.notes) && (
-            <div className="bg-gray-50 rounded-lg p-3 space-y-2">
-              <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">Do CNL quản lý</p>
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 space-y-2">
+              <p className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wide">Do CNL quản lý</p>
               {session.session_zoom_link && (
                 <p className="text-sm text-gray-600">
                   <span className="font-medium">Zoom:</span>{' '}
@@ -571,7 +571,7 @@ export default function AdminSessionsClient({
     <>
       {/* Trạng thái A — Chưa có buổi nào */}
       {hasNoSessions ? (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-10 text-center">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-10 text-center">
           <div className="text-4xl mb-3">📅</div>
           <p className="text-gray-600 font-medium">Lớp này chưa có lịch học</p>
           <p className="text-gray-400 text-sm mt-1 mb-5">Tạo lịch tự động theo thứ trong tuần, hoặc thêm từng buổi thủ công</p>
@@ -602,23 +602,23 @@ export default function AdminSessionsClient({
             </div>
           )}
 
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-100">
+              <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Buổi</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Ngày giờ</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Buổi</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Ngày giờ</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden md:table-cell">Tên bài</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">Tài liệu</th>
-                  <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Trạng thái</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Thao tác</th>
+                  <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Trạng thái</th>
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Thao tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                 {sessions.map((session) => {
                   const status = getSessionStatus(session.scheduled_at)
                   return (
-                    <tr key={session.id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={session.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                       <td className="px-4 py-3">
                         <span className="font-bold text-ink text-sm">#{session.session_number}</span>
                         {session.duration_min !== 120 && (
@@ -691,9 +691,9 @@ export default function AdminSessionsClient({
       {/* Modal xác nhận xóa */}
       {deletingId && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
-            <h3 className="font-bold text-ink text-lg mb-2">Xóa buổi học?</h3>
-            <p className="text-gray-600 text-sm mb-6">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-sm p-6">
+            <h3 className="font-bold text-ink dark:text-gray-100 text-lg mb-2">Xóa buổi học?</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm mb-6">
               Hành động này không thể hoàn tác. Buổi học sẽ bị xóa khỏi lịch.
             </p>
             <div className="flex gap-3 justify-end">

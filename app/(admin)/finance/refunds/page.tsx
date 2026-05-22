@@ -173,7 +173,7 @@ export default function RefundsPage() {
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               subTab === t.key
                 ? 'bg-navy text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
             {t.label}
@@ -187,7 +187,7 @@ export default function RefundsPage() {
       </div>
 
       {loading && (
-        <div className="bg-white rounded-xl p-12 text-center text-gray-400 shadow-sm border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl p-12 text-center text-gray-400 shadow-sm border border-gray-100 dark:border-gray-700">
           Đang tải...
         </div>
       )}
@@ -210,8 +210,8 @@ export default function RefundsPage() {
             return (
               <div
                 key={r.id}
-                className={`bg-white rounded-xl shadow-sm border overflow-hidden transition-all ${
-                  isOverdue ? 'border-amber-300' : 'border-gray-100'
+                className={`bg-white dark:bg-gray-900 rounded-xl shadow-sm border overflow-hidden transition-all ${
+                  isOverdue ? 'border-amber-300' : 'border-gray-100 dark:border-gray-700'
                 }`}
               >
                 {/* Row chính */}
@@ -299,7 +299,7 @@ export default function RefundsPage() {
                           value={refundedAt}
                           onChange={(e) => setRefundedAt(e.target.value)}
                           max={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
-                          className="border border-green-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-300 bg-white"
+                          className="border border-green-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-300 bg-white dark:bg-gray-800 dark:text-gray-100 dark:border-green-700"
                         />
                       </div>
                       <button
@@ -329,7 +329,7 @@ export default function RefundsPage() {
                           placeholder="Nhập lý do từ chối (bắt buộc)"
                           value={rejectionReason}
                           onChange={(e) => setRejectionReason(e.target.value)}
-                          className="w-full border border-red-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 bg-white"
+                          className="w-full border border-red-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 bg-white dark:bg-gray-800 dark:text-gray-100 dark:border-red-700"
                         />
                       </div>
                       <button

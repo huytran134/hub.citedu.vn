@@ -13,7 +13,7 @@ export default function AdminNewContactPage() {
 
       <h1 className="text-xl font-bold text-ink mb-6">Thêm Contact mới</h1>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
         <ContactForm
           mode="create"
           successRedirect="/admin/contacts"

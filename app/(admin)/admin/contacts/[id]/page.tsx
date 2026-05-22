@@ -86,7 +86,7 @@ export default async function AdminContactDetailPage({ params }: { params: { id:
         <div className="lg:col-span-2 space-y-5">
 
           {/* Card thông tin chính */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex items-start justify-between gap-4 mb-5">
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 rounded-full bg-navy flex items-center justify-center flex-shrink-0">
@@ -149,14 +149,14 @@ export default async function AdminContactDetailPage({ params }: { params: { id:
           </div>
 
           {/* Khóa học */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-100">
-              <h2 className="font-semibold text-ink">Khóa học ({enrollmentsWithDebt.length})</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
+              <h2 className="font-semibold text-ink dark:text-gray-100">Khóa học ({enrollmentsWithDebt.length})</h2>
             </div>
             {enrollmentsWithDebt.length === 0 ? (
               <div className="px-5 py-8 text-center text-sm text-gray-400">Chưa đăng ký khóa nào</div>
             ) : (
-              <div className="divide-y divide-gray-50">
+              <div className="divide-y divide-gray-50 dark:divide-gray-700">
                 {enrollmentsWithDebt.map((e) => (
                   <div key={e.id} className="px-5 py-4 flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -189,8 +189,8 @@ export default async function AdminContactDetailPage({ params }: { params: { id:
 
         {/* Cột phải — Ghi chú */}
         <div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-            <h2 className="font-semibold text-ink mb-4">Ghi chú</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+            <h2 className="font-semibold text-ink dark:text-gray-100 mb-4">Ghi chú</h2>
             <ContactNoteTimeline
               contactId={contact.id}
               initialNotes={serializedNotes}

@@ -76,7 +76,7 @@ export default function NewClassForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-5">
+    <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 space-y-5">
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
           {error}
@@ -220,7 +220,7 @@ export default function NewClassForm({
         <button
           type="button"
           onClick={() => router.back()}
-          className="flex-1 border border-gray-200 text-gray-600 px-4 py-3 rounded-lg font-medium text-sm hover:bg-gray-50 transition-colors"
+          className="flex-1 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-4 py-3 rounded-lg font-medium text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           Hủy
         </button>

@@ -310,25 +310,25 @@ export default function ContactImportClient() {
           </div>
 
           {/* Preview table — 10 dòng đầu */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden mb-5">
-            <div className="px-4 py-3 border-b border-gray-50">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden mb-5">
+            <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+              <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                 Xem trước ({Math.min(10, parsedRows.length)} / {parsedRows.length} dòng)
               </p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 border-b border-gray-100">
+                <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                   <tr>
-                    <th className="text-left text-xs text-gray-500 px-4 py-2.5 font-medium">Tên</th>
-                    <th className="text-left text-xs text-gray-500 px-4 py-2.5 font-medium">SĐT</th>
-                    <th className="text-left text-xs text-gray-500 px-4 py-2.5 font-medium">Nguồn</th>
-                    <th className="text-left text-xs text-gray-500 px-4 py-2.5 font-medium">Email</th>
+                    <th className="text-left text-xs text-gray-500 dark:text-gray-400 px-4 py-2.5 font-medium">Tên</th>
+                    <th className="text-left text-xs text-gray-500 dark:text-gray-400 px-4 py-2.5 font-medium">SĐT</th>
+                    <th className="text-left text-xs text-gray-500 dark:text-gray-400 px-4 py-2.5 font-medium">Nguồn</th>
+                    <th className="text-left text-xs text-gray-500 dark:text-gray-400 px-4 py-2.5 font-medium">Email</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                   {parsedRows.slice(0, 10).map((row, i) => (
-                    <tr key={i} className="hover:bg-gray-50">
+                    <tr key={i} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                       <td className="px-4 py-2.5 text-ink font-medium">{row.name}</td>
                       <td className="px-4 py-2.5 text-gray-600">{row.phone}</td>
                       <td className="px-4 py-2.5 text-gray-600">{row.source}</td>
@@ -354,7 +354,7 @@ export default function ContactImportClient() {
           <div className="flex gap-3">
             <button
               onClick={reset}
-              className="border border-gray-200 text-sm font-semibold rounded-lg px-5 py-2.5 text-gray-600 hover:bg-gray-50 transition-colors min-h-[44px]"
+              className="border border-gray-200 dark:border-gray-600 text-sm font-semibold rounded-lg px-5 py-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors min-h-[44px]"
             >
               Huỷ
             </button>
@@ -386,7 +386,7 @@ export default function ContactImportClient() {
               <p className="text-3xl font-bold text-green-600">{result.created}</p>
               <p className="text-sm text-green-700 mt-0.5 font-medium">Contact mới</p>
             </div>
-            <div className="flex-1 min-w-[120px] bg-gray-50 border border-gray-100 rounded-xl p-4 text-center">
+            <div className="flex-1 min-w-[120px] bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-4 text-center">
               <p className="text-3xl font-bold text-gray-500">{result.skipped}</p>
               <p className="text-sm text-gray-500 mt-0.5 font-medium">Trùng · bỏ qua</p>
             </div>
@@ -406,7 +406,7 @@ export default function ContactImportClient() {
 
           {/* Conflict table */}
           {result.conflicts.length > 0 && (
-            <div className="bg-white rounded-xl border border-amber-100 shadow-sm overflow-hidden mb-6">
+            <div className="bg-white dark:bg-gray-900 rounded-xl border border-amber-100 dark:border-amber-900/50 shadow-sm overflow-hidden mb-6">
               <div className="px-5 py-4 border-b border-amber-50 bg-amber-50/50">
                 <p className="text-sm font-semibold text-amber-800">
                   {result.conflicts.length} xung đột cần Admin xem lại
@@ -418,7 +418,7 @@ export default function ContactImportClient() {
 
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50 border-b border-gray-100">
+                  <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                     <tr>
                       <th className="text-left text-xs text-gray-500 px-4 py-3 font-medium">SĐT</th>
                       <th className="text-left text-xs text-gray-500 px-4 py-3 font-medium">Trong file</th>
@@ -427,7 +427,7 @@ export default function ContactImportClient() {
                       <th className="text-left text-xs text-gray-500 px-4 py-3 font-medium"></th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50">
+                  <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                     {result.conflicts.map((c, i) => (
                       <tr key={i} className="hover:bg-amber-50/30 transition-colors">
                         <td className="px-4 py-3 font-mono text-xs text-gray-600">{c.phone}</td>
@@ -503,7 +503,7 @@ export default function ContactImportClient() {
           <div className="flex gap-3">
             <button
               onClick={reset}
-              className="border border-gray-200 text-sm font-semibold rounded-lg px-5 py-2.5 text-gray-600 hover:bg-gray-50 transition-colors min-h-[44px]"
+              className="border border-gray-200 dark:border-gray-600 text-sm font-semibold rounded-lg px-5 py-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors min-h-[44px]"
             >
               Import file khác
             </button>

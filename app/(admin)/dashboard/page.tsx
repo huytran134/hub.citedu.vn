@@ -374,9 +374,9 @@ export default async function DashboardPage() {
 
         {/* KHU VỰC 2 — Lead cần gọi lại hôm nay */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="font-semibold text-ink flex items-center gap-2">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+              <h2 className="font-semibold text-ink dark:text-gray-100 flex items-center gap-2">
                 <span>📞</span>
                 Lead cần liên hệ hôm nay
                 {totalFollowupCount > 0 && (
@@ -398,7 +398,7 @@ export default async function DashboardPage() {
                 <p className="text-sm text-gray-400 mt-1">Không có ai cần gọi hôm nay</p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-50">
+              <div className="divide-y divide-gray-100 dark:divide-gray-700">
                 {followups.map((note) => {
                   const followupDate = note.next_followup_at!
                   const isOverdue = followupDate < startOfToday
@@ -406,7 +406,7 @@ export default async function DashboardPage() {
                     <Link
                       key={note.id}
                       href={`/admin/leads/${note.lead.id}`}
-                      className="flex items-center justify-between px-5 py-3.5 hover:bg-gray-50 transition-colors"
+                      className="flex items-center justify-between px-5 py-3.5 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       <div className="flex-1 min-w-0 pr-3">
                         <p className="font-medium text-ink truncate">{note.lead.contact.name}</p>
@@ -434,9 +434,9 @@ export default async function DashboardPage() {
 
         {/* KHU VỰC 3 — Hoạt động gần đây */}
         <div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-100">
-              <h2 className="font-semibold text-ink">Hoạt động gần đây</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
+              <h2 className="font-semibold text-ink dark:text-gray-100">Hoạt động gần đây</h2>
             </div>
 
             {recentPayments.length === 0 ? (
@@ -446,7 +446,7 @@ export default async function DashboardPage() {
             ) : (
               <div>
                 {recentPayments.map((payment) => (
-                  <div key={payment.id} className="flex items-center justify-between px-5 py-3 border-b border-gray-50 last:border-0">
+                  <div key={payment.id} className="flex items-center justify-between px-5 py-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
                     <div className="flex-1 min-w-0 pr-3">
                       <p className="text-sm font-medium text-ink truncate">
                         {payment.enrollment.contact.name}
@@ -470,7 +470,7 @@ export default async function DashboardPage() {
       {/* PANEL — Bảo lưu sắp hết hạn (ẩn nếu không có ai) */}
       {expiringSoon.length > 0 && (
         <div className="mt-6">
-          <div className="bg-white rounded-xl shadow-sm border border-amber-100 overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-amber-100 dark:border-amber-900/50 overflow-hidden">
             <div className="px-5 py-4 border-b border-amber-100 bg-amber-50 flex items-center gap-2">
               <h2 className="font-semibold text-ink flex items-center gap-2">
                 <span>⚠️</span>
@@ -480,7 +480,7 @@ export default async function DashboardPage() {
                 </span>
               </h2>
             </div>
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-gray-100 dark:divide-gray-700">
               {expiringSoon.map((enrollment) => {
                 const daysLeft = Math.ceil(
                   (enrollment.suspended_until!.getTime() - now.getTime()) / 86400000

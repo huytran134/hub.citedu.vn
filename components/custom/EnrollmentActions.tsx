@@ -191,14 +191,14 @@ export default function EnrollmentActions({
       {/* Dialog A — Bảo lưu */}
       {showSuspend && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
-            <div className="px-6 pt-6 pb-4 border-b border-gray-100">
-              <h3 className="font-bold text-ink text-lg">Bảo lưu học viên</h3>
-              <p className="text-sm text-gray-500 mt-0.5">{contactName}</p>
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md">
+            <div className="px-6 pt-6 pb-4 border-b border-gray-100 dark:border-gray-700">
+              <h3 className="font-bold text-ink dark:text-gray-100 text-lg">Bảo lưu học viên</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{contactName}</p>
             </div>
             <div className="px-6 py-4 space-y-4">
               <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">
+                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide block mb-1">
                   Lý do bảo lưu <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -206,23 +206,23 @@ export default function EnrollmentActions({
                   onChange={(e) => setSuspendReason(e.target.value)}
                   placeholder="VD: Đi du học 6 tháng, công việc bận..."
                   rows={3}
-                  className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-200 resize-none"
+                  className="w-full text-sm border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 placeholder:text-gray-300 dark:placeholder:text-gray-600 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-200 resize-none"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">
+                  <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide block mb-1">
                     Ngày bắt đầu <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="date"
                     value={suspendedAt}
                     onChange={(e) => { setSuspendedAt(e.target.value); setSuspendedUntilInput('') }}
-                    className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-200"
+                    className="w-full text-sm border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-200"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">
+                  <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide block mb-1">
                     Bảo lưu đến <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -250,7 +250,7 @@ export default function EnrollmentActions({
             <div className="px-6 pb-6 flex gap-3 justify-end">
               <button
                 onClick={() => { setShowSuspend(false); resetSuspendForm() }}
-                className="px-4 py-2 text-sm text-gray-600 font-medium rounded-lg hover:bg-gray-100 transition-colors"
+                className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
                 Hủy
               </button>
@@ -269,10 +269,10 @@ export default function EnrollmentActions({
       {/* Dialog — Xác nhận kích hoạt lại */}
       {showReactivate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-sm">
             <div className="px-6 pt-6 pb-4">
-              <h3 className="font-bold text-ink text-lg">Kích hoạt lại</h3>
-              <p className="text-sm text-gray-500 mt-1">
+              <h3 className="font-bold text-ink dark:text-gray-100 text-lg">Kích hoạt lại</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 Cho học viên <strong>{contactName}</strong> quay lại học?
               </p>
               {suspendedUntil && (
@@ -284,7 +284,7 @@ export default function EnrollmentActions({
             <div className="px-6 pb-6 flex gap-3 justify-end">
               <button
                 onClick={() => setShowReactivate(false)}
-                className="px-4 py-2 text-sm text-gray-600 font-medium rounded-lg hover:bg-gray-100 transition-colors"
+                className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
                 Hủy
               </button>
@@ -303,14 +303,14 @@ export default function EnrollmentActions({
       {/* Dialog B — Thôi học */}
       {showDrop && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
-            <div className="px-6 pt-6 pb-4 border-b border-gray-100">
-              <h3 className="font-bold text-ink text-lg">Thôi học</h3>
-              <p className="text-sm text-gray-500 mt-0.5">{contactName}</p>
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md">
+            <div className="px-6 pt-6 pb-4 border-b border-gray-100 dark:border-gray-700">
+              <h3 className="font-bold text-ink dark:text-gray-100 text-lg">Thôi học</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{contactName}</p>
             </div>
             <div className="px-6 py-4 space-y-4">
               <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">
+                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide block mb-1">
                   Lý do thôi học <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -319,7 +319,7 @@ export default function EnrollmentActions({
                   placeholder="VD: Không tiếp tục theo học, chuyển công việc..."
                   rows={3}
                   disabled={dropStep === 'confirm_debt'}
-                  className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 resize-none disabled:bg-gray-50 disabled:text-gray-400"
+                  className="w-full text-sm border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 placeholder:text-gray-300 dark:placeholder:text-gray-600 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-200 resize-none disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:text-gray-400 dark:disabled:text-gray-500"
                 />
               </div>
               {dropStep === 'confirm_debt' && (
@@ -347,7 +347,7 @@ export default function EnrollmentActions({
             <div className="px-6 pb-6 flex gap-3 justify-end">
               <button
                 onClick={() => { setShowDrop(false); resetDropForm() }}
-                className="px-4 py-2 text-sm text-gray-600 font-medium rounded-lg hover:bg-gray-100 transition-colors"
+                className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
                 {dropStep === 'confirm_debt' ? 'Hủy — xử lý công nợ trước' : 'Hủy'}
               </button>

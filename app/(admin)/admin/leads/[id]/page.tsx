@@ -87,7 +87,7 @@ export default async function AdminLeadDetailPage({
         {/* Cột trái — Thông tin Lead */}
         <div className="lg:col-span-1 space-y-4">
           {/* Card thông tin */}
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-5">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <Link
@@ -160,7 +160,7 @@ export default async function AdminLeadDetailPage({
 
         {/* Cột phải — Timeline */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-5">
             <h2 className="text-sm font-semibold text-ink uppercase tracking-wide mb-4">
               Nhật ký tư vấn ({lead.notes.length})
             </h2>

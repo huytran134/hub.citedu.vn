@@ -64,18 +64,18 @@ export default function AddStudentForm({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
       <button
         type="button"
         onClick={() => { setOpen(!open); setError(''); setSuccess('') }}
-        className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
+        className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
       >
         <span className="font-semibold text-ink">+ Thêm học viên vào lớp</span>
         <span className="text-gray-400 text-sm">{open ? '▲ Thu gọn' : '▼ Mở rộng'}</span>
       </button>
 
       {open && (
-        <form onSubmit={handleSubmit} className="px-5 pb-5 border-t border-gray-100 pt-4 space-y-4">
+        <form onSubmit={handleSubmit} className="px-5 pb-5 border-t border-gray-100 dark:border-gray-700 pt-4 space-y-4">
           {sessionsCompleted > 0 && (
             <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-lg px-4 py-3">
               ⚠️ Lớp đã học <strong>{sessionsCompleted} buổi</strong>. Vui lòng điều chỉnh học phí thỏa thuận nếu cần.

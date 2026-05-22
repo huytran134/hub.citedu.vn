@@ -20,10 +20,10 @@ const STATUS_CONFIG: Record<
   AttendanceStatus,
   { label: string; inactive: string; active: string }
 > = {
-  present:     { label: 'Có mặt', inactive: 'border-gray-200 text-gray-500 bg-white',           active: 'border-green-600 bg-green-600 text-white' },
-  late:        { label: 'Trễ',    inactive: 'border-gray-200 text-gray-500 bg-white',           active: 'border-amber-500 bg-amber-500 text-white' },
-  leave_early: { label: 'Về sớm', inactive: 'border-gray-200 text-gray-500 bg-white',           active: 'border-blue-500 bg-blue-500 text-white' },
-  absent:      { label: 'Vắng',   inactive: 'border-gray-200 text-gray-500 bg-white',           active: 'border-red-600 bg-red-600 text-white' },
+  present:     { label: 'Có mặt', inactive: 'border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800',           active: 'border-green-600 bg-green-600 text-white' },
+  late:        { label: 'Trễ',    inactive: 'border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800',           active: 'border-amber-500 bg-amber-500 text-white' },
+  leave_early: { label: 'Về sớm', inactive: 'border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800',           active: 'border-blue-500 bg-blue-500 text-white' },
+  absent:      { label: 'Vắng',   inactive: 'border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800',           active: 'border-red-600 bg-red-600 text-white' },
 }
 
 interface Props {
@@ -112,7 +112,7 @@ export default function AttendanceBoard({ sessionId, initialStudents }: Props) {
           </span>
           <span className="text-xs text-gray-400">{progressPct}%</span>
         </div>
-        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
           <div
             className="h-full bg-flame rounded-full transition-all duration-300"
             style={{ width: `${progressPct}%` }}
@@ -144,7 +144,7 @@ export default function AttendanceBoard({ sessionId, initialStudents }: Props) {
           return (
             <div
               key={student.enrollment_id}
-              className={`bg-white rounded-xl px-4 py-4 shadow-sm border border-gray-100 transition-opacity duration-200 ${isMarked ? 'opacity-75' : ''}`}
+              className={`bg-white dark:bg-gray-800 rounded-xl px-4 py-4 shadow-sm border border-gray-100 dark:border-gray-700 transition-opacity duration-200 ${isMarked ? 'opacity-75' : ''}`}
             >
               {/* Thông tin học viên */}
               <div className="flex items-center gap-3 mb-3">
@@ -154,8 +154,8 @@ export default function AttendanceBoard({ sessionId, initialStudents }: Props) {
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-ink truncate">{student.contact_name}</p>
-                  <p className="text-xs text-gray-400">{student.contact_phone}</p>
+                  <p className="font-semibold text-ink dark:text-gray-100 truncate">{student.contact_name}</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500">{student.contact_phone}</p>
                 </div>
                 {isLoading && (
                   <div className="w-4 h-4 rounded-full border-2 border-gray-200 border-t-flame animate-spin flex-shrink-0" />
@@ -187,7 +187,7 @@ export default function AttendanceBoard({ sessionId, initialStudents }: Props) {
       </div>
 
       {/* Footer sticky — tóm tắt realtime, nằm trên CnlBottomNav (bottom-14 = 56px) */}
-      <div className="fixed bottom-14 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2.5 z-10 shadow-md">
+      <div className="fixed bottom-14 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4 py-2.5 z-10 shadow-md">
         <div className="flex items-center justify-center gap-3 text-xs flex-wrap">
           <span className="text-green-600 font-semibold">Có mặt: {summary.present}</span>
           <span className="text-gray-300">·</span>

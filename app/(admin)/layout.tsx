@@ -37,7 +37,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     dates.length > 0 ? Math.min(...dates.map((d) => d.getTime())) : null
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <AdminNav
         user={user}
         pendingPayments={pendingPayments}

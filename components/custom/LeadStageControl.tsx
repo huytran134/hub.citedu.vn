@@ -99,8 +99,8 @@ export default function LeadStageControl({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 space-y-4">
-      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Điều chỉnh</p>
+    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 space-y-4">
+      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Điều chỉnh</p>
 
       {/* Stage */}
       <div>
@@ -109,7 +109,7 @@ export default function LeadStageControl({
           value={stage}
           onChange={(e) => handleStageChange(e.target.value)}
           disabled={saving}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame disabled:opacity-60"
+          className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame disabled:opacity-60"
         >
           {STAGE_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>{o.label}</option>
@@ -143,7 +143,7 @@ export default function LeadStageControl({
           <div className="flex gap-2">
             <button
               onClick={() => setPendingStage(null)}
-              className="flex-1 border border-gray-200 text-xs rounded-lg py-2 text-gray-600 hover:bg-gray-50"
+              className="flex-1 border border-gray-200 dark:border-gray-600 text-xs rounded-lg py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               Huỷ
             </button>
@@ -165,7 +165,7 @@ export default function LeadStageControl({
           value={assignedTo}
           onChange={(e) => handleAssignChange(e.target.value)}
           disabled={saving}
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame disabled:opacity-60"
+          className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame disabled:opacity-60"
         >
           <option value="">— Chưa phân công —</option>
           {users.map((u) => (

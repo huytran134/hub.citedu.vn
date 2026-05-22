@@ -52,16 +52,16 @@ export default async function ClassesPage() {
       </div>
 
       {classes.length === 0 ? (
-        <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl p-12 text-center shadow-sm border border-gray-100 dark:border-gray-700">
           <p className="text-gray-400 mb-4">Chưa có lớp học nào</p>
           <Link href="/classes/new" className="text-flame font-medium hover:underline">
             Tạo lớp đầu tiên
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-100">
+            <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
               <tr>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Lớp</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Chương trình</th>
@@ -71,9 +71,9 @@ export default async function ClassesPage() {
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
               {classes.map((cls) => (
-                <tr key={cls.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={cls.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                   <td className="px-4 py-3">
                     <p className="font-medium text-ink">{cls.name}</p>
                     {cls.start_date && (

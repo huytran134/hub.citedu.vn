@@ -179,16 +179,16 @@ export default function LeadNoteTimeline({ leadId, initialNotes, currentUserId, 
   return (
     <div>
       {/* Form thêm ghi chú mới */}
-      <div className="mb-6 bg-gray-50 rounded-xl p-4 border border-gray-100">
-        <p className="text-sm font-semibold text-ink mb-3">Ghi nhật ký tư vấn</p>
+      <div className="mb-6 bg-gray-50 dark:bg-gray-800 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
+        <p className="text-sm font-semibold text-ink dark:text-gray-100 mb-3">Ghi nhật ký tư vấn</p>
 
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Hình thức</label>
+            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Hình thức</label>
             <select
               value={contactMethod}
               onChange={(e) => setContactMethod(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             >
               {Object.entries(METHOD_LABEL).map(([v, l]) => (
                 <option key={v} value={v}>{l}</option>
@@ -197,11 +197,11 @@ export default function LeadNoteTimeline({ leadId, initialNotes, currentUserId, 
           </div>
 
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Kết quả</label>
+            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Kết quả</label>
             <select
               value={contactResult}
               onChange={(e) => setContactResult(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             >
               {Object.entries(RESULT_LABEL).map(([v, l]) => (
                 <option key={v} value={v}>{l}</option>
@@ -212,12 +212,12 @@ export default function LeadNoteTimeline({ leadId, initialNotes, currentUserId, 
 
         {showFollowup && (
           <div className="mb-3">
-            <label className="block text-xs text-gray-500 mb-1">Gọi lại lúc (tùy chọn)</label>
+            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Gọi lại lúc (tùy chọn)</label>
             <input
               type="datetime-local"
               value={nextFollowup}
               onChange={(e) => setNextFollowup(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             />
           </div>
         )}
@@ -226,7 +226,7 @@ export default function LeadNoteTimeline({ leadId, initialNotes, currentUserId, 
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={3}
-          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame resize-none"
+          className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-3 text-sm bg-white dark:bg-gray-700 text-ink dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame resize-none"
           placeholder="Nội dung buổi liên hệ..."
           onKeyDown={(e) => {
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) handleAdd()
@@ -265,7 +265,7 @@ export default function LeadNoteTimeline({ leadId, initialNotes, currentUserId, 
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1.5">
-                    <span className="text-sm font-semibold text-ink">{note.created_by.full_name}</span>
+                    <span className="text-sm font-semibold text-ink dark:text-gray-100">{note.created_by.full_name}</span>
                     <span className="text-xs text-gray-400">{formatRelativeTime(note.created_at)}</span>
                     {note.updated_at !== note.created_at && (
                       <span className="text-xs text-gray-300">(đã sửa)</span>
@@ -344,7 +344,7 @@ export default function LeadNoteTimeline({ leadId, initialNotes, currentUserId, 
                           {isOverdue(note.next_followup_at) ? ' — Đã quá hạn!' : ''}
                         </p>
                       )}
-                      <p className="text-sm text-ink whitespace-pre-wrap bg-white rounded-lg px-3 py-2.5 border border-gray-100">
+                      <p className="text-sm text-ink dark:text-gray-200 whitespace-pre-wrap bg-white dark:bg-gray-800 rounded-lg px-3 py-2.5 border border-gray-100 dark:border-gray-700">
                         {note.content}
                       </p>
                       {(canEdit || canDelete) && (

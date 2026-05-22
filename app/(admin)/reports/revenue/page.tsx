@@ -180,7 +180,7 @@ function SummaryCard({
   sub?: string
 }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-4">
+    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-5 py-4">
       <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">{label}</p>
       <p className="text-2xl font-bold text-ink leading-tight">{value}</p>
       {sub && <p className="text-xs text-gray-400 mt-1">{sub}</p>}
@@ -203,7 +203,7 @@ function GroupRow({
     <>
       {/* Dòng tổng hợp — click để mở/đóng */}
       <tr
-        className="hover:bg-gray-50 cursor-pointer select-none border-b border-gray-100 transition-colors"
+        className="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer select-none border-b border-gray-100 dark:border-gray-700 transition-colors"
         onClick={onToggle}
       >
         <td className="px-4 py-3 font-semibold text-ink flex items-center gap-2">
@@ -232,7 +232,7 @@ function GroupRow({
       {/* Dòng chi tiết — accordion */}
       {expanded && (
         <tr>
-          <td colSpan={4} className="p-0 bg-gray-50">
+          <td colSpan={4} className="p-0 bg-gray-50 dark:bg-gray-800">
             <div className="border-t border-gray-100">
               {group.payments.length === 0 ? (
                 <p className="px-8 py-4 text-sm text-gray-400">Không có phiếu nào</p>
@@ -261,7 +261,7 @@ function GroupRow({
                     {group.payments.map((p) => (
                       <tr
                         key={p.id}
-                        className="border-b border-gray-100 last:border-0 hover:bg-white transition-colors"
+                        className="border-b border-gray-100 dark:border-gray-700 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                       >
                         <td className="px-8 py-2.5">
                           <span className="font-medium text-ink">{p.contact_name}</span>
@@ -383,7 +383,7 @@ export default function RevenuePage() {
       </div>
 
       {/* Bộ lọc */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-4 mb-5">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-5 py-4 mb-5">
         {/* Preset buttons */}
         <div className="flex flex-wrap items-center gap-2 mb-4">
           {PRESET_LABELS.map(({ value, label }) => (
@@ -393,7 +393,7 @@ export default function RevenuePage() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 preset === value
                   ? 'bg-navy text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
               {label}
@@ -408,7 +408,7 @@ export default function RevenuePage() {
               type="date"
               value={customFrom}
               onChange={(e) => setCustomFrom(e.target.value)}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy/30"
+              className="border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-navy/30"
             />
             <span className="text-gray-400">→</span>
             <input
@@ -416,7 +416,7 @@ export default function RevenuePage() {
               value={customTo}
               onChange={(e) => setCustomTo(e.target.value)}
               min={customFrom}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy/30"
+              className="border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-navy/30"
             />
           </div>
         )}
@@ -426,7 +426,7 @@ export default function RevenuePage() {
           <select
             value={classId}
             onChange={(e) => setClassId(e.target.value)}
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy/30 bg-white min-w-[200px]"
+            className="border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-navy/30 min-w-[200px]"
           >
             <option value="">Tất cả lớp</option>
             {classes.map((c) => (
@@ -439,7 +439,7 @@ export default function RevenuePage() {
           <select
             value={branch}
             onChange={(e) => setBranch(e.target.value)}
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy/30 bg-white"
+            className="border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-navy/30"
           >
             {BRANCH_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
@@ -460,7 +460,7 @@ export default function RevenuePage() {
       </div>
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center text-gray-400">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-12 text-center text-gray-400 dark:text-gray-500">
           Đang tải...
         </div>
       ) : (
@@ -493,20 +493,20 @@ export default function RevenuePage() {
 
           {/* Bảng nhóm theo tháng/tuần */}
           {groups.length === 0 ? (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
-              <p className="text-gray-400">Không có phiếu thu nào trong khoảng thời gian này</p>
+            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-12 text-center">
+              <p className="text-gray-400 dark:text-gray-500">Không có phiếu thu nào trong khoảng thời gian này</p>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
-                <h2 className="font-semibold text-ink text-sm uppercase tracking-wide">
+            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+              <div className="px-5 py-3 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                <h2 className="font-semibold text-ink dark:text-gray-100 text-sm uppercase tracking-wide">
                   Chi tiết theo {diffDays(rangeFrom, rangeTo) <= 35 ? 'tuần' : 'tháng'}
                 </h2>
                 <p className="text-xs text-gray-400">Click vào dòng để xem chi tiết phiếu</p>
               </div>
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50">
+                  <tr className="border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wide">
                       {diffDays(rangeFrom, rangeTo) <= 35 ? 'Tuần' : 'Tháng'}
                     </th>
@@ -534,7 +534,7 @@ export default function RevenuePage() {
                 {/* Dòng tổng cộng */}
                 {summary && (
                   <tfoot>
-                    <tr className="border-t-2 border-gray-200 bg-gray-50">
+                    <tr className="border-t-2 border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
                       <td className="px-4 py-3 font-bold text-ink">Tổng cộng</td>
                       <td className="px-4 py-3 text-center font-semibold text-ink">
                         {summary.totalPayments}

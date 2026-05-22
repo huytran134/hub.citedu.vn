@@ -8,7 +8,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi">
+    <html lang="vi" suppressHydrationWarning>
+      <head>
+        {/* Chống flash trắng khi reload ở dark mode */}
+        <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem('cithub-theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}` }} />
+      </head>
       <body>{children}</body>
     </html>
   )

@@ -80,7 +80,7 @@ export default async function AdminContactsPage({
         <div className="flex items-center gap-2">
           <Link
             href="/admin/contacts/import"
-            className="border border-gray-200 text-ink font-semibold rounded-lg px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors min-h-[44px] flex items-center"
+            className="border border-gray-200 dark:border-gray-600 text-ink dark:text-gray-200 font-semibold rounded-lg px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors min-h-[44px] flex items-center"
           >
             ↑ Import Sheets
           </Link>
@@ -97,7 +97,7 @@ export default async function AdminContactsPage({
       <ContactSearchBar defaultSearch={search} defaultSource={source} defaultStatus={status} />
 
       {/* Bảng */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
         {contacts.length === 0 ? (
           <div className="px-6 py-16 text-center">
             <p className="text-gray-400 text-sm">
@@ -109,7 +109,7 @@ export default async function AdminContactsPage({
             {/* Desktop table */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-100">
+                <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                   <tr>
                     <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Tên</th>
                     <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">SĐT</th>
@@ -119,9 +119,9 @@ export default async function AdminContactsPage({
                     <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Ngày tạo</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
+                <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
                   {contacts.map((c) => (
-                    <tr key={c.id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={c.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                       <td className="px-5 py-3.5">
                         <Link
                           href={`/admin/contacts/${c.id}`}
@@ -158,12 +158,12 @@ export default async function AdminContactsPage({
             </div>
 
             {/* Mobile cards */}
-            <div className="md:hidden divide-y divide-gray-50">
+            <div className="md:hidden divide-y divide-gray-50 dark:divide-gray-700">
               {contacts.map((c) => (
                 <Link
                   key={c.id}
                   href={`/admin/contacts/${c.id}`}
-                  className="block px-4 py-4 hover:bg-gray-50 transition-colors"
+                  className="block px-4 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>

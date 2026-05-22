@@ -104,7 +104,7 @@ function SummaryCard({
   return (
     <div
       className={`rounded-xl border shadow-sm px-5 py-4 ${
-        highlight ? 'bg-amber-50 border-amber-200' : 'bg-white border-gray-100'
+        highlight ? 'bg-amber-50 border-amber-200' : 'bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-700'
       }`}
     >
       <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">{label}</p>
@@ -155,9 +155,9 @@ function DebtDrawer({
       />
 
       {/* Panel */}
-      <div className="fixed right-0 top-0 h-full w-full max-w-lg bg-white shadow-2xl z-50 flex flex-col overflow-hidden">
+      <div className="fixed right-0 top-0 h-full w-full max-w-lg bg-white dark:bg-gray-900 shadow-2xl z-50 flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-800">
           <div>
             <h2 className="font-bold text-ink text-lg">{row.contact_name}</h2>
             <p className="text-sm text-gray-400">{row.contact_phone} · {row.class_name}</p>
@@ -172,7 +172,7 @@ function DebtDrawer({
         </div>
 
         {/* Tổng quan tài chính */}
-        <div className="px-6 py-4 border-b border-gray-100 bg-white grid grid-cols-3 gap-3">
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-900 grid grid-cols-3 gap-3">
           <div className="text-center">
             <p className="text-xs text-gray-400 mb-1">Học phí thỏa thuận</p>
             <p className="font-bold text-ink">{formatCurrency(row.agreed_price)}</p>
@@ -200,7 +200,7 @@ function DebtDrawer({
               {row.payments.map((p) => (
                 <div
                   key={p.id}
-                  className="border border-gray-100 rounded-lg px-4 py-3 bg-gray-50"
+                  className="border border-gray-100 dark:border-gray-700 rounded-lg px-4 py-3 bg-gray-50 dark:bg-gray-800"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-semibold text-ink">{formatCurrency(p.amount)}</span>
@@ -302,7 +302,7 @@ export default function DebtPage() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center text-gray-400">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-12 text-center text-gray-400">
         Đang tải...
       </div>
     )
@@ -341,7 +341,7 @@ export default function DebtPage() {
       )}
 
       {/* Bộ lọc */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm px-5 py-3 mb-4 flex flex-wrap items-center gap-3">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-5 py-3 mb-4 flex flex-wrap items-center gap-3">
         {/* Filter nợ */}
         <div className="flex gap-1">
           {(
@@ -357,7 +357,7 @@ export default function DebtPage() {
               className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 debtFilter === value
                   ? 'bg-navy text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
               {label}
@@ -369,7 +369,7 @@ export default function DebtPage() {
         <select
           value={classFilter}
           onChange={(e) => setClassFilter(e.target.value)}
-          className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy/30 bg-white min-w-[180px]"
+          className="border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy/30 bg-white dark:bg-gray-800 text-ink dark:text-gray-100 min-w-[180px]"
         >
           <option value="">Tất cả lớp</option>
           {classOptions.map((c) => (
@@ -386,7 +386,7 @@ export default function DebtPage() {
 
       {/* Bảng công nợ */}
       {filteredRows.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-12 text-center">
           <p className="text-gray-400">
             {debtFilter === 'has_debt'
               ? '✓ Không có học viên nào đang nợ học phí'
@@ -394,10 +394,10 @@ export default function DebtPage() {
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50">
+              <tr className="border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wide">
                   Học viên
                 </th>
@@ -422,7 +422,7 @@ export default function DebtPage() {
               {filteredRows.map((row) => (
                 <tr
                   key={row.enrollment_id}
-                  className="border-b border-gray-100 last:border-0 hover:bg-gray-50 cursor-pointer transition-colors"
+                  className="border-b border-gray-100 dark:border-gray-700 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
                   onClick={() => setSelectedRow(row)}
                 >
                   <td className="px-4 py-3">

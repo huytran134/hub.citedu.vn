@@ -116,14 +116,14 @@ function LeadCard({
     <div
       draggable
       onDragStart={() => onDragStart(lead.id)}
-      className="bg-white rounded-xl border border-gray-100 p-3.5 shadow-sm hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing select-none"
+      className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-3.5 shadow-sm hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing select-none"
     >
       {/* Name + source */}
       <div className="flex items-start justify-between gap-2 mb-1.5">
         <Link
           href={`/admin/leads/${lead.id}`}
           onClick={(e) => e.stopPropagation()}
-          className="font-semibold text-sm text-ink hover:text-flame transition-colors leading-tight"
+          className="font-semibold text-sm text-ink dark:text-gray-100 hover:text-flame transition-colors leading-tight"
         >
           {lead.contact.name}
         </Link>
@@ -143,7 +143,7 @@ function LeadCard({
       )}
 
       {/* Footer: assigned + date */}
-      <div className="flex items-center justify-between pt-2 border-t border-gray-50">
+      <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
         <span className="text-[10px] text-gray-400">
           {lead.assigned_to ? lead.assigned_to.full_name : '—'}
         </span>
@@ -194,8 +194,8 @@ function KanbanColumn({
         style={collapsible ? { cursor: 'pointer' } : undefined}
       >
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-sm text-ink">{STAGE_LABEL[stage]}</span>
-          <span className="text-xs bg-gray-100 text-gray-500 rounded-full px-2 py-0.5 font-medium">
+          <span className="font-semibold text-sm text-ink dark:text-gray-100">{STAGE_LABEL[stage]}</span>
+          <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-full px-2 py-0.5 font-medium">
             {leads.length}
           </span>
         </div>
@@ -299,11 +299,11 @@ function AddLeadModal({
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md">
         <div className="p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-bold text-ink">Thêm Lead mới</h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">×</button>
+            <h2 className="text-lg font-bold text-ink dark:text-gray-100">Thêm Lead mới</h2>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-xl leading-none">×</button>
           </div>
 
           {/* Tìm contact theo SĐT */}
@@ -316,7 +316,7 @@ function AddLeadModal({
                 onKeyDown={(e) => e.key === 'Enter' && searchContact()}
                 type="tel"
                 placeholder="0912345678"
-                className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+                className="flex-1 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
               />
               <button
                 onClick={searchContact}
@@ -348,7 +348,7 @@ function AddLeadModal({
             <select
               value={assignedTo}
               onChange={(e) => setAssignedTo(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
             >
               <option value="">— Chưa phân công —</option>
               {users.map((u) => (
@@ -365,7 +365,7 @@ function AddLeadModal({
               onChange={(e) => setInitialNote(e.target.value)}
               rows={2}
               placeholder="Nguồn từ đâu, quan tâm khóa gì..."
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame resize-none"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame resize-none"
             />
           </div>
 
@@ -374,7 +374,7 @@ function AddLeadModal({
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="flex-1 border border-gray-200 text-sm font-semibold rounded-lg py-2.5 text-gray-600 hover:bg-gray-50 transition-colors min-h-[44px]"
+              className="flex-1 border border-gray-200 dark:border-gray-600 text-sm font-semibold rounded-lg py-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors min-h-[44px]"
             >
               Huỷ
             </button>
@@ -406,10 +406,10 @@ function LostReasonModal({
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-sm">
         <div className="p-6">
-          <h2 className="text-lg font-bold text-ink mb-1">Lý do không chốt</h2>
-          <p className="text-sm text-gray-500 mb-4">Chọn lý do để ghi nhận vào hệ thống</p>
+          <h2 className="text-lg font-bold text-ink dark:text-gray-100 mb-1">Lý do không chốt</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Chọn lý do để ghi nhận vào hệ thống</p>
 
           <div className="mb-4">
             <select
@@ -431,7 +431,7 @@ function LostReasonModal({
                 onChange={(e) => setNote(e.target.value)}
                 rows={2}
                 placeholder="Mô tả thêm lý do..."
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame resize-none"
+                className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-ink dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame resize-none"
               />
             </div>
           )}
@@ -462,10 +462,10 @@ function LostReasonModal({
 function WonConfirmModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-sm">
         <div className="p-6">
-          <h2 className="text-lg font-bold text-ink mb-1">Lead đã chốt ✓</h2>
-          <p className="text-sm text-gray-500 mb-5">
+          <h2 className="text-lg font-bold text-ink dark:text-gray-100 mb-1">Lead đã chốt ✓</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">
             Tạo Enrollment để xếp học viên vào lớp học?
           </p>
 
