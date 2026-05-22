@@ -56,18 +56,21 @@ export async function POST(
       )
     }
 
-    // Lấy session_number lớn nhất hiện có để đánh số tiếp nối
-    const lastSession = await prisma.classSession.findFirst({
-      where: { class_id: params.id },
-      orderBy: { session_number: 'desc' },
-    })
-    const startingSessionNumber = (lastSession?.session_number ?? 0) + 1
+    // $queryRaw để bypass soft delete middleware — phải tính MAX kể cả records đã xóa mềm
+    // nếu dùng findFirst thì middleware lọc mất deleted records → startingSessionNumber sai → P2002
+    const maxResult = await prisma.$queryRaw<[{ max_num: number | null }]>`
+      SELECT COALESCE(MAX(session_number), 0) AS max_num
+      FROM class_sessions
+      WHERE class_id = ${params.id}
+    `
+    const startingSessionNumber = (maxResult[0]?.max_num ?? 0) + 1
 
     // Sắp xếp theo ngày giờ rồi gán session_number tiếp nối — bỏ qua số thứ tự client gửi lên
     const sorted = [...sessions].sort(
       (a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime()
     )
 
+    // skipDuplicates: false — để lỗi nổi lên thay vì âm thầm bỏ qua
     const result = await prisma.classSession.createMany({
       data: sorted.map((s, i) => ({
         class_id: params.id,
@@ -76,19 +79,21 @@ export async function POST(
         title: s.title ?? null,
         created_by_id: user!.id,
       })),
-      skipDuplicates: true,
+      skipDuplicates: false,
     })
 
-    // Trả về toàn bộ danh sách buổi để client refresh ngay
-    let created: Awaited<ReturnType<typeof prisma.classSession.findMany>> = []
-    try {
-      created = await prisma.classSession.findMany({
-        where: { class_id: params.id },
-        orderBy: { session_number: 'asc' },
-      })
-    } catch {
-      // Bảng chưa migrate xong — sessions đã tạo, client tự refresh sẽ thấy
+    if (result.count === 0) {
+      return NextResponse.json(
+        { error: 'Không tạo được buổi học nào — có thể số thứ tự bị trùng, vui lòng thử lại' },
+        { status: 409 }
+      )
     }
+
+    // Trả về toàn bộ danh sách buổi để client refresh ngay
+    const created = await prisma.classSession.findMany({
+      where: { class_id: params.id },
+      orderBy: { session_number: 'asc' },
+    })
 
     return NextResponse.json({ sessions: created, created: result.count }, { status: 201 })
 
