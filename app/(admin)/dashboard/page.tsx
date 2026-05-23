@@ -44,17 +44,29 @@ const PAYMENT_STATUS_COLOR: Record<string, string> = {
   rejected: 'bg-red-100 text-red-600',
 }
 
-// 3 mức cảnh báo công nợ — Design System CLAUDE.md §6.2
-// green = tốt (không nợ) · amber = cần chú ý · red = cần xử lý ngay
-function getDebtCardStyle(debt: number): { bg: string; label: string } {
-  if (debt <= 0) {
-    return { bg: 'bg-green-600', label: 'Không có nợ' }
-  }
-  if (debt < 50_000_000) {
-    return { bg: 'bg-amber-500', label: 'Cần thu' }
-  }
-  return { bg: 'bg-red-600', label: 'Cần xử lý' }
-}
+// Style cho 4 metric card — màu riêng biệt theo từng loại số liệu
+const CARD_STYLES = {
+  revenue: {
+    bg: '#0f2341', border: '#1e3a5f',
+    label: '#94b0d6', value: '#7fb8f5', sub: '#4a6a9a',
+  },
+  forecast: {
+    bg: '#0d2218', border: '#1a4228',
+    label: '#94c494', value: '#5dd89c', sub: '#3a7a4a',
+  },
+  debtOk: {
+    bg: '#0d2b1a', border: '#174d2a',
+    value: '#3ecf8e',
+  },
+  debtWarn: {
+    bg: '#2b1a0d', border: '#5a3515',
+    value: '#f5a623',
+  },
+  pending: {
+    bg: '#200d0d', border: '#4d1515',
+    label: '#c49494', valueActive: '#e86c6c', valueMuted: '#4a6080',
+  },
+} as const
 
 export default async function DashboardPage() {
   const now = new Date()
@@ -231,47 +243,51 @@ export default async function DashboardPage() {
         {/* Card 1: Doanh thu tháng này */}
         <Link
           href="/reports/revenue"
-          className="relative bg-navy rounded-xl p-5 shadow-sm text-white hover:opacity-90 transition-opacity flex flex-col"
+          className="relative rounded-xl p-5 shadow-sm hover:opacity-90 transition-opacity flex flex-col"
+          style={{ background: CARD_STYLES.revenue.bg, border: `1px solid ${CARD_STYLES.revenue.border}` }}
         >
-          <span className="absolute top-4 right-4 opacity-60 text-lg leading-none">›</span>
-          <p className="text-sm opacity-80 pr-5">Doanh thu tháng này</p>
-          <p className="text-xl font-bold mt-2 leading-tight break-words">
+          <span className="absolute top-4 right-4 text-lg leading-none" style={{ color: CARD_STYLES.revenue.sub }}>›</span>
+          <p className="text-sm pr-5" style={{ color: CARD_STYLES.revenue.label }}>Doanh thu tháng này</p>
+          <p className="text-xl font-bold mt-2 leading-tight break-words" style={{ color: CARD_STYLES.revenue.value }}>
             {formatCurrency(revenueThisMonth)}
           </p>
-          {/* Delta so với tháng trước */}
           {revenueDelta === null ? (
-            <p className="text-xs opacity-60 mt-1.5">Tháng đầu tiên</p>
+            <p className="text-xs mt-1.5" style={{ color: CARD_STYLES.revenue.sub }}>Tháng đầu tiên</p>
           ) : (
-            <p
-              className={`text-xs font-semibold mt-1.5 ${
-                revenueDelta >= 0 ? 'text-green-300' : 'text-red-300'
-              }`}
-            >
+            <p className="text-xs font-semibold mt-1.5" style={{ color: revenueDelta >= 0 ? '#4ade80' : '#f87171' }}>
               {revenueDelta >= 0 ? '+' : ''}{revenueDelta.toFixed(1)}% so với {prevMonthLabel}
             </p>
           )}
-          <p className="text-xs opacity-50 mt-0.5">{monthLabel}</p>
+          <p className="text-xs mt-0.5" style={{ color: CARD_STYLES.revenue.sub }}>{monthLabel}</p>
         </Link>
 
         {/* Card 2: Dự thu */}
-        <div className={`rounded-xl p-5 shadow-sm text-white ${duThu > 0 ? 'bg-amber-500' : 'bg-gray-400'}`}>
-          <p className="text-sm opacity-80">Dự thu</p>
-          <p className="text-xl font-bold mt-2 leading-tight break-words">
+        <div
+          className="rounded-xl p-5 shadow-sm"
+          style={{ background: CARD_STYLES.forecast.bg, border: `1px solid ${CARD_STYLES.forecast.border}` }}
+        >
+          <p className="text-sm" style={{ color: CARD_STYLES.forecast.label }}>Dự thu</p>
+          <p className="text-xl font-bold mt-2 leading-tight break-words" style={{ color: CARD_STYLES.forecast.value }}>
             {formatCurrency(duThu)}
           </p>
-          <p className="text-xs font-semibold opacity-90 mt-1.5">Còn cần thu</p>
+          <p className="text-xs font-semibold mt-1.5" style={{ color: CARD_STYLES.forecast.sub }}>Còn cần thu</p>
         </div>
 
-        {/* Card 3: Tổng công nợ */}
+        {/* Card 3: Tổng công nợ — xanh lá khi = 0, cam khi > 0 */}
         {(() => {
-          const debtStyle = getDebtCardStyle(totalDebt)
+          const s = totalDebt <= 0 ? CARD_STYLES.debtOk : CARD_STYLES.debtWarn
           return (
-            <div className={`rounded-xl p-5 shadow-sm text-white ${debtStyle.bg}`}>
-              <p className="text-sm opacity-80">Tổng công nợ</p>
-              <p className="text-xl font-bold mt-2 leading-tight break-words">
+            <div
+              className="rounded-xl p-5 shadow-sm"
+              style={{ background: s.bg, border: `1px solid ${s.border}` }}
+            >
+              <p className="text-sm" style={{ color: s.value, opacity: 0.75 }}>Tổng công nợ</p>
+              <p className="text-xl font-bold mt-2 leading-tight break-words" style={{ color: s.value }}>
                 {formatCurrency(totalDebt)}
               </p>
-              <p className="text-xs font-semibold opacity-90 mt-1.5">{debtStyle.label}</p>
+              <p className="text-xs font-semibold mt-1.5" style={{ color: s.value, opacity: 0.7 }}>
+                {totalDebt <= 0 ? '✓ Không có nợ' : formatCurrency(totalDebt) + ' cần thu'}
+              </p>
             </div>
           )
         })()}
@@ -280,43 +296,27 @@ export default async function DashboardPage() {
         {pendingTotal > 0 ? (
           <Link
             href="/finance/payments"
-            className="relative rounded-xl p-5 shadow-sm text-white bg-flame hover:opacity-90 transition-opacity flex flex-col"
+            className="relative rounded-xl p-5 shadow-sm hover:opacity-90 transition-opacity flex flex-col"
+            style={{ background: CARD_STYLES.pending.bg, border: `1px solid ${CARD_STYLES.pending.border}` }}
           >
-            <span className="absolute top-4 right-4 opacity-70 text-lg leading-none">›</span>
-            <p className="text-sm opacity-80 pr-5">Phiếu chờ duyệt</p>
-            <p className="text-4xl font-bold mt-2">{pendingTotal}</p>
-            <div className="flex items-center gap-2 mt-2">
-              <span
-                className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                  pendingPaymentCount > 0 ? 'bg-amber-100 text-amber-700' : 'bg-white/20 text-white'
-                }`}
-              >
-                {pendingPaymentCount} thu
-              </span>
-              <span
-                className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                  pendingRefundCount > 0 ? 'bg-blue-100 text-blue-700' : 'bg-white/20 text-white'
-                }`}
-              >
-                {pendingRefundCount} hoàn
-              </span>
-            </div>
-            <p className="text-xs font-medium opacity-80 mt-2 underline underline-offset-2">
+            <span className="absolute top-4 right-4 text-lg leading-none" style={{ color: CARD_STYLES.pending.label }}>›</span>
+            <p className="text-sm pr-5" style={{ color: CARD_STYLES.pending.label }}>Phiếu chờ duyệt</p>
+            <p className="text-4xl font-bold mt-2" style={{ color: CARD_STYLES.pending.valueActive }}>{pendingTotal}</p>
+            <p className="text-xs mt-2" style={{ color: CARD_STYLES.pending.label }}>
+              {pendingPaymentCount} thu · {pendingRefundCount} hoàn
+            </p>
+            <p className="text-xs font-medium mt-1.5 underline underline-offset-2" style={{ color: CARD_STYLES.pending.label }}>
               Xem {pendingTotal} phiếu chờ →
             </p>
           </Link>
         ) : (
-          <div className="rounded-xl p-5 shadow-sm text-white bg-gray-300">
-            <p className="text-sm opacity-80">Phiếu chờ duyệt</p>
-            <p className="text-4xl font-bold mt-2">0</p>
-            <div className="flex items-center gap-2 mt-2">
-              <span className="text-xs font-semibold bg-white/20 text-white px-2 py-0.5 rounded-full">
-                0 thu
-              </span>
-              <span className="text-xs font-semibold bg-white/20 text-white px-2 py-0.5 rounded-full">
-                0 hoàn
-              </span>
-            </div>
+          <div
+            className="rounded-xl p-5 shadow-sm"
+            style={{ background: CARD_STYLES.pending.bg, border: `1px solid ${CARD_STYLES.pending.border}` }}
+          >
+            <p className="text-sm" style={{ color: CARD_STYLES.pending.label }}>Phiếu chờ duyệt</p>
+            <p className="text-4xl font-bold mt-2" style={{ color: CARD_STYLES.pending.valueMuted }}>0</p>
+            <p className="text-xs mt-2" style={{ color: CARD_STYLES.pending.label }}>0 thu · 0 hoàn</p>
           </div>
         )}
       </div>

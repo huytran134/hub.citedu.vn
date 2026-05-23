@@ -63,14 +63,64 @@
     font-size: 16px;
     line-height: 1.7;
   }
+}
 
-  .dark input::placeholder,
-  .dark textarea::placeholder {
-    color: hsl(215 20% 55%);
-  }
+/* ─── Dark mode form overrides ────────────────────────────────────────────────
+   Viết ngoài @layer để override Tailwind utility classes (bg-white, border-gray-200...)
+   Áp dụng toàn bộ form: Contact, Lead, Class, Payment, Refund
+   ──────────────────────────────────────────────────────────────────────────── */
 
-  .dark select option {
-    background-color: hsl(222.2 47% 13%);
-    color: hsl(210 40% 95%);
-  }
+/* Label — thay text-ink (#111) sang màu đọc được trên nền tối */
+.dark label {
+  color: #94b0d6;
+  font-weight: 500;
+}
+
+/* Dấu * required giữ nguyên màu Flame */
+.dark label .text-flame,
+.dark label span[class*="text-flame"] {
+  color: #E8471A !important;
+}
+
+/* Input / Select / Textarea — nền navy, viền xanh đậm, chữ sáng */
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+.dark select,
+.dark textarea {
+  background-color: #0a1628;
+  border-color: #2d4a7a;
+  color: #c8d8f0;
+}
+
+/* Placeholder — đủ sáng để đọc được nhưng vẫn phân biệt với value */
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #4a6080;
+  opacity: 1;
+}
+
+/* Focus — viền Flame + glow nhẹ */
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="submit"]):not([type="button"]):not([type="reset"]):focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: #E8471A;
+  box-shadow: 0 0 0 3px rgba(232, 71, 26, 0.2);
+  outline: none;
+}
+
+/* Disabled / read-only — tối hơn, muted */
+.dark input:disabled,
+.dark select:disabled,
+.dark textarea:disabled,
+.dark input[readonly],
+.dark textarea[readonly] {
+  background-color: #060e1a;
+  color: #4a6080;
+  border-color: #1a2d4a;
+  cursor: not-allowed;
+}
+
+/* Select option dropdown */
+.dark select option {
+  background-color: #0d1f3c;
+  color: #c8d8f0;
 }
