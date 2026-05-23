@@ -152,6 +152,13 @@ enum MagicLinkContext {
   evaluation // Form đánh giá cuối buổi học
 }
 
+// Trạng thái điểm danh buổi học bù
+enum MakeupAttendance {
+  scheduled // Đã đăng ký lịch bù — chưa diễn ra
+  attended  // Đã học bù — CNL lớp tiếp nhận xác nhận
+  absent    // Vắng buổi bù đã đăng ký
+}
+
 // =============================================================================
 // MODEL: User — Profile người dùng hệ thống
 // Liên kết 1-1 với auth.users của Supabase (qua id = Supabase Auth UID)
@@ -170,33 +177,34 @@ model User {
   updated_at DateTime @updatedAt
 
   // Relations — những gì User này đã tạo/xử lý
-  contacts_created        Contact[]       @relation("ContactCreatedBy")
-  contacts_deleted        Contact[]       @relation("ContactDeletedBy")
-  contact_notes_created   ContactNote[]   @relation("ContactNoteCreatedBy")
-  contact_notes_deleted   ContactNote[]   @relation("ContactNoteDeletedBy")
-  leads_created           Lead[]          @relation("LeadCreatedBy")
-  leads_assigned          Lead[]          @relation("LeadAssignedTo")
-  leads_deleted           Lead[]          @relation("LeadDeletedBy")
-  lead_notes_created      LeadNote[]      @relation("LeadNoteCreatedBy")
-  lead_notes_deleted      LeadNote[]      @relation("LeadNoteDeletedBy")
-  classes_created         Class[]         @relation("ClassCreatedBy")
-  classes_deleted         Class[]         @relation("ClassDeletedBy")
-  classes_as_homeroom     Class[]         @relation("ClassHomeroom")
-  sessions_created        ClassSession[]  @relation("SessionCreatedBy")
-  sessions_deleted        ClassSession[]  @relation("SessionDeletedBy")
-  enrollments_created     Enrollment[]    @relation("EnrollmentCreatedBy")
-  enrollments_deleted     Enrollment[]    @relation("EnrollmentDeletedBy")
-  payments_created        Payment[]       @relation("PaymentCreatedBy")
-  payments_approved       Payment[]       @relation("PaymentApprovedBy")
-  payments_deleted        Payment[]       @relation("PaymentDeletedBy")
-  refunds_created         Refund[]        @relation("RefundCreatedBy")
-  refunds_approved        Refund[]        @relation("RefundApprovedBy")
-  refunds_deleted         Refund[]        @relation("RefundDeletedBy")
-  magic_links_created     MagicLink[]     @relation("MagicLinkCreatedBy")
-  programs_created        Program[]       @relation("ProgramCreatedBy")
-  lessons_created         Lesson[]        @relation("LessonCreatedBy")
-  lessons_deleted         Lesson[]        @relation("LessonDeletedBy")
-  lesson_versions_created LessonVersion[] @relation("LessonVersionCreatedBy")
+  contacts_created           Contact[]       @relation("ContactCreatedBy")
+  contacts_deleted           Contact[]       @relation("ContactDeletedBy")
+  contact_notes_created      ContactNote[]   @relation("ContactNoteCreatedBy")
+  contact_notes_deleted      ContactNote[]   @relation("ContactNoteDeletedBy")
+  leads_created              Lead[]          @relation("LeadCreatedBy")
+  leads_assigned             Lead[]          @relation("LeadAssignedTo")
+  leads_deleted              Lead[]          @relation("LeadDeletedBy")
+  lead_notes_created         LeadNote[]      @relation("LeadNoteCreatedBy")
+  lead_notes_deleted         LeadNote[]      @relation("LeadNoteDeletedBy")
+  classes_created            Class[]         @relation("ClassCreatedBy")
+  classes_deleted            Class[]         @relation("ClassDeletedBy")
+  classes_as_homeroom        Class[]         @relation("ClassHomeroom")
+  sessions_created           ClassSession[]  @relation("SessionCreatedBy")
+  sessions_deleted           ClassSession[]  @relation("SessionDeletedBy")
+  enrollments_created        Enrollment[]    @relation("EnrollmentCreatedBy")
+  enrollments_deleted        Enrollment[]    @relation("EnrollmentDeletedBy")
+  payments_created           Payment[]       @relation("PaymentCreatedBy")
+  payments_approved          Payment[]       @relation("PaymentApprovedBy")
+  payments_deleted           Payment[]       @relation("PaymentDeletedBy")
+  refunds_created            Refund[]        @relation("RefundCreatedBy")
+  refunds_approved           Refund[]        @relation("RefundApprovedBy")
+  refunds_deleted            Refund[]        @relation("RefundDeletedBy")
+  magic_links_created        MagicLink[]     @relation("MagicLinkCreatedBy")
+  programs_created           Program[]       @relation("ProgramCreatedBy")
+  lessons_created            Lesson[]        @relation("LessonCreatedBy")
+  lessons_deleted            Lesson[]        @relation("LessonDeletedBy")
+  lesson_versions_created    LessonVersion[] @relation("LessonVersionCreatedBy")
+  makeup_sessions_registered MakeupSession[] @relation("MakeupRegisteredBy")
 
   @@map("users")
 }
@@ -531,9 +539,11 @@ model ClassSession {
   created_by_id String
   created_by    User     @relation("SessionCreatedBy", fields: [created_by_id], references: [id])
 
-  attendances Attendance[]
-  feedbacks   Feedback[]
-  magic_links MagicLink[]
+  attendances              Attendance[]
+  feedbacks                Feedback[]
+  magic_links              MagicLink[]
+  makeup_sessions_here     MakeupSession[] @relation("MakeupAt")
+  makeup_sessions_original MakeupSession[] @relation("OriginalSession")
 
   @@unique([class_id, session_number])
   @@index([class_id])
@@ -581,9 +591,10 @@ model Enrollment {
   created_by_id String
   created_by    User     @relation("EnrollmentCreatedBy", fields: [created_by_id], references: [id])
 
-  payments    Payment[]
-  refunds     Refund[]
-  attendances Attendance[]
+  payments        Payment[]
+  refunds         Refund[]
+  attendances     Attendance[]
+  makeup_sessions MakeupSession[]
 
   @@unique([contact_id, class_id])
   @@index([contact_id])
@@ -751,4 +762,34 @@ model MagicLink {
   @@index([class_id])
   @@index([expires_at])
   @@map("magic_links")
+}
+
+// =============================================================================
+// MODEL: MakeupSession — Đăng ký học bù buổi vắng ở lớp khác
+// Không ảnh hưởng Attendance lớp gốc — ghi nhận riêng
+// agreed_price KHÔNG thay đổi — học bù miễn phí
+// =============================================================================
+model MakeupSession {
+  id                  String           @id @default(cuid())
+  enrollment_id       String           // Enrollment lớp gốc (lớp A) của học viên
+  makeup_session_id   String           // ClassSession sẽ học bù (lớp B)
+  original_session_id String           // ClassSession cần bù (lớp A — buổi đã vắng)
+  registered_by_id    String           // CNL hoặc Admin đăng ký
+  attendance_status   MakeupAttendance @default(scheduled)
+  note                String?
+
+  deleted_at DateTime?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  enrollment      Enrollment   @relation(fields: [enrollment_id], references: [id])
+  makeupSession   ClassSession @relation("MakeupAt", fields: [makeup_session_id], references: [id])
+  originalSession ClassSession @relation("OriginalSession", fields: [original_session_id], references: [id])
+  registeredBy    User         @relation("MakeupRegisteredBy", fields: [registered_by_id], references: [id])
+
+  @@index([enrollment_id])
+  @@index([makeup_session_id])
+  @@index([original_session_id])
+  @@index([deleted_at])
+  @@map("makeup_sessions")
 }

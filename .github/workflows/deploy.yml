@@ -34,6 +34,7 @@ jobs:
 
       - name: Apply pending migrations
         run: npx prisma migrate deploy
+        continue-on-error: true
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}

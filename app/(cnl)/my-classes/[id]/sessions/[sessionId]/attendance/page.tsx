@@ -8,7 +8,11 @@ import AttendanceBoard from '@/components/custom/AttendanceBoard'
 import SessionZoomLinkInput from '@/components/custom/SessionZoomLinkInput'
 import SessionNotesInput from '@/components/custom/SessionNotesInput'
 import SessionDetailTabs from '@/components/custom/SessionDetailTabs'
+import MakeupStudentSection from '@/components/custom/MakeupStudentSection'
+import AbsentWithMakeupList from '@/components/custom/AbsentWithMakeupList'
 import type { StudentAttendance } from '@/components/custom/AttendanceBoard'
+import type { MakeupStudent } from '@/components/custom/MakeupStudentSection'
+import type { AbsentStudent } from '@/components/custom/AbsentWithMakeupList'
 
 export default async function AttendancePage({
   params,
@@ -37,7 +41,6 @@ export default async function AttendancePage({
   }
 
   // Lấy enrollment đang học của lớp (active, waitlist, suspended)
-  // Middleware tự thêm deleted_at: null cho top-level Enrollment query
   const enrollments = await prisma.enrollment.findMany({
     where: {
       class_id: params.id,
@@ -62,6 +65,64 @@ export default async function AttendancePage({
     contact_name: e.contact.name,
     contact_phone: e.contact.phone,
     status: (attendanceMap[e.id] as StudentAttendance['status']) ?? null,
+  }))
+
+  // Danh sách học viên vắng (đã điểm danh = absent) — để hiện nút "Đăng ký bù"
+  const absentEnrollmentIds = attendances
+    .filter((a) => a.status === 'absent')
+    .map((a) => a.enrollment_id)
+
+  // Kiểm tra đã đăng ký bù chưa cho từng học viên vắng
+  const existingMakeups = absentEnrollmentIds.length > 0
+    ? await prisma.makeupSession.findMany({
+        where: {
+          enrollment_id: { in: absentEnrollmentIds },
+          original_session_id: params.sessionId,
+          deleted_at: null,
+        },
+        select: { enrollment_id: true, id: true },
+      })
+    : []
+
+  const makeupByEnrollment = Object.fromEntries(
+    existingMakeups.map((m) => [m.enrollment_id, m.id]),
+  )
+
+  const absentStudents: AbsentStudent[] = absentEnrollmentIds.map((eid) => {
+    const enrollment = enrollments.find((e) => e.id === eid)
+    return {
+      enrollment_id: eid,
+      contact_name: enrollment?.contact.name ?? 'Học viên',
+      has_makeup: eid in makeupByEnrollment,
+      makeup_id: makeupByEnrollment[eid],
+    }
+  })
+
+  // Học viên học bù tại buổi này (lớp B nhìn thấy)
+  const makeupStudentsRaw = await prisma.makeupSession.findMany({
+    where: {
+      makeup_session_id: params.sessionId,
+      deleted_at: null,
+    },
+    include: {
+      enrollment: {
+        include: {
+          contact: { select: { name: true } },
+          class: { select: { name: true } },
+        },
+      },
+      originalSession: {
+        select: { session_number: true },
+      },
+    },
+  })
+
+  const makeupStudents: MakeupStudent[] = makeupStudentsRaw.map((m) => ({
+    makeup_id: m.id,
+    contact_name: m.enrollment.contact.name,
+    original_class_name: m.enrollment.class.name,
+    original_session_number: m.originalSession.session_number,
+    attendance_status: m.attendance_status as MakeupStudent['attendance_status'],
   }))
 
   return (
@@ -134,6 +195,19 @@ export default async function AttendancePage({
         </div>
       ) : (
         <AttendanceBoard sessionId={params.sessionId} initialStudents={students} />
+      )}
+
+      {/* Section học viên học bù tại buổi này (lớp tiếp nhận) */}
+      {makeupStudents.length > 0 && (
+        <MakeupStudentSection students={makeupStudents} />
+      )}
+
+      {/* Danh sách vắng + nút đăng ký bù (hiện sau khi đã điểm danh) */}
+      {absentStudents.length > 0 && (
+        <AbsentWithMakeupList
+          sessionId={params.sessionId}
+          students={absentStudents}
+        />
       )}
 
       {/* Ghi chú buổi học — CNL nhập sau buổi, có thể cuộn xuống để tìm */}
