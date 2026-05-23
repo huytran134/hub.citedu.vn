@@ -599,7 +599,7 @@ export default function LeadKanbanBoard({
     <div>
       {/* Toolbar */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Pipeline Leads</h1>
+        <h1 className="text-2xl font-bold text-[#E8471A] uppercase tracking-wide">Pipeline Leads</h1>
         <button
           onClick={() => setShowAddModal(true)}
           className="bg-flame text-white font-semibold rounded-lg px-5 py-2.5 text-sm hover:bg-flame/90 transition-colors min-h-[44px] flex items-center"

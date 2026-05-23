@@ -182,7 +182,7 @@ function SummaryCard({
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm px-5 py-4">
       <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">{label}</p>
-      <p className="text-2xl font-bold text-ink leading-tight">{value}</p>
+      <p className="text-2xl font-bold text-ink dark:text-gray-100 leading-tight">{value}</p>
       {sub && <p className="text-xs text-gray-400 mt-1">{sub}</p>}
     </div>
   )

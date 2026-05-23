@@ -108,7 +108,7 @@ function SummaryCard({
       }`}
     >
       <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-1">{label}</p>
-      <p className={`text-2xl font-bold leading-tight ${highlight ? 'text-amber-700' : 'text-ink'}`}>
+      <p className={`text-2xl font-bold leading-tight ${highlight ? 'text-amber-700' : 'text-ink dark:text-gray-100'}`}>
         {value}
       </p>
       {sub && <p className="text-xs text-gray-400 mt-1">{sub}</p>}

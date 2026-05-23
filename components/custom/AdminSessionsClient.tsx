@@ -623,18 +623,18 @@ export default function AdminSessionsClient({
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                {sessions.map((session) => {
+                {sessions.map((session, index) => {
                   const status = getSessionStatus(session.scheduled_at)
                   return (
                     <tr key={session.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                       <td className="px-4 py-3">
-                        <span className="font-bold text-ink text-sm">#{session.session_number}</span>
+                        <span className="font-bold text-ink dark:text-gray-100 text-sm">#{index + 1}</span>
                         {session.duration_min !== 120 && (
                           <span className="text-xs text-muted-foreground/70 ml-1.5">{session.duration_min}p</span>
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        <p className="text-sm text-ink">{formatDate(session.scheduled_at)}</p>
+                        <p className="text-sm text-ink dark:text-gray-100">{formatDate(session.scheduled_at)}</p>
                         <p className="text-xs text-muted-foreground/70">
                           {new Date(session.scheduled_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                           {session.duration_min && ` · ${session.duration_min} phút`}
