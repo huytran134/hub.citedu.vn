@@ -3,6 +3,8 @@ import { requireAdmin } from '@/lib/auth-helpers'
 import { prisma } from '@/lib/prisma'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
+const GEMINI_MODEL = 'gemini-1.5-flash'
+
 const BRANCH_LABEL: Record<string, string> = {
   tu_duy: 'Tư duy (phát triển tư duy thành đạt và khởi nghiệp)',
   coaching: 'Coaching 1-1 (Mật Thất)',
@@ -50,7 +52,7 @@ Viết bằng tiếng Việt. Nội dung phải thực tế, ứng dụng đư�
 
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
+    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
 
     const result = await model.generateContent(prompt)
     const rawText = result.response.text()
@@ -73,10 +75,14 @@ Viết bằng tiếng Việt. Nội dung phải thực tế, ứng dụng đư�
 
     const message = err instanceof Error ? err.message : ''
     const isQuotaError = message.includes('quota') || message.includes('429') || message.includes('RESOURCE_EXHAUSTED')
+    const isKeyError = message.includes('API_KEY_INVALID') || message.includes('401') || message.includes('403') || message.includes('PERMISSION_DENIED')
 
-    return NextResponse.json(
-      { error: isQuotaError ? 'AI đang quá tải, thử lại sau ít phút' : 'Không thể kết nối AI, thử lại sau' },
-      { status: isQuotaError ? 429 : 502 }
-    )
+    if (isKeyError) {
+      return NextResponse.json({ error: 'Cấu hình AI có vấn đề, liên hệ Admin' }, { status: 503 })
+    }
+    if (isQuotaError) {
+      return NextResponse.json({ error: 'Hệ thống AI đang bận, vui lòng thử lại sau 1 phút' }, { status: 429 })
+    }
+    return NextResponse.json({ error: 'Không thể kết nối AI, thử lại sau' }, { status: 502 })
   }
 }
