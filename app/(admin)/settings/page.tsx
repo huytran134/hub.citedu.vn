@@ -15,8 +15,8 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      <div className="text-sm text-gray-400 dark:text-gray-500 mb-4">Cài đặt</div>
-      <h1 className="text-2xl font-bold text-ink dark:text-gray-100 mb-6">Cài đặt hệ thống</h1>
+      <div className="text-sm text-gray-400 mb-4">Cài đặt</div>
+      <h1 className="text-2xl font-bold text-[#E8471A] mb-6">Cài đặt hệ thống</h1>
 
       <div className="space-y-6">
         {/* Card 1: Giao diện */}

@@ -11,7 +11,7 @@ export default function AdminNewContactPage() {
         <span className="text-ink">Thêm mới</span>
       </div>
 
-      <h1 className="text-xl font-bold text-ink mb-6">Thêm Contact mới</h1>
+      <h1 className="text-xl font-bold text-[#E8471A] mb-6">Thêm Contact mới</h1>
 
       <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
         <ContactForm

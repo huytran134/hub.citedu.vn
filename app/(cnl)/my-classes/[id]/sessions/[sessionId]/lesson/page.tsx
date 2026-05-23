@@ -78,7 +78,7 @@ export default async function LessonViewPage({
         </Link>
         <div className="min-w-0">
           <p className="text-xs text-muted-foreground/70 truncate">{cls.name}</p>
-          <h1 className="font-bold text-ink text-base leading-snug">
+          <h1 className="font-bold text-[#E8471A] text-base leading-snug">
             Buổi {session.session_number} — {lesson.title}
           </h1>
         </div>
@@ -206,7 +206,7 @@ function LessonEmptyShell({
         </Link>
         <div className="min-w-0">
           <p className="text-xs text-muted-foreground/70 truncate">{className}</p>
-          <h1 className="font-bold text-ink text-base">Buổi {sessionNumber} — {sessionLabel}</h1>
+          <h1 className="font-bold text-[#E8471A] text-base">Buổi {sessionNumber} — {sessionLabel}</h1>
         </div>
       </div>
 

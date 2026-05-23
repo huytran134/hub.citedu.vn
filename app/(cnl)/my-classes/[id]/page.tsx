@@ -78,8 +78,8 @@ export default async function CnlClassDetailPage({ params }: { params: { id: str
 
       {/* Header */}
       <div className="mb-5">
-        <h1 className="text-xl font-bold text-ink">{cls.name}</h1>
-        <p className="text-gray-500 text-sm mt-0.5">
+        <h1 className="text-xl font-bold text-[#E8471A]">{cls.name}</h1>
+        <p className="text-gray-400 text-sm mt-0.5">
           {cls.program.name}
           {cls.start_date && ` · Khai giảng: ${new Date(cls.start_date).toLocaleDateString('vi-VN')}`}
         </p>

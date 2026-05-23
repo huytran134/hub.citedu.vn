@@ -31,8 +31,8 @@ export default async function LessonsProgramListPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Bài giảng</h1>
-          <p className="text-gray-500 text-sm mt-1">Chọn chương trình để quản lý nội dung bài giảng</p>
+          <h1 className="text-2xl font-bold text-[#E8471A] uppercase tracking-wide">Bài giảng</h1>
+          <p className="text-gray-400 text-sm mt-1">Chọn chương trình để quản lý nội dung bài giảng</p>
         </div>
         <CreateProgramDialog />
       </div>

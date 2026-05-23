@@ -124,8 +124,8 @@ export default async function FeedbackResultsPage({
 
       {/* Header */}
       <div className="mb-5">
-        <h1 className="text-xl font-bold text-ink">{sessionLabel}</h1>
-        <p className="text-muted-foreground text-sm mt-0.5">{cls.name}</p>
+        <h1 className="text-xl font-bold text-[#E8471A]">{sessionLabel}</h1>
+        <p className="text-gray-400 text-sm mt-0.5">{cls.name}</p>
       </div>
 
       {/* Tab nav */}

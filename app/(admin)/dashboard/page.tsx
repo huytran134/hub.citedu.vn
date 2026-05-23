@@ -228,8 +228,8 @@ export default async function DashboardPage() {
   return (
     <div>
       {/* Header */}
-      <h1 className="text-2xl font-bold text-ink mb-1 uppercase tracking-wide">Tổng quan</h1>
-      <p className="text-gray-500 text-sm mb-6">
+      <h1 className="text-2xl font-bold text-[#E8471A] mb-1 uppercase tracking-wide">Tổng quan</h1>
+      <p className="text-gray-400 text-sm mb-6">
         {now.toLocaleDateString('vi-VN', {
           weekday: 'long',
           year: 'numeric',
@@ -402,6 +402,9 @@ export default async function DashboardPage() {
                 {followups.map((note) => {
                   const followupDate = note.next_followup_at!
                   const isOverdue = followupDate < startOfToday
+                  const overdueDays = isOverdue
+                    ? Math.ceil((startOfToday.getTime() - followupDate.getTime()) / 86400000)
+                    : 0
                   return (
                     <Link
                       key={note.id}
@@ -409,21 +412,21 @@ export default async function DashboardPage() {
                       className="flex items-center justify-between px-5 py-3.5 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       <div className="flex-1 min-w-0 pr-3">
-                        <p className="font-medium text-ink truncate">{note.lead.contact.name}</p>
-                        <p className="text-sm text-gray-500 truncate">
+                        <p className="font-medium text-ink dark:text-gray-100 truncate">{note.lead.contact.name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                           {note.lead.contact.phone}
                           {note.lead.assigned_to && ` · TV: ${note.lead.assigned_to.full_name}`}
                         </p>
                       </div>
-                      <span
-                        className={`text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 whitespace-nowrap ${
-                          isOverdue
-                            ? 'bg-red-100 text-red-600'
-                            : 'bg-amber-100 text-amber-600'
-                        }`}
-                      >
-                        {formatRelativeDate(followupDate)}
-                      </span>
+                      {isOverdue ? (
+                        <span className="text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 whitespace-nowrap bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400">
+                          Quá {overdueDays} ngày
+                        </span>
+                      ) : (
+                        <span className="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 whitespace-nowrap bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
+                          Hôm nay
+                        </span>
+                      )}
                     </Link>
                   )
                 })}

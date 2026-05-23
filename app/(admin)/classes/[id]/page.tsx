@@ -88,7 +88,7 @@ export default async function ClassDetailPage({ params }: { params: { id: string
       <div className="flex items-start justify-between mb-6">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-ink">{cls.name}</h1>
+            <h1 className="text-2xl font-bold text-[#E8471A]">{cls.name}</h1>
             <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${STATUS_COLOR[cls.status]}`}>
               {STATUS_LABEL[cls.status]}
             </span>

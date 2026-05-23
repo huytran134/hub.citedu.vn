@@ -312,8 +312,8 @@ export default function DebtPage() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Báo cáo Công nợ</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-[#E8471A] uppercase tracking-wide">Báo cáo Công nợ</h1>
+        <p className="text-gray-400 text-sm mt-1">
           Học viên đang active hoặc bảo lưu · Tính theo học phí thỏa thuận
         </p>
       </div>

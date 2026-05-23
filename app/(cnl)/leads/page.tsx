@@ -101,8 +101,8 @@ export default async function CnlLeadsPage({
     <div className="pb-20">
       {/* Header */}
       <div className="px-4 pt-4 pb-2">
-        <h1 className="text-lg font-bold text-ink uppercase tracking-wide">Leads</h1>
-        <p className="text-sm text-gray-500">{total} leads</p>
+        <h1 className="text-lg font-bold text-[#E8471A] uppercase tracking-wide">Leads</h1>
+        <p className="text-sm text-gray-400">{total} leads</p>
       </div>
 
       {/* Search */}

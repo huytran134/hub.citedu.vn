@@ -34,8 +34,8 @@ export default async function MyClassesPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-ink mb-1">Lớp của tôi</h1>
-      <p className="text-gray-500 text-sm mb-5">{classes.length} lớp được phân công</p>
+      <h1 className="text-xl font-bold text-[#E8471A] mb-1">Lớp của tôi</h1>
+      <p className="text-gray-400 text-sm mb-5">{classes.length} lớp được phân công</p>
 
       {classes.length === 0 ? (
         <div className="bg-white rounded-xl p-10 text-center shadow-sm border border-gray-100">

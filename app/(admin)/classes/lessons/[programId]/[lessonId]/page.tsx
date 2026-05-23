@@ -45,8 +45,8 @@ export default async function LessonEditorPage({
               {lesson.session_number}
             </span>
             <div>
-              <h1 className="text-xl font-bold text-ink">{lesson.title}</h1>
-              <p className="text-sm text-gray-500">{lesson.program.name}</p>
+              <h1 className="text-xl font-bold text-[#E8471A]">{lesson.title}</h1>
+              <p className="text-sm text-gray-400">{lesson.program.name}</p>
             </div>
           </div>
         </div>

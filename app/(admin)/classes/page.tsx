@@ -40,8 +40,8 @@ export default async function ClassesPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Lớp học</h1>
-          <p className="text-muted-foreground text-sm mt-1">{classes.length} lớp học</p>
+          <h1 className="text-2xl font-bold text-[#E8471A] uppercase tracking-wide">Lớp học</h1>
+          <p className="text-gray-400 text-sm mt-1">{classes.length} lớp học</p>
         </div>
         <Link
           href="/classes/new"

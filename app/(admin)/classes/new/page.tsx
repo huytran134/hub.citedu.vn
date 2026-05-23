@@ -18,7 +18,7 @@ export default async function NewClassPage() {
   return (
     <div className="max-w-2xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Tạo lớp mới</h1>
+        <h1 className="text-2xl font-bold text-[#E8471A] uppercase tracking-wide">Tạo lớp mới</h1>
       </div>
       <NewClassForm
         programs={programs.map((p) => ({ ...p, price: Number(p.price) }))}

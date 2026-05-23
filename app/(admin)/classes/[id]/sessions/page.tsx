@@ -58,8 +58,8 @@ export default async function AdminClassSessionsPage({ params }: { params: { id:
 
       {/* Header */}
       <div className="mb-5">
-        <h1 className="text-2xl font-bold text-ink">{cls.name}</h1>
-        <p className="text-gray-500 text-sm mt-0.5">
+        <h1 className="text-2xl font-bold text-[#E8471A]">{cls.name}</h1>
+        <p className="text-gray-400 text-sm mt-0.5">
           {cls.program.name}
           {cls.homeroom && ` · CNL: ${cls.homeroom.full_name}`}
         </p>

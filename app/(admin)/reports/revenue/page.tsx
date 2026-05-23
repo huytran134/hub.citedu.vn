@@ -376,8 +376,8 @@ export default function RevenuePage() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Báo cáo Doanh thu</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-[#E8471A] uppercase tracking-wide">Báo cáo Doanh thu</h1>
+        <p className="text-gray-400 text-sm mt-1">
           Tổng hợp phiếu thu đã duyệt · Tính theo ngày nhận tiền thực tế
         </p>
       </div>

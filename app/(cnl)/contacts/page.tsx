@@ -62,8 +62,8 @@ export default async function CnlContactsPage({
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-ink mb-1">Danh sách Contact</h1>
-      <p className="text-gray-500 text-sm mb-5">
+      <h1 className="text-xl font-bold text-[#E8471A] mb-1">Danh sách Contact</h1>
+      <p className="text-gray-400 text-sm mb-5">
         {total.toLocaleString('vi-VN')} người trong hệ thống · Chỉ đọc
       </p>
 

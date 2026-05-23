@@ -80,8 +80,8 @@ export default async function ClassSessionsPage({ params }: { params: { id: stri
 
       {/* Header */}
       <div className="mb-5">
-        <h1 className="text-xl font-bold text-ink">{cls.name}</h1>
-        <p className="text-gray-500 text-sm mt-0.5">{cls.program.name}</p>
+        <h1 className="text-xl font-bold text-[#E8471A]">{cls.name}</h1>
+        <p className="text-gray-400 text-sm mt-0.5">{cls.program.name}</p>
       </div>
 
       {/* Tab navigation */}

@@ -61,7 +61,7 @@ export default async function TodayPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-ink mb-0.5">Hôm nay</h1>
+      <h1 className="text-xl font-bold text-[#E8471A] mb-0.5">Hôm nay</h1>
       <p className="text-gray-400 text-sm mb-5">{todayLabel}</p>
 
       {/* Buổi học hôm nay */}

@@ -158,7 +158,7 @@ export default function PaymentsPage() {
   return (
     <div>
       <div className="mb-5">
-        <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Phiếu thu</h1>
+        <h1 className="text-2xl font-bold text-[#E8471A] uppercase tracking-wide">Phiếu thu</h1>
       </div>
 
       {/* Sub-tabs */}

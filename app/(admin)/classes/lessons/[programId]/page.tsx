@@ -38,8 +38,8 @@ export default async function ProgramLessonsPage({ params }: { params: { program
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-ink">{program.name}</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-[#E8471A]">{program.name}</h1>
+          <p className="text-gray-400 text-sm mt-1">
             {program.lessons.length} / {totalSessions || '?'} buổi đã nhập nội dung
           </p>
         </div>

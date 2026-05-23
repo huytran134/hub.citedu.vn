@@ -95,7 +95,7 @@ export default async function AdminContactDetailPage({ params }: { params: { id:
                   </span>
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-ink">{contact.name}</h1>
+                  <h1 className="text-xl font-bold text-[#E8471A]">{contact.name}</h1>
                   <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_COLOR[contact.status]}`}>
                     {STATUS_LABEL[contact.status]}
                   </span>

@@ -84,7 +84,7 @@ export default async function AttendancePage({
 
       {/* Header buổi học */}
       <div className="mb-5">
-        <h1 className="text-xl font-bold text-ink">
+        <h1 className="text-xl font-bold text-[#E8471A]">
           Buổi #{session.session_number}
           {session.title ? ` — ${session.title}` : ''}
         </h1>

@@ -183,7 +183,7 @@ function NewPaymentForm({ classId }: { classId: string }) {
 export default function NewPaymentPage({ params }: { params: { id: string } }) {
   return (
     <div className="max-w-md mx-auto">
-      <h1 className="text-xl font-bold text-ink mb-5">Tạo phiếu thu</h1>
+      <h1 className="text-xl font-bold text-[#E8471A] mb-5">Tạo phiếu thu</h1>
       <Suspense fallback={<div className="text-gray-400 text-sm">Đang tải...</div>}>
         <NewPaymentForm classId={params.id} />
       </Suspense>

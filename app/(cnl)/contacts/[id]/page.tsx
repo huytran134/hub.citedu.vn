@@ -83,7 +83,7 @@ export default async function CnlContactDetailPage({ params }: { params: { id: s
             <span className="text-white text-lg font-bold">{contact.name.charAt(0).toUpperCase()}</span>
           </div>
           <div>
-            <h1 className="text-lg font-bold text-ink">{contact.name}</h1>
+            <h1 className="text-lg font-bold text-[#E8471A]">{contact.name}</h1>
             <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_COLOR[contact.status]}`}>
               {STATUS_LABEL[contact.status]}
             </span>

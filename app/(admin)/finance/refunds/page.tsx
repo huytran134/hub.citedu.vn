@@ -161,7 +161,7 @@ export default function RefundsPage() {
   return (
     <div>
       <div className="mb-5">
-        <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">Lệnh hoàn tiền</h1>
+        <h1 className="text-2xl font-bold text-[#E8471A] uppercase tracking-wide">Lệnh hoàn tiền</h1>
       </div>
 
       {/* Sub-tabs */}

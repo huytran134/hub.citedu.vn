@@ -14,10 +14,10 @@ export default function ContactImportPage() {
       </div>
 
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-ink uppercase tracking-wide">
+        <h1 className="text-2xl font-bold text-[#E8471A] uppercase tracking-wide">
           Import Contacts
         </h1>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-400 mt-1">
           Upload file CSV export từ Google Sheets — hệ thống tự phát hiện trùng lặp và xung đột
         </p>
       </div>

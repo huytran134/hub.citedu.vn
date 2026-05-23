@@ -215,7 +215,7 @@ function NewRefundForm({ classId }: { classId: string }) {
 export default function NewRefundPage({ params }: { params: { id: string } }) {
   return (
     <div className="max-w-md mx-auto">
-      <h1 className="text-xl font-bold text-ink mb-5">Tạo lệnh hoàn tiền</h1>
+      <h1 className="text-xl font-bold text-[#E8471A] mb-5">Tạo lệnh hoàn tiền</h1>
       <Suspense fallback={<div className="text-gray-400 text-sm">Đang tải...</div>}>
         <NewRefundForm classId={params.id} />
       </Suspense>
