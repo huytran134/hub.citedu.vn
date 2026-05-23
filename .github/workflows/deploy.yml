@@ -68,14 +68,16 @@ jobs:
           name: nextjs-build
 
       - name: Copy build to VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: 65002
-          source: next-build.tar.gz
-          target: /home/u969193399/cithub/
+        run: |
+          echo "${{ secrets.VPS_SSH_KEY }}" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+          scp -P 65002 \
+            -i /tmp/deploy_key \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            next-build.tar.gz \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/home/u969193399/cithub/
+          rm -f /tmp/deploy_key
 
       - name: Extract & restart app
         uses: appleboy/ssh-action@v1.0.3
