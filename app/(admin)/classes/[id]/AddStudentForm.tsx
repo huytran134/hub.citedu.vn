@@ -64,43 +64,43 @@ export default function AddStudentForm({
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <div className="bg-[#0d1c33] border border-[#1e3060] rounded-xl shadow-sm overflow-hidden">
       <button
         type="button"
         onClick={() => { setOpen(!open); setError(''); setSuccess('') }}
-        className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-[#0a1628] transition-colors"
       >
-        <span className="font-semibold text-ink">+ Thêm học viên vào lớp</span>
-        <span className="text-gray-400 text-sm">{open ? '▲ Thu gọn' : '▼ Mở rộng'}</span>
+        <span className="font-semibold text-[#E8471A]">+ Thêm học viên vào lớp</span>
+        <span className="text-[#6b7fa3] text-sm">{open ? '▲ Thu gọn' : '▼ Mở rộng'}</span>
       </button>
 
       {open && (
-        <form onSubmit={handleSubmit} className="px-5 pb-5 border-t border-gray-100 dark:border-gray-700 pt-4 space-y-4">
+        <form onSubmit={handleSubmit} className="px-5 pb-5 border-t border-[#1e3060] pt-4 space-y-4">
           {sessionsCompleted > 0 && (
-            <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-lg px-4 py-3">
+            <div className="bg-[#3d2a0a] border border-[#5a3d10] text-[#f5a623] text-sm rounded-lg px-4 py-3">
               ⚠️ Lớp đã học <strong>{sessionsCompleted} buổi</strong>. Vui lòng điều chỉnh học phí thỏa thuận nếu cần.
             </div>
           )}
           {classStatus === 'active' && sessionsCompleted === 0 && (
-            <div className="bg-blue-50 border border-blue-200 text-blue-800 text-sm rounded-lg px-4 py-3">
+            <div className="bg-[#0a1a3d] border border-[#1a3060] text-[#7fb8f5] text-sm rounded-lg px-4 py-3">
               Lớp đang hoạt động — học viên mới sẽ có trạng thái "Đang học".
             </div>
           )}
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
+            <div className="bg-[#2d0a0a] border border-[#5a1515] text-[#e86c6c] text-sm rounded-lg px-4 py-3">
               {error}
             </div>
           )}
           {success && (
-            <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3">
+            <div className="bg-[#0a2d1a] border border-[#145a30] text-[#3ecf8e] text-sm rounded-lg px-4 py-3">
               {success}
             </div>
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-ink mb-1.5">
+              <label className="block text-sm font-medium text-[#94b0d6] mb-1.5">
                 Họ tên <span className="text-red-500">*</span>
               </label>
               <input
@@ -109,11 +109,11 @@ export default function AddStudentForm({
                 placeholder="Nguyễn Văn A"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+                className="w-full bg-[#0a1628] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-3 py-2.5 text-sm placeholder:text-[#4a6080] focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-ink mb-1.5">
+              <label className="block text-sm font-medium text-[#94b0d6] mb-1.5">
                 Số điện thoại <span className="text-red-500">*</span>
               </label>
               <input
@@ -122,12 +122,12 @@ export default function AddStudentForm({
                 placeholder="0912345678"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+                className="w-full bg-[#0a1628] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-3 py-2.5 text-sm placeholder:text-[#4a6080] focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame"
               />
-              <p className="text-xs text-gray-400 mt-1">Kiểm tra trùng SĐT tự động</p>
+              <p className="text-xs text-[#6b7fa3] mt-1">Kiểm tra trùng SĐT tự động</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-ink mb-1.5">
+              <label className="block text-sm font-medium text-[#94b0d6] mb-1.5">
                 Học phí thỏa thuận (đ) <span className="text-red-500">*</span>
               </label>
               <input
@@ -137,9 +137,9 @@ export default function AddStudentForm({
                 step="100000"
                 value={form.agreed_price}
                 onChange={(e) => setForm({ ...form, agreed_price: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+                className="w-full bg-[#0a1628] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-3 py-2.5 text-sm placeholder:text-[#4a6080] focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame"
               />
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-[#6b7fa3] mt-1">
                 Niêm yết: {formatCurrency(programPrice)}
               </p>
             </div>

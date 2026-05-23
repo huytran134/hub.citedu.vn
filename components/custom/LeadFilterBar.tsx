@@ -66,14 +66,14 @@ export default function LeadFilterBar({
           const v = e.target.value.trim()
           if (v !== defaultSearch) go('search', v)
         }}
-        className="border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame min-w-[200px]"
+        className="bg-[#0d1c33] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-4 py-2 text-sm placeholder:text-[#4a6080] focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame min-w-[200px]"
       />
 
       {/* Assigned to filter */}
       <select
         defaultValue={defaultAssignedTo}
         onChange={(e) => go('assigned_to_id', e.target.value)}
-        className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+        className="bg-[#0d1c33] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame"
       >
         <option value="">Tất cả tư vấn viên</option>
         {users.map((u) => (
@@ -85,7 +85,7 @@ export default function LeadFilterBar({
       <select
         defaultValue={defaultSource}
         onChange={(e) => go('source', e.target.value)}
-        className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 focus:border-flame"
+        className="bg-[#0d1c33] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame"
       >
         {SOURCE_OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>{o.label}</option>

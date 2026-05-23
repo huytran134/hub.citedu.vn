@@ -124,12 +124,12 @@ export default function CreateProgramDialog() {
           />
 
           {/* Dialog */}
-          <div className="relative bg-white rounded-xl shadow-xl w-full max-w-lg">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-              <h2 className="text-lg font-bold text-ink">Thêm khóa học mới</h2>
+          <div className="relative bg-[#0d1c33] border border-[#1e3060] rounded-xl shadow-xl w-full max-w-lg">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#1e3060]">
+              <h2 className="text-lg font-bold text-[#e8edf5]">Thêm khóa học mới</h2>
               <button
                 onClick={closeDialog}
-                className="text-gray-400 hover:text-gray-600 text-xl leading-none"
+                className="text-[#6b7fa3] hover:text-[#e8edf5] text-xl leading-none"
               >
                 ×
               </button>
@@ -138,7 +138,7 @@ export default function CreateProgramDialog() {
             <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
               {/* Tên khóa học */}
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
+                <label className="block text-xs font-medium text-[#94b0d6] mb-1">
                   Tên khóa học <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -146,33 +146,33 @@ export default function CreateProgramDialog() {
                   value={form.name}
                   onChange={(e) => set('name', e.target.value)}
                   placeholder="VD: Tư duy Tài Năng"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30"
+                  className="w-full bg-[#0a1628] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-3 py-2 text-sm placeholder:text-[#4a6080] focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame"
                   required
                 />
               </div>
 
               {/* Mô tả */}
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Mô tả (không bắt buộc)</label>
+                <label className="block text-xs font-medium text-[#94b0d6] mb-1">Mô tả (không bắt buộc)</label>
                 <input
                   type="text"
                   value={form.description}
                   onChange={(e) => set('description', e.target.value)}
                   placeholder="Mô tả ngắn về khóa học"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30"
+                  className="w-full bg-[#0a1628] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-3 py-2 text-sm placeholder:text-[#4a6080] focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame"
                 />
               </div>
 
               {/* Nhánh + Cấp độ */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                  <label className="block text-xs font-medium text-[#94b0d6] mb-1">
                     Nhánh <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={form.branch}
                     onChange={(e) => set('branch', e.target.value)}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 bg-white"
+                    className="w-full bg-[#0a1628] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame"
                   >
                     {BRANCH_OPTIONS.map((o) => (
                       <option key={o.value} value={o.value}>{o.label}</option>
@@ -183,13 +183,13 @@ export default function CreateProgramDialog() {
                 {/* Cấp độ — chỉ hiện khi chọn tu_duy */}
                 {form.branch === 'tu_duy' && (
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                    <label className="block text-xs font-medium text-[#94b0d6] mb-1">
                       Cấp độ <span className="text-red-500">*</span>
                     </label>
                     <select
                       value={form.level}
                       onChange={(e) => set('level', e.target.value)}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30 bg-white"
+                      className="w-full bg-[#0a1628] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame"
                     >
                       {LEVEL_OPTIONS.map((o) => (
                         <option key={o.value} value={o.value}>{o.label}</option>
@@ -202,7 +202,7 @@ export default function CreateProgramDialog() {
               {/* Giá + Số buổi */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                  <label className="block text-xs font-medium text-[#94b0d6] mb-1">
                     Giá niêm yết (VNĐ) <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -211,12 +211,12 @@ export default function CreateProgramDialog() {
                     value={form.price}
                     onChange={(e) => set('price', e.target.value)}
                     placeholder="VD: 5000000"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30"
+                    className="w-full bg-[#0a1628] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-3 py-2 text-sm placeholder:text-[#4a6080] focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                  <label className="block text-xs font-medium text-[#94b0d6] mb-1">
                     Số buổi học <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -225,14 +225,14 @@ export default function CreateProgramDialog() {
                     value={form.sessions_count}
                     onChange={(e) => set('sessions_count', e.target.value)}
                     placeholder="VD: 8"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-flame/30"
+                    className="w-full bg-[#0a1628] border border-[#2d4a7a] text-[#c8d8f0] rounded-lg px-3 py-2 text-sm placeholder:text-[#4a6080] focus:outline-none focus:ring-2 focus:ring-flame/40 focus:border-flame"
                     required
                   />
                 </div>
               </div>
 
               {form.sessions_count && parseInt(form.sessions_count, 10) > 0 && (
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-[#6b7fa3]">
                   Hệ thống sẽ tự tạo {form.sessions_count} buổi học rỗng — Admin nhập nội dung sau.
                 </p>
               )}
@@ -250,7 +250,7 @@ export default function CreateProgramDialog() {
                 <button
                   type="button"
                   onClick={closeDialog}
-                  className="px-4 py-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100 transition-colors"
+                  className="px-4 py-2 rounded-lg text-sm text-[#94b0d6] hover:bg-[#1a2d4a] transition-colors"
                 >
                   Hủy
                 </button>

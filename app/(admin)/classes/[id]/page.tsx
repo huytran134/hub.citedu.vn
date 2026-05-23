@@ -103,25 +103,38 @@ export default async function ClassDetailPage({ params }: { params: { id: string
 
       {/* KPI cards */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
-        {[
-          { label: 'Học viên đang học', value: activeCount, color: 'text-green-600' },
-          { label: 'Tổng đã thu', value: formatCurrency(totalPaid), color: 'text-green-600' },
-          { label: 'Tổng công nợ', value: formatCurrency(totalDebt), color: totalDebt > 0 ? 'text-amber-600' : 'text-gray-400' },
-          { label: 'Buổi đã học', value: `${sessionsCompleted} / ${cls._count.sessions}`, color: 'text-[#c8d8f0]' },
-        ].map((card) => (
-          <div key={card.label} className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-            <p className="text-xs text-[#6b7fa3]">{card.label}</p>
-            <p className={`text-xl font-bold mt-1 ${card.color}`}>{card.value}</p>
-          </div>
-        ))}
+        <div className="bg-[#0d1c33] border border-[#1e3060] rounded-xl p-4 shadow-sm">
+          <p className="text-xs text-[#6b7fa3]">Học viên đang học</p>
+          <p className="text-xl font-bold mt-1 text-[#e8edf5]">{activeCount}</p>
+        </div>
+        <div className="bg-[#0d2218] border border-[#145a30] rounded-xl p-4 shadow-sm">
+          <p className="text-xs text-[#6b7fa3]">Tổng đã thu</p>
+          <p className="text-xl font-bold mt-1 text-[#5dd89c]">{formatCurrency(totalPaid)}</p>
+        </div>
+        <div
+          className="rounded-xl p-4 shadow-sm border"
+          style={{
+            background: totalDebt > 0 ? '#2b1a0d' : '#0d2b1a',
+            borderColor: totalDebt > 0 ? '#5a3515' : '#174d2a',
+          }}
+        >
+          <p className="text-xs text-[#6b7fa3]">Tổng công nợ</p>
+          <p className="text-xl font-bold mt-1" style={{ color: totalDebt > 0 ? '#f5a623' : '#3ecf8e' }}>
+            {formatCurrency(totalDebt)}
+          </p>
+        </div>
+        <div className="bg-[#0f2341] border border-[#1a3060] rounded-xl p-4 shadow-sm">
+          <p className="text-xs text-[#6b7fa3]">Buổi đã học</p>
+          <p className="text-xl font-bold mt-1 text-[#7fb8f5]">{sessionsCompleted} / {cls._count.sessions}</p>
+        </div>
       </div>
 
       {/* Tab navigation — Học viên / Lịch học */}
       <ClassDetailTabs classId={params.id} basePath="/classes" />
 
       {/* Danh sách học viên */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden mb-6">
-        <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+      <div className="bg-[#0d1c33] border border-[#1e3060] rounded-xl shadow-sm overflow-hidden mb-6">
+        <div className="px-5 py-4 border-b border-[#1e3060] flex items-center justify-between">
           <h2 className="font-semibold text-[#c8d8f0]">
             Danh sách học viên ({enrollmentsWithDebt.length}/{cls.max_students})
           </h2>
@@ -133,7 +146,7 @@ export default async function ClassDetailPage({ params }: { params: { id: string
           </div>
         ) : (
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+            <thead className="bg-[#0a1628] border-b border-[#1e3060]">
               <tr>
                 <th className="text-left px-4 py-2.5 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Học viên</th>
                 <th className="text-right px-4 py-2.5 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Học phí TT</th>
@@ -143,9 +156,9 @@ export default async function ClassDetailPage({ params }: { params: { id: string
                 <th className="text-left px-4 py-2.5 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Hành động</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
+            <tbody className="divide-y divide-[#1e3060]">
               {enrollmentsWithDebt.map((e) => (
-                <tr key={e.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <tr key={e.id} className="hover:bg-[#0a1628] transition-colors">
                   <td className="px-4 py-3">
                     <p className="font-semibold text-[#7fb8f5] text-sm">{e.contact.name}</p>
                     <p className="text-[11px] text-[#6b7fa3]">{e.contact.phone}</p>
