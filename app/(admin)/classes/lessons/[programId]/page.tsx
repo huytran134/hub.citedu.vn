@@ -29,10 +29,10 @@ export default async function ProgramLessonsPage({ params }: { params: { program
   return (
     <div>
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-        <Link href="/classes/lessons" className="hover:text-flame">Bài giảng</Link>
-        <span>/</span>
-        <span className="text-ink">{program.name}</span>
+      <div className="flex items-center gap-2 text-sm mb-4">
+        <Link href="/classes/lessons" className="text-[#6b7fa3] hover:text-[#94b0d6]">Bài giảng</Link>
+        <span className="text-[#3a4d6a]">/</span>
+        <span className="text-[#7fb8f5] font-medium">{program.name}</span>
       </div>
 
       {/* Header */}
@@ -47,14 +47,14 @@ export default async function ProgramLessonsPage({ params }: { params: { program
 
       {/* Progress bar */}
       {totalSessions > 0 && (
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-6">
+        <div className="bg-[#0d1c33] rounded-xl p-4 border border-[#1e3060] mb-6">
           <div className="flex items-center justify-between text-sm mb-2">
-            <span className="text-gray-600 font-medium">Tiến độ nhập bài giảng</span>
+            <span className="text-[#6b7fa3] font-medium">Tiến độ nhập bài giảng</span>
             <span className="text-flame font-semibold">
               {program.lessons.length}/{totalSessions} buổi
             </span>
           </div>
-          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-2 bg-[#132540] rounded-full overflow-hidden">
             <div
               className="h-full bg-flame rounded-full transition-all"
               style={{ width: `${Math.min(100, (program.lessons.length / totalSessions) * 100)}%` }}
@@ -64,48 +64,48 @@ export default async function ProgramLessonsPage({ params }: { params: { program
       )}
 
       {/* Danh sách lesson */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-        <div className="px-5 py-4 border-b border-gray-100">
-          <h2 className="font-semibold text-ink">Danh sách bài giảng</h2>
+      <div className="bg-[#0d1c33] rounded-xl border border-[#1e3060] overflow-hidden mb-6">
+        <div className="px-5 py-4 border-b border-[#1e3060]">
+          <h2 className="font-semibold text-[#e8edf5]">Danh sách bài giảng</h2>
         </div>
 
         {program.lessons.length === 0 ? (
-          <div className="px-5 py-10 text-center text-gray-400 text-sm">
+          <div className="px-5 py-10 text-center text-[#6b7fa3] text-sm">
             Chưa có bài giảng nào. Thêm buổi đầu tiên bên dưới.
           </div>
         ) : (
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-100">
+            <thead className="bg-[#0a1628] border-b border-[#1e3060]">
               <tr>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide w-16">Buổi</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Tiêu đề</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Nội dung</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-wider w-16">Buổi</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-wider">Tiêu đề</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-wider">Nội dung</th>
                 <th className="px-4 py-3 w-20"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody>
               {program.lessons.map((lesson) => (
-                <tr key={lesson.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={lesson.id} className="border-b border-[#132540] hover:bg-[#132540] transition-colors">
                   <td className="px-4 py-3">
-                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-navy/10 text-navy text-sm font-bold">
+                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#1a2d4a] text-[#7fb8f5] text-[13px] font-semibold">
                       {lesson.session_number}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="font-medium text-ink text-sm">{lesson.title}</p>
+                    <p className="font-semibold text-[#e8edf5] text-sm">{lesson.title}</p>
                     {lesson.objectives && (
-                      <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{lesson.objectives}</p>
+                      <p className="text-[13px] text-[#6b7fa3] mt-0.5 line-clamp-1 leading-relaxed">{lesson.objectives}</p>
                     )}
                   </td>
                   <td className="px-4 py-3">
                     {lesson.content ? (
-                      <span className="inline-flex items-center gap-1 text-xs text-green-600 font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#3ecf8e] bg-[#0a2d1a] border border-[#145a30] px-2 py-0.5 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#3ecf8e]" />
                         Đã nhập
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-xs text-amber-500 font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#f5a623] bg-[#2b1a0a] border border-[#4d3010] px-2 py-0.5 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#f5a623]" />
                         Chưa có
                       </span>
                     )}
