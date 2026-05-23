@@ -25,9 +25,15 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
 
-      - name: Push schema to database
-        run: npx prisma db push --skip-generate
+      - name: Mark baseline migration as applied (chạy 1 lần khi chuyển sang migrate workflow)
+        run: npx prisma migrate resolve --applied 20260501000000_initial_baseline
         continue-on-error: true
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+
+      - name: Apply pending migrations
+        run: npx prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}

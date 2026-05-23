@@ -1,0 +1,6 @@
+-- Baseline migration — đánh dấu trạng thái DB ban đầu trước khi chuyển sang migrate workflow
+-- Các bảng (users, contacts, leads, classes, enrollments, ...) đã tồn tại trong DB
+-- qua nhiều lần `prisma db push` trước đó.
+-- Migration này KHÔNG chạy bất kỳ DDL nào — chỉ là marker để Prisma biết
+-- điểm khởi đầu của lịch sử migration.
+-- Xem: https://www.prisma.io/docs/orm/prisma-migrate/workflows/baselining
