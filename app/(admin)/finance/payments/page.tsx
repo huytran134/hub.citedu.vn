@@ -33,9 +33,9 @@ const STATUS_LABEL: Record<string, string> = {
 }
 
 const STATUS_COLOR: Record<string, string> = {
-  pending: 'bg-amber-100 text-amber-700',
-  approved: 'bg-green-100 text-green-700',
-  rejected: 'bg-red-100 text-red-700',
+  pending: 'bg-[#3d2a0a] text-[#f5a623] border border-[#5a3d10]',
+  approved: 'bg-[#0a2d1a] text-[#3ecf8e] border border-[#145a30]',
+  rejected: 'bg-[#2d0a0a] text-[#e86c6c] border border-[#5a1515]',
 }
 
 type SubTab = 'pending' | 'approved' | 'rejected'
@@ -215,16 +215,16 @@ export default function PaymentsPage() {
                 <div className="px-5 py-4 flex items-center justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-ink">{p.enrollment.contact.name}</span>
-                      <span className="text-gray-400 text-sm">·</span>
-                      <span className="text-sm text-gray-500">{p.enrollment.class.name}</span>
+                      <span className="font-semibold text-[#7fb8f5]">{p.enrollment.contact.name}</span>
+                      <span className="text-[#6b7fa3] text-sm">·</span>
+                      <span className="text-sm text-[#c8d8f0]">{p.enrollment.class.name}</span>
                       {isOverdue && (
                         <span className="text-xs font-medium bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
                           {hoursWaiting}h chờ
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-4 mt-1 text-xs text-gray-400">
+                    <div className="flex items-center gap-4 mt-1 text-xs text-[#6b7fa3]">
                       <span>{p.enrollment.contact.phone}</span>
                       <span>CNL: {p.enrollment.class.homeroom?.full_name ?? '—'}</span>
                       <span>Tạo bởi: {p.created_by.full_name}</span>
@@ -247,8 +247,8 @@ export default function PaymentsPage() {
 
                   <div className="flex items-center gap-4 flex-shrink-0">
                     <div className="text-right">
-                      <p className="font-bold text-lg text-ink">{formatCurrency(p.amount)}</p>
-                      <p className="text-xs text-gray-400">{METHOD_LABEL[p.method]}</p>
+                      <p className="font-bold text-lg text-[#c8d8f0]">{formatCurrency(p.amount)}</p>
+                      <p className="text-xs text-[#6b7fa3]">{METHOD_LABEL[p.method]}</p>
                       {p.status !== 'pending' && (
                         <span className={`text-xs font-medium px-2 py-0.5 rounded-full mt-1 inline-block ${STATUS_COLOR[p.status]}`}>
                           {STATUS_LABEL[p.status]}

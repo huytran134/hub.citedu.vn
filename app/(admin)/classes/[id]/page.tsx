@@ -16,10 +16,10 @@ const STATUS_LABEL: Record<string, string> = {
 }
 
 const STATUS_COLOR: Record<string, string> = {
-  forming: 'bg-amber-100 text-amber-700',
-  active: 'bg-green-100 text-green-700',
-  completed: 'bg-gray-100 text-gray-600',
-  cancelled: 'bg-red-100 text-red-700',
+  forming: 'bg-[#3d2a0a] text-[#f5a623] border border-[#5a3d10]',
+  active: 'bg-[#0a2d1a] text-[#3ecf8e] border border-[#145a30]',
+  completed: 'bg-[#1a1a2b] text-[#7fb8f5] border border-[#2a2a4a]',
+  cancelled: 'bg-[#2d0a0a] text-[#e86c6c] border border-[#5a1515]',
 }
 
 const ENROLLMENT_STATUS_LABEL: Record<string, string> = {
@@ -31,11 +31,11 @@ const ENROLLMENT_STATUS_LABEL: Record<string, string> = {
 }
 
 const ENROLLMENT_STATUS_COLOR: Record<string, string> = {
-  waitlist: 'bg-amber-100 text-amber-700',
-  active: 'bg-green-100 text-green-700',
-  suspended: 'bg-blue-100 text-blue-700',
-  completed: 'bg-gray-100 text-gray-600',
-  dropped: 'bg-red-100 text-red-700',
+  waitlist: 'bg-[#3d2a0a] text-[#f5a623] border border-[#5a3d10]',
+  active: 'bg-[#0a2d1a] text-[#3ecf8e] border border-[#145a30]',
+  suspended: 'bg-[#0a1a3d] text-[#7fb8f5] border border-[#1a2a5a]',
+  completed: 'bg-[#1a1a2b] text-[#8899aa] border border-[#2a2a4a]',
+  dropped: 'bg-[#2d0a0a] text-[#e86c6c] border border-[#5a1515]',
 }
 
 export default async function ClassDetailPage({ params }: { params: { id: string } }) {
@@ -78,10 +78,10 @@ export default async function ClassDetailPage({ params }: { params: { id: string
   return (
     <div>
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-        <Link href="/classes" className="hover:text-flame">Lớp học</Link>
+      <div className="flex items-center gap-2 text-sm text-[#6b7fa3] mb-4">
+        <Link href="/classes" className="hover:text-flame transition-colors">Lớp học</Link>
         <span>/</span>
-        <span className="text-ink">{cls.name}</span>
+        <span className="text-[#c8d8f0]">{cls.name}</span>
       </div>
 
       {/* Header */}
@@ -93,7 +93,7 @@ export default async function ClassDetailPage({ params }: { params: { id: string
               {STATUS_LABEL[cls.status]}
             </span>
           </div>
-          <p className="text-muted-foreground text-sm mt-1">
+          <p className="text-[#c8d8f0] text-sm mt-1">
             {cls.program.name}
             {cls.homeroom && ` · CNL: ${cls.homeroom.full_name}`}
             {cls.start_date && ` · Khai giảng: ${new Date(cls.start_date).toLocaleDateString('vi-VN')}`}
@@ -107,10 +107,10 @@ export default async function ClassDetailPage({ params }: { params: { id: string
           { label: 'Học viên đang học', value: activeCount, color: 'text-green-600' },
           { label: 'Tổng đã thu', value: formatCurrency(totalPaid), color: 'text-green-600' },
           { label: 'Tổng công nợ', value: formatCurrency(totalDebt), color: totalDebt > 0 ? 'text-amber-600' : 'text-gray-400' },
-          { label: 'Buổi đã học', value: `${sessionsCompleted} / ${cls._count.sessions}`, color: 'text-ink' },
+          { label: 'Buổi đã học', value: `${sessionsCompleted} / ${cls._count.sessions}`, color: 'text-[#c8d8f0]' },
         ].map((card) => (
           <div key={card.label} className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-            <p className="text-xs text-gray-500">{card.label}</p>
+            <p className="text-xs text-[#6b7fa3]">{card.label}</p>
             <p className={`text-xl font-bold mt-1 ${card.color}`}>{card.value}</p>
           </div>
         ))}
@@ -122,7 +122,7 @@ export default async function ClassDetailPage({ params }: { params: { id: string
       {/* Danh sách học viên */}
       <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden mb-6">
         <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-          <h2 className="font-semibold text-ink">
+          <h2 className="font-semibold text-[#c8d8f0]">
             Danh sách học viên ({enrollmentsWithDebt.length}/{cls.max_students})
           </h2>
         </div>
@@ -135,20 +135,20 @@ export default async function ClassDetailPage({ params }: { params: { id: string
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
               <tr>
-                <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Học viên</th>
-                <th className="text-right px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Học phí TT</th>
-                <th className="text-right px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Đã đóng</th>
-                <th className="text-right px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Còn nợ</th>
-                <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Trạng thái</th>
-                <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Hành động</th>
+                <th className="text-left px-4 py-2.5 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Học viên</th>
+                <th className="text-right px-4 py-2.5 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Học phí TT</th>
+                <th className="text-right px-4 py-2.5 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Đã đóng</th>
+                <th className="text-right px-4 py-2.5 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Còn nợ</th>
+                <th className="text-left px-4 py-2.5 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Trạng thái</th>
+                <th className="text-left px-4 py-2.5 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Hành động</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
               {enrollmentsWithDebt.map((e) => (
                 <tr key={e.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                   <td className="px-4 py-3">
-                    <p className="font-medium text-ink text-sm">{e.contact.name}</p>
-                    <p className="text-xs text-gray-400">{e.contact.phone}</p>
+                    <p className="font-semibold text-[#7fb8f5] text-sm">{e.contact.name}</p>
+                    <p className="text-[11px] text-[#6b7fa3]">{e.contact.phone}</p>
                     {e.joined_late && (
                       <p className="text-xs text-amber-600 mt-0.5">
                         Vào lớp muộn (từ buổi {(e.joined_at_session ?? 0) + 1})
@@ -165,14 +165,14 @@ export default async function ClassDetailPage({ params }: { params: { id: string
                       </p>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-right text-sm text-foreground/90">
+                  <td className="px-4 py-3 text-right text-sm text-[#c8d8f0]">
                     {formatCurrency(e.agreedPrice)}
                   </td>
                   <td className="px-4 py-3 text-right text-sm text-green-600 font-medium">
                     {formatCurrency(e.paid)}
                   </td>
                   <td className="px-4 py-3 text-right text-sm font-semibold">
-                    <span className={e.debt > 0 ? 'text-amber-600' : 'text-gray-400'}>
+                    <span className={e.debt > 0 ? 'text-[#f5a623]' : 'text-[#6b7fa3]'}>
                       {formatCurrency(e.debt)}
                     </span>
                   </td>

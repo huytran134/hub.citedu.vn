@@ -38,9 +38,9 @@ const STATUS_LABEL: Record<string, string> = {
 }
 
 const STATUS_COLOR: Record<string, string> = {
-  pending: 'bg-amber-100 text-amber-700',
-  approved: 'bg-green-100 text-green-700',
-  rejected: 'bg-red-100 text-red-700',
+  pending: 'bg-[#3d2a0a] text-[#f5a623] border border-[#5a3d10]',
+  approved: 'bg-[#0a2d1a] text-[#3ecf8e] border border-[#145a30]',
+  rejected: 'bg-[#2d0a0a] text-[#e86c6c] border border-[#5a1515]',
 }
 
 type SubTab = 'pending' | 'approved' | 'rejected'
@@ -218,22 +218,22 @@ export default function RefundsPage() {
                 <div className="px-5 py-4 flex items-center justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-ink">{r.enrollment.contact.name}</span>
-                      <span className="text-gray-400 text-sm">·</span>
-                      <span className="text-sm text-gray-500">{r.enrollment.class.name}</span>
+                      <span className="font-semibold text-[#7fb8f5]">{r.enrollment.contact.name}</span>
+                      <span className="text-[#6b7fa3] text-sm">·</span>
+                      <span className="text-sm text-[#c8d8f0]">{r.enrollment.class.name}</span>
                       {isOverdue && (
                         <span className="text-xs font-medium bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
                           {hoursWaiting}h chờ
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-3 mt-1 text-xs text-gray-400 flex-wrap">
+                    <div className="flex items-center gap-3 mt-1 text-xs text-[#6b7fa3] flex-wrap">
                       <span>{r.enrollment.contact.phone}</span>
                       <span>CNL: {r.enrollment.class.homeroom?.full_name ?? '—'}</span>
                       <span>Tạo bởi: {r.created_by.full_name}</span>
                       <span>{new Date(r.created_at).toLocaleString('vi-VN')}</span>
                     </div>
-                    <p className="text-xs text-gray-600 mt-1.5 italic">
+                    <p className="text-xs text-[#c8d8f0] mt-1.5 italic">
                       Lý do: {r.reason}
                     </p>
                     {r.status === 'rejected' && r.rejection_reason && (
@@ -249,8 +249,8 @@ export default function RefundsPage() {
 
                   <div className="flex items-center gap-4 flex-shrink-0">
                     <div className="text-right">
-                      <p className="font-bold text-lg text-ink">{formatCurrency(r.amount)}</p>
-                      <p className="text-xs text-gray-400">{r.refund_method ? METHOD_LABEL[r.refund_method] : '—'}</p>
+                      <p className="font-bold text-lg text-[#c8d8f0]">{formatCurrency(r.amount)}</p>
+                      <p className="text-xs text-[#6b7fa3]">{r.refund_method ? METHOD_LABEL[r.refund_method] : '—'}</p>
                       <span className={`text-xs font-medium px-2 py-0.5 rounded-full mt-1 inline-block ${STATUS_COLOR[r.status]}`}>
                         {STATUS_LABEL[r.status]}
                       </span>

@@ -12,10 +12,10 @@ const STATUS_LABEL: Record<string, string> = {
 }
 
 const STATUS_COLOR: Record<string, string> = {
-  forming: 'bg-amber-100 text-amber-700',
-  active: 'bg-green-100 text-green-700',
-  completed: 'bg-gray-100 text-gray-600',
-  cancelled: 'bg-red-100 text-red-700',
+  forming: 'bg-[#3d2a0a] text-[#f5a623] border border-[#5a3d10]',
+  active: 'bg-[#0a2d1a] text-[#3ecf8e] border border-[#145a30]',
+  completed: 'bg-[#1a1a2b] text-[#7fb8f5] border border-[#2a2a4a]',
+  cancelled: 'bg-[#2d0a0a] text-[#e86c6c] border border-[#5a1515]',
 }
 
 const BRANCH_LABEL: Record<string, string> = {
@@ -63,11 +63,11 @@ export default async function ClassesPage() {
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
               <tr>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Lớp</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Chương trình</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Chủ nhiệm</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Học viên</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Trạng thái</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Lớp</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Chương trình</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Chủ nhiệm</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Học viên</th>
+                <th className="text-left px-4 py-3 text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em]">Trạng thái</th>
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
@@ -75,21 +75,21 @@ export default async function ClassesPage() {
               {classes.map((cls) => (
                 <tr key={cls.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                   <td className="px-4 py-3">
-                    <p className="font-medium text-ink">{cls.name}</p>
+                    <p className="font-semibold text-[#7fb8f5] cursor-pointer hover:text-[#b8d8ff]">{cls.name}</p>
                     {cls.start_date && (
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="text-[11px] text-[#6b7fa3] mt-0.5">
                         {new Date(cls.start_date).toLocaleDateString('vi-VN')}
                       </p>
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-sm text-foreground/90">{cls.program.name}</p>
-                    <p className="text-xs text-muted-foreground/70">{BRANCH_LABEL[cls.program.branch]}</p>
+                    <p className="text-sm text-[#c8d8f0]">{cls.program.name}</p>
+                    <p className="text-[11px] text-[#6b7fa3]">{BRANCH_LABEL[cls.program.branch]}</p>
                   </td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">
-                    {cls.homeroom?.full_name || <span className="text-muted-foreground/70">—</span>}
+                  <td className="px-4 py-3 text-sm text-[#c8d8f0]">
+                    {cls.homeroom?.full_name || <span className="text-[#6b7fa3]">—</span>}
                   </td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">
+                  <td className="px-4 py-3 text-sm text-[#c8d8f0]">
                     {cls._count.enrollments} / {cls.max_students}
                   </td>
                   <td className="px-4 py-3">

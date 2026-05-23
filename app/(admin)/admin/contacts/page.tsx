@@ -10,16 +10,21 @@ const SOURCE_LABEL: Record<string, string> = {
   referral: 'Giới thiệu', event: 'Sự kiện', other: 'Khác',
 }
 const SOURCE_COLOR: Record<string, string> = {
-  facebook: 'bg-blue-100 text-blue-700', website: 'bg-purple-100 text-purple-700',
-  hys: 'bg-green-100 text-green-700', referral: 'bg-amber-100 text-amber-700',
-  event: 'bg-pink-100 text-pink-700', other: 'bg-gray-100 text-gray-600',
+  facebook: 'bg-[#0a1a3d] text-[#7fb8f5] border border-[#1a2a5a]',
+  website: 'bg-[#1a0a3d] text-[#b8a8f5] border border-[#2a1a5a]',
+  hys: 'bg-[#0a2d1a] text-[#3ecf8e] border border-[#145a30]',
+  referral: 'bg-[#3d2a0a] text-[#f5a623] border border-[#5a3d10]',
+  event: 'bg-[#2d0a2a] text-[#e86cb8] border border-[#5a154a]',
+  other: 'bg-[#1a1a2b] text-[#8899aa] border border-[#2a2a4a]',
 }
 const STATUS_LABEL: Record<string, string> = {
   lead: 'Lead', customer: 'Khách hàng', alumni: 'Cựu học viên', dropped: 'Bỏ học',
 }
 const STATUS_COLOR: Record<string, string> = {
-  lead: 'bg-amber-100 text-amber-700', customer: 'bg-green-100 text-green-700',
-  alumni: 'bg-blue-100 text-blue-700', dropped: 'bg-red-100 text-red-700',
+  lead: 'bg-[#3d2a0a] text-[#f5a623] border border-[#5a3d10]',
+  customer: 'bg-[#0a2d1a] text-[#3ecf8e] border border-[#145a30]',
+  alumni: 'bg-[#1a1a2b] text-[#7fb8f5] border border-[#2a2a4a]',
+  dropped: 'bg-[#2d0a0a] text-[#e86c6c] border border-[#5a1515]',
 }
 
 export default async function AdminContactsPage({
@@ -111,12 +116,12 @@ export default async function AdminContactsPage({
               <table className="w-full">
                 <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
                   <tr>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Tên</th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">SĐT</th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Nguồn</th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Trạng thái</th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Khóa học</th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-3">Ngày tạo</th>
+                    <th className="text-left text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em] px-5 py-3">Tên</th>
+                    <th className="text-left text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em] px-5 py-3">SĐT</th>
+                    <th className="text-left text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em] px-5 py-3">Nguồn</th>
+                    <th className="text-left text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em] px-5 py-3">Trạng thái</th>
+                    <th className="text-left text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em] px-5 py-3">Khóa học</th>
+                    <th className="text-left text-[11px] font-semibold text-[#6b7fa3] uppercase tracking-[.05em] px-5 py-3">Ngày tạo</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
@@ -125,12 +130,12 @@ export default async function AdminContactsPage({
                       <td className="px-5 py-3.5">
                         <Link
                           href={`/admin/contacts/${c.id}`}
-                          className="font-medium text-ink hover:text-flame transition-colors"
+                          className="font-semibold text-[#7fb8f5] hover:text-[#b8d8ff] hover:underline underline-offset-2 transition-colors"
                         >
                           {c.name}
                         </Link>
                       </td>
-                      <td className="px-5 py-3.5 text-sm text-gray-600">{c.phone}</td>
+                      <td className="px-5 py-3.5 text-sm text-[#c8d8f0]">{c.phone}</td>
                       <td className="px-5 py-3.5">
                         <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${SOURCE_COLOR[c.source]}`}>
                           {SOURCE_LABEL[c.source]}
@@ -141,14 +146,14 @@ export default async function AdminContactsPage({
                           {STATUS_LABEL[c.status]}
                         </span>
                       </td>
-                      <td className="px-5 py-3.5 text-sm text-gray-600">
+                      <td className="px-5 py-3.5 text-sm text-[#c8d8f0]">
                         {c._count.enrollments > 0 ? (
-                          <span className="font-semibold text-ink">{c._count.enrollments} khóa</span>
+                          <span className="font-semibold text-[#7fb8f5]">{c._count.enrollments} khóa</span>
                         ) : (
-                          <span className="text-gray-300">—</span>
+                          <span className="text-[#6b7fa3]">—</span>
                         )}
                       </td>
-                      <td className="px-5 py-3.5 text-sm text-gray-400">
+                      <td className="px-5 py-3.5 text-[11px] text-[#6b7fa3]">
                         {new Date(c.created_at).toLocaleDateString('vi-VN')}
                       </td>
                     </tr>
@@ -167,8 +172,8 @@ export default async function AdminContactsPage({
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="font-medium text-ink">{c.name}</p>
-                      <p className="text-sm text-gray-500 mt-0.5">{c.phone}</p>
+                      <p className="font-semibold text-[#7fb8f5]">{c.name}</p>
+                      <p className="text-sm text-[#6b7fa3] mt-0.5">{c.phone}</p>
                     </div>
                     <div className="flex flex-col items-end gap-1">
                       <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_COLOR[c.status]}`}>

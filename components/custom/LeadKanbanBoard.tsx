@@ -36,10 +36,10 @@ const STAGE_LABEL: Record<LeadStage, string> = {
 }
 
 const STAGE_COLOR: Record<LeadStage, string> = {
-  new: 'bg-gray-100 text-gray-600',
-  consulting: 'bg-amber-100 text-amber-700',
-  won: 'bg-green-100 text-green-700',
-  lost: 'bg-red-100 text-red-600',
+  new: 'bg-[#1a1a2b] text-[#8899aa] border border-[#2a2a4a]',
+  consulting: 'bg-[#3d2a0a] text-[#f5a623] border border-[#5a3d10]',
+  won: 'bg-[#0a2d1a] text-[#3ecf8e] border border-[#145a30]',
+  lost: 'bg-[#2d0a0a] text-[#e86c6c] border border-[#5a1515]',
 }
 
 const SOURCE_LABEL: Record<string, string> = {
@@ -48,12 +48,12 @@ const SOURCE_LABEL: Record<string, string> = {
 }
 
 const SOURCE_COLOR: Record<string, string> = {
-  facebook: 'bg-blue-100 text-blue-600',
-  website: 'bg-purple-100 text-purple-600',
-  hys: 'bg-green-100 text-green-600',
-  referral: 'bg-amber-100 text-amber-600',
-  event: 'bg-pink-100 text-pink-600',
-  other: 'bg-gray-100 text-gray-500',
+  facebook: 'bg-[#0a1a3d] text-[#7fb8f5] border border-[#1a2a5a]',
+  website: 'bg-[#1a0a3d] text-[#b8a8f5] border border-[#2a1a5a]',
+  hys: 'bg-[#0a2d1a] text-[#3ecf8e] border border-[#145a30]',
+  referral: 'bg-[#3d2a0a] text-[#f5a623] border border-[#5a3d10]',
+  event: 'bg-[#2d0a2a] text-[#e86cb8] border border-[#5a154a]',
+  other: 'bg-[#1a1a2b] text-[#8899aa] border border-[#2a2a4a]',
 }
 
 const LOST_REASON_OPTIONS: { value: string; label: string }[] = [
@@ -94,10 +94,10 @@ function getFollowupBadge(note: LatestNote | undefined): {
   return {
     label: `Gọi lại: ${d.toLocaleDateString('vi-VN')}`,
     color: isOverdue
-      ? 'bg-red-100 text-red-600'
+      ? 'bg-[#2d0a0a] text-[#e86c6c] border border-[#5a1515]'
       : isToday
-        ? 'bg-amber-100 text-amber-600'
-        : 'bg-gray-100 text-gray-500',
+        ? 'bg-[#3d2a0a] text-[#f5a623] border border-[#5a3d10]'
+        : 'bg-[#1a1a2b] text-[#8899aa] border border-[#2a2a4a]',
   }
 }
 
@@ -123,17 +123,17 @@ function LeadCard({
         <Link
           href={`/admin/leads/${lead.id}`}
           onClick={(e) => e.stopPropagation()}
-          className="font-semibold text-sm text-ink dark:text-gray-100 hover:text-flame transition-colors leading-tight"
+          className="font-semibold text-sm text-[#7fb8f5] hover:text-[#b8d8ff] hover:underline underline-offset-2 transition-colors leading-tight"
         >
           {lead.contact.name}
         </Link>
-        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full flex-shrink-0 ${SOURCE_COLOR[lead.contact.source] ?? 'bg-gray-100 text-gray-500'}`}>
+        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full flex-shrink-0 ${SOURCE_COLOR[lead.contact.source] ?? 'bg-[#1a1a2b] text-[#8899aa] border border-[#2a2a4a]'}`}>
           {SOURCE_LABEL[lead.contact.source] ?? lead.contact.source}
         </span>
       </div>
 
       {/* Phone */}
-      <p className="text-xs text-gray-500 mb-2">{lead.contact.phone}</p>
+      <p className="text-xs text-[#6b7fa3] mb-2">{lead.contact.phone}</p>
 
       {/* Followup badge */}
       {followup && (
@@ -144,10 +144,10 @@ function LeadCard({
 
       {/* Footer: assigned + date */}
       <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
-        <span className="text-[10px] text-gray-400">
+        <span className="text-[10px] text-[#6b7fa3]">
           {lead.assigned_to ? lead.assigned_to.full_name : '—'}
         </span>
-        <span className="text-[10px] text-gray-400">{formatRelativeDate(lead.created_at)}</span>
+        <span className="text-[10px] text-[#6b7fa3]">{formatRelativeDate(lead.created_at)}</span>
       </div>
     </div>
   )
@@ -194,13 +194,13 @@ function KanbanColumn({
         style={collapsible ? { cursor: 'pointer' } : undefined}
       >
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-sm text-ink dark:text-gray-100">{STAGE_LABEL[stage]}</span>
-          <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-full px-2 py-0.5 font-medium">
+          <span className="font-semibold text-sm text-[#c8d8f0]">{STAGE_LABEL[stage]}</span>
+          <span className="text-xs bg-[#1a1a2b] text-[#6b7fa3] border border-[#2a2a4a] rounded-full px-2 py-0.5 font-medium">
             {leads.length}
           </span>
         </div>
         {collapsible && (
-          <span className="text-gray-400 text-xs">{isCollapsed ? '▶ Mở' : '▼ Thu'}</span>
+          <span className="text-[#6b7fa3] text-xs">{isCollapsed ? '▶ Mở' : '▼ Thu'}</span>
         )}
       </div>
 
