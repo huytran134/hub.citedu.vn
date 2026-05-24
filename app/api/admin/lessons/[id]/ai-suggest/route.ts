@@ -72,9 +72,7 @@ Viết bằng tiếng Việt. Nội dung phải thực tế, ứng dụng đư�
     return NextResponse.json({ suggestion })
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    const errName = err instanceof Error ? err.constructor.name : 'UnknownError'
-    // Log đầy đủ để xem trong pm2 logs
-    console.error('[Gemini] ai-suggest error — name:', errName, '— message:', message)
+    console.error('[Gemini] ai-suggest error:', message)
 
     const isQuotaError = message.includes('quota') || message.includes('429') || message.includes('RESOURCE_EXHAUSTED')
     const isKeyError = message.includes('API_KEY_INVALID') || message.includes('401') || message.includes('403') || message.includes('PERMISSION_DENIED')
@@ -89,6 +87,6 @@ Viết bằng tiếng Việt. Nội dung phải thực tế, ứng dụng đư�
     if (isNetworkError) {
       return NextResponse.json({ error: 'Server không kết nối được Gemini API — kiểm tra firewall VPS' }, { status: 503 })
     }
-    return NextResponse.json({ error: `Lỗi AI: ${errName}` }, { status: 502 })
+    return NextResponse.json({ error: 'Lỗi AI không xác định, thử lại sau' }, { status: 502 })
   }
 }
