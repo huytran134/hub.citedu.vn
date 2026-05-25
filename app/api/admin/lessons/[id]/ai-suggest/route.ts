@@ -90,7 +90,7 @@ Viết bằng tiếng Việt. Nội dung phải thực tế, ứng dụng đư�
     const msgLower = message.toLowerCase()
     const isQuotaError = msgLower.includes('quota') || msgLower.includes('resource_exhausted') || statusCode === 429 || String(statusCode) === '429'
     const isKeyError = msgLower.includes('api_key_invalid') || msgLower.includes('permission_denied') || statusCode === 401 || statusCode === 403 || String(statusCode) === '401' || String(statusCode) === '403'
-    const isNetworkError = msgLower.includes('fetch failed') || msgLower.includes('econnrefused') || msgLower.includes('enotfound') || msgLower.includes('etimedout') || msgLower.includes('network error')
+    const isNetworkError = msgLower.includes('fetch failed') || msgLower.includes('error fetching') || msgLower.includes('econnrefused') || msgLower.includes('enotfound') || msgLower.includes('etimedout') || msgLower.includes('network error')
     const isSafetyError = msgLower.includes('safety') || msgLower.includes('blocked') || msgLower.includes('harm')
 
     if (isKeyError) {
