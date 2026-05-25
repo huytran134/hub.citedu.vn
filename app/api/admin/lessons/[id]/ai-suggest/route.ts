@@ -3,7 +3,7 @@ import { requireAdmin } from '@/lib/auth-helpers'
 import { prisma } from '@/lib/prisma'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const GEMINI_MODEL = 'gemini-1.5-flash'
+const GEMINI_MODEL = 'gemini-2.0-flash'
 
 const BRANCH_LABEL: Record<string, string> = {
   tu_duy: 'Tư duy (phát triển tư duy thành đạt và khởi nghiệp)',
