@@ -55,28 +55,43 @@ Viết bằng tiếng Việt. Nội dung phải thực tế, ứng dụng đư�
     const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
 
     const result = await model.generateContent(prompt)
+
+    // Safety filter: nội dung bị chặn
+    const blockReason = result.response.promptFeedback?.blockReason
+    if (blockReason) {
+      console.warn('[Gemini] Bị safety filter:', blockReason)
+      return NextResponse.json({ error: 'AI không thể gợi ý nội dung này (bị lọc an toàn), hãy thay tiêu đề và thử lại' }, { status: 422 })
+    }
+
     const rawText = result.response.text()
 
     // Parse JSON từ response
     const jsonMatch = rawText.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {
+      console.warn('[Gemini] Response không có JSON:', rawText.slice(0, 200))
       return NextResponse.json({ error: 'AI trả về định dạng không hợp lệ' }, { status: 502 })
     }
 
-    const suggestion = JSON.parse(jsonMatch[0]) as {
-      content?: string
-      discussion_questions?: string
-      notes_for_teacher?: string
+    let suggestion: { content?: string; discussion_questions?: string; notes_for_teacher?: string }
+    try {
+      suggestion = JSON.parse(jsonMatch[0])
+    } catch {
+      console.warn('[Gemini] JSON.parse thất bại:', jsonMatch[0].slice(0, 200))
+      return NextResponse.json({ error: 'AI trả về dữ liệu không đọc được, vui lòng thử lại' }, { status: 502 })
     }
 
     return NextResponse.json({ suggestion })
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    console.error('[Gemini] ai-suggest error:', message)
+    // Log cả status code nếu SDK trả về (GoogleGenerativeAIFetchError)
+    const statusCode = (err as Record<string, unknown>)?.statusCode ?? (err as Record<string, unknown>)?.status
+    console.error('[Gemini] ai-suggest error:', message, statusCode ? `(status ${statusCode})` : '')
 
-    const isQuotaError = message.includes('quota') || message.includes('429') || message.includes('RESOURCE_EXHAUSTED')
-    const isKeyError = message.includes('API_KEY_INVALID') || message.includes('401') || message.includes('403') || message.includes('PERMISSION_DENIED')
-    const isNetworkError = message.includes('fetch failed') || message.includes('ECONNREFUSED') || message.includes('ENOTFOUND') || message.includes('ETIMEDOUT') || message.includes('network')
+    const msgLower = message.toLowerCase()
+    const isQuotaError = msgLower.includes('quota') || msgLower.includes('resource_exhausted') || statusCode === 429 || String(statusCode) === '429'
+    const isKeyError = msgLower.includes('api_key_invalid') || msgLower.includes('permission_denied') || statusCode === 401 || statusCode === 403 || String(statusCode) === '401' || String(statusCode) === '403'
+    const isNetworkError = msgLower.includes('fetch failed') || msgLower.includes('econnrefused') || msgLower.includes('enotfound') || msgLower.includes('etimedout') || msgLower.includes('network error')
+    const isSafetyError = msgLower.includes('safety') || msgLower.includes('blocked') || msgLower.includes('harm')
 
     if (isKeyError) {
       return NextResponse.json({ error: 'Cấu hình AI có vấn đề, liên hệ Admin' }, { status: 503 })
@@ -87,6 +102,9 @@ Viết bằng tiếng Việt. Nội dung phải thực tế, ứng dụng đư�
     if (isNetworkError) {
       return NextResponse.json({ error: 'Server không kết nối được Gemini API — kiểm tra firewall VPS' }, { status: 503 })
     }
-    return NextResponse.json({ error: 'Lỗi AI không xác định, thử lại sau' }, { status: 502 })
+    if (isSafetyError) {
+      return NextResponse.json({ error: 'AI không thể gợi ý nội dung này (bị lọc an toàn), hãy thay tiêu đề và thử lại' }, { status: 422 })
+    }
+    return NextResponse.json({ error: `Lỗi AI: ${message.slice(0, 120)}` }, { status: 502 })
   }
 }
