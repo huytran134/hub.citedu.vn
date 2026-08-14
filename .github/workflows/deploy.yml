@@ -23,28 +23,16 @@ jobs:
         run: npx prisma generate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
 
-      - name: Mark baseline migration as applied (chạy 1 lần khi chuyển sang migrate workflow)
-        run: npx prisma migrate resolve --applied 20260501000000_initial_baseline
-        continue-on-error: true
+      - name: Push schema to MariaDB (db push — không dùng migrations)
+        run: npx prisma db push --skip-generate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
-
-      - name: Apply pending migrations
-        run: npx prisma migrate deploy
-        continue-on-error: true
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
 
       - name: Build
         run: npm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_APP_URL: https://hub.citedu.vn
 
       - name: Package build output
