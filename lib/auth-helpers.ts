@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server'
-import { createSupabaseServerClient } from './supabase'
+import { auth } from './auth'
 import { prisma } from './prisma'
 import type { User } from '@prisma/client'
 
-// Lấy user hiện tại: xác thực qua Supabase session + lấy profile từ DB
+// Lấy user hiện tại: xác thực qua NextAuth session + lấy profile từ DB
 export async function getCurrentUser(): Promise<User | null> {
   try {
-    const supabase = createSupabaseServerClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
+    const session = await auth()
+    const userId = session?.user?.id
+    if (!userId) return null
 
-    return await prisma.user.findUnique({ where: { id: user.id } })
+    return await prisma.user.findUnique({ where: { id: userId } })
   } catch (err) {
     console.error('getCurrentUser failed:', err)
     return null

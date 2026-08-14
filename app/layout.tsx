@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Providers } from './providers'
 
 export const metadata: Metadata = {
   title: 'CiT Hub',
@@ -13,7 +14,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Chống flash trắng khi reload ở dark mode */}
         <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem('cithub-theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}` }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }

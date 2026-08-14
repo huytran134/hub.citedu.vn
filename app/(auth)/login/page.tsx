@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createSupabaseBrowserClient } from '@/lib/supabase-browser'
+import { signIn } from 'next-auth/react'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -17,10 +17,13 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      const supabase = createSupabaseBrowserClient()
-      const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
 
-      if (authError) {
+      if (!result || result.error) {
         setError('Email hoặc mật khẩu không đúng')
         return
       }

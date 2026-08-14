@@ -23,13 +23,15 @@
 ```
 Frontend:    Next.js 14 (App Router) + TypeScript
 Styling:     Tailwind CSS + Shadcn UI
-Database:    Supabase Cloud (PostgreSQL) — Free Tier
-Auth:        Supabase Auth
-             ❌ KHÔNG dùng NextAuth · ❌ KHÔNG dùng Better Auth
+Database:    MySQL/MariaDB tự host trên Hostinger VPS (MariaDB 11.8)
+             (Đổi từ Supabase Cloud PostgreSQL — Tháng 8/2026, xem lịch sử ở cuối file)
+Auth:        NextAuth.js (Auth.js) v5 — Credentials provider + bcrypt
+             (Đổi từ Supabase Auth — Tháng 8/2026)
+             Session strategy: JWT — KHÔNG dùng database session
 ORM:         Prisma — KHÔNG có relationMode (dùng mặc định foreignKeys)
-             ✅ DB tự bảo vệ tính toàn vẹn dữ liệu bằng FK thật
-Keep-Alive:  Cronjob trên VPS (cron mỗi 24h) ping SELECT 1 vào Supabase
-             ❌ KHÔNG dùng GitHub Actions cho keep-alive
+             ✅ DB tự bảo vệ tính toàn vẹn dữ liệu bằng FK thật (InnoDB)
+Backup:      Cronjob mysqldump hàng đêm trên VPS + đẩy ra ngoài VPS
+             ❌ KHÔNG còn keep-alive ping Supabase — không cần nữa vì MySQL tự host không tự ngủ
 Process Mgr: PM2
 Web Server:  Nginx + Let's Encrypt SSL
 Hosting:     Hostinger VPS
@@ -63,8 +65,8 @@ cit-hub/
 │   └── custom/             # CiT Hub custom components
 ├── lib/
 │   ├── prisma.ts           # Prisma client + soft delete middleware
-│   ├── supabase.ts         # Supabase client helpers
-│   └── auth-helpers.ts     # requireAdmin() · requireHomeroom()
+│   ├── auth.ts             # Cấu hình NextAuth.js (Credentials + bcrypt)
+│   └── auth-helpers.ts     # requireAdmin() · requireHomeroom() · getCurrentUser()
 ├── prisma/
 │   └── schema.prisma       # Nguồn sự thật duy nhất cho DB
 └── .github/workflows/
@@ -152,7 +154,7 @@ const SOFT_DELETE_MODELS = [
 ### 4.2 Danh sách bảng
 
 ```
-User                — Profile khớp với Supabase auth.users.id
+User                — Profile + password_hash (bcrypt) — tự quản lý auth qua NextAuth.js
 Contact             — Mọi người biết đến CiT EDU (1 SĐT = 1 bản ghi)
 ContactNote         — Ghi chú về CON NGƯỜI (tính cách, hoàn cảnh, sở thích...)
 Lead                — Pipeline tư vấn (1 Contact → nhiều Lead theo thời gian)
@@ -460,14 +462,16 @@ Không làm email, không làm Zalo OA ở Phase 1. Chỉ cần:
 
 > Phase 3: Xem xét thêm Zalo cá nhân webhook — phù hợp thực tế Việt Nam hơn email.
 
-### 5.11 Keep-Alive Supabase — Cronjob trên VPS
+### 5.11 Backup MySQL — Cronjob trên VPS
 
 ```bash
-# Chạy trên VPS bằng crontab — không dùng GitHub Actions
-# Mỗi ngày lúc 3:00 sáng ping vào DB để Supabase không ngủ
+# Chạy trên VPS bằng crontab — MySQL tự host KHÔNG có backup tự động như Supabase.
+# Mỗi ngày lúc 3:00 sáng: dump toàn bộ DB, nén, giữ 7 bản gần nhất.
+# BẮT BUỘC: đẩy bản backup ra NGOÀI VPS định kỳ (rclone/Google Drive...),
+# backup nằm trên cùng VPS không bảo vệ được nếu VPS gặp sự cố.
 
-0 3 * * * cd /var/www/cithub && npx prisma db execute \
-  --url "$DATABASE_URL" --stdin <<< "SELECT 1;" >> /var/log/supabase-ping.log 2>&1
+0 3 * * * mysqldump -u cithub_user -p"$DB_PASSWORD" cithub | gzip > /var/backups/cithub/cithub_$(date +\%Y\%m\%d).sql.gz && \
+  find /var/backups/cithub -name "*.sql.gz" -mtime +7 -delete
 ```
 
 ---
@@ -539,8 +543,7 @@ lg (≥ 1024px):      Desktop — sidebar cố định · layout đa cột
 ❌ KHÔNG cho CNL xóa bất kỳ bản ghi nào
 ❌ KHÔNG cho CNL duyệt phiếu thu hoặc lệnh hoàn tiền
 ❌ KHÔNG tạo lệnh hoàn cho Coaching 1-1 (Nhánh 2) — chặn tại UI
-❌ KHÔNG tạo bảng Session/Account/VerificationToken trong Prisma
-   (Supabase Auth tự quản lý — không đụng vào)
+❌ KHÔNG log hoặc trả `password_hash` ra response/console dưới bất kỳ hình thức nào
 ❌ KHÔNG để học viên đăng nhập (không có Student Portal)
 ❌ KHÔNG thêm role mới ngoài ADMIN và HOMEROOM (Phase 1–4)
 ❌ KHÔNG lưu computed values vào DB (công nợ, điểm TB... tính realtime)
@@ -550,7 +553,7 @@ lg (≥ 1024px):      Desktop — sidebar cố định · layout đa cột
 ❌ KHÔNG để agreed_price = null → khi đăng ký phải nhập (mặc định = Program.price)
 ❌ KHÔNG drop học viên còn công nợ mà không cảnh báo và xác nhận từ Admin
 ❌ KHÔNG tạo MagicLink không có expires_at → mặc định now() + 7 ngày
-❌ KHÔNG dùng relationMode="prisma" → dùng foreign key thật của PostgreSQL
+❌ KHÔNG dùng relationMode="prisma" → dùng foreign key thật của MySQL/MariaDB (InnoDB)
 ❌ KHÔNG deploy với npm install --production → dùng npm ci (cần devDeps)
 ❌ KHÔNG dùng pm2 restart → dùng pm2 reload (zero-downtime)
 ```
@@ -593,17 +596,14 @@ jobs:
         run: npm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: https://hub.citedu.vn
           NEXT_PUBLIC_APP_URL: https://hub.citedu.vn
 ```
 
-> **GitHub Secrets cần có:** `DATABASE_URL` · `DIRECT_URL` · `VPS_HOST` · `VPS_USER` · `VPS_SSH_KEY` · `NEXT_PUBLIC_SUPABASE_URL` · `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+> **GitHub Secrets cần có:** `DATABASE_URL` (mysql://...) · `NEXTAUTH_SECRET` · `VPS_HOST` · `VPS_USER` · `VPS_SSH_KEY`
 >
-> **`DIRECT_URL`** = DATABASE_URL nhưng bỏ `?pgbouncer=true&connection_limit=1` — dùng cho Prisma schema operations (db push, generate).
->
-> **Keep-Alive không dùng GitHub Actions** — xem Mục 5.11 (cronjob trên VPS).
+> **Backup không dùng GitHub Actions** — xem Mục 5.11 (cronjob mysqldump trên VPS).
 
 ---
 
@@ -612,11 +612,12 @@ jobs:
 ```bash
 # .env.local trên VPS tại /var/www/cithub/
 
-# Supabase
-DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[REF].supabase.co:5432/postgres"
-NEXT_PUBLIC_SUPABASE_URL="https://[REF].supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="[ANON_KEY]"
-SUPABASE_SERVICE_ROLE_KEY="[SERVICE_ROLE_KEY]"
+# Database — MySQL/MariaDB tự host
+DATABASE_URL="mysql://cithub_user:[PASSWORD]@localhost:3306/cithub"
+
+# NextAuth.js — tạo bằng: openssl rand -base64 32
+NEXTAUTH_SECRET="[RANDOM_32_BYTE_SECRET]"
+NEXTAUTH_URL="https://hub.citedu.vn"
 
 # App
 NEXT_PUBLIC_APP_URL="https://hub.citedu.vn"
@@ -633,13 +634,13 @@ GEMINI_API_KEY="[KEY]"
 > **Nguyên tắc:** Chặn "chảy máu" trước · Không build tính năng chưa cần.
 
 ### Phase 0 — Hạ tầng (làm 1 lần duy nhất)
-- [ ] Tạo Supabase project · lấy 4 env variables
-- [ ] Tạo tài khoản 5 nhân sự trong Supabase Auth
+- [x] Tạo database MySQL/MariaDB trên Hostinger · lấy DATABASE_URL
+- [x] Tạo NEXTAUTH_SECRET
 - [ ] Clone repo · cấu hình `.env.local` trên VPS
-- [ ] `npx prisma migrate deploy` · `npx prisma db seed` (5 user accounts)
+- [ ] `npx prisma db push` · `npm run db:seed` (5 user accounts)
 - [ ] Cấu hình Nginx + SSL Let's Encrypt
 - [ ] Setup GitHub Actions deploy workflow
-- [ ] Setup cronjob keep-alive trên VPS
+- [ ] Setup cronjob backup mysqldump trên VPS
 - [ ] Xác nhận: hub.citedu.vn HTTPS xanh · đăng nhập được
 
 ### Phase 1 — MVP: Lớp học & Dòng tiền ⭐ QUAN TRỌNG NHẤT
@@ -684,7 +685,7 @@ Mọi tính năng mới đều dùng cấu trúc sau — giữ đúng thứ tự
 ```
 [C - CONTEXT]
 Đọc file CLAUDE.md v3.0.
-Stack: Next.js 14 App Router · TypeScript · Supabase Auth · Prisma · Shadcn UI · Tailwind.
+Stack: Next.js 14 App Router · TypeScript · NextAuth.js (Credentials + bcrypt) · Prisma (MySQL/MariaDB) · Shadcn UI · Tailwind.
 Brand colors: navy (#0A1628) · flame (#E8471A) · ink (#111111).
 Mobile-first. Nút tối thiểu 44px.
 
@@ -729,3 +730,14 @@ AI phải tự kiểm tra trước khi viết bất kỳ dòng code nào:
 
 *CLAUDE.md v3.0 · Tháng 5/2026*  
 *Mọi quyết định đã chốt — không tranh luận lại · Cập nhật khi có quyết định mới từ owner.*
+
+---
+
+## 13. LỊCH SỬ THAY ĐỔI KIẾN TRÚC
+
+**Tháng 8/2026 — Chuyển Database + Auth khỏi Supabase**
+- Lý do: MySQL có sẵn trong gói Hostinger Business đang dùng · chi phí thấp hơn · đội quen thuộc MySQL hơn PostgreSQL.
+- Database: Supabase Cloud PostgreSQL → MySQL/MariaDB 11.8 tự host trên VPS Hostinger (đã hoàn thành, DATABASE_URL đã trỏ MariaDB thật).
+- Auth: Supabase Auth → NextAuth.js v5 (Credentials provider) + bcrypt, session JWT. `User` model có thêm `password_hash`.
+- Hệ quả: bỏ cronjob keep-alive ping Supabase (mục 5.11 cũ) → thay bằng cronjob backup `mysqldump` (bắt buộc, vì MySQL tự host không có backup tự động như Supabase).
+- Rule cũ "KHÔNG tạo bảng Session/Account/VerificationToken" đã bị bãi bỏ vì không còn áp dụng — dự án dùng session JWT nên vẫn không cần các bảng này, nhưng lý do khác (không phải vì Supabase quản lý).

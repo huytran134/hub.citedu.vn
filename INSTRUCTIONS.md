@@ -113,14 +113,16 @@ Hệ thống này phục vụ 5 người, không phải 50.000. Mọi quyết đ
 ```
 Frontend:    Next.js 14 (App Router) + TypeScript
 Styling:     Tailwind CSS + Shadcn UI
-Database:    Supabase Cloud PostgreSQL (Free Tier)
-Auth:        Supabase Auth (email/password)
-ORM:         Prisma (KHÔNG có relationMode — dùng FK thật PostgreSQL)
+Database:    MySQL/MariaDB tự host trên Hostinger VPS (MariaDB 11.8)
+Auth:        NextAuth.js (Auth.js) v5 — Credentials provider + bcrypt, session JWT
+ORM:         Prisma (KHÔNG có relationMode — dùng FK thật MySQL/MariaDB, InnoDB)
 Server:      Hostinger VPS · PM2 · Nginx · Let's Encrypt SSL
 CI/CD:       GitHub Actions (1 workflow duy nhất: deploy khi push main)
-Keep-Alive:  Cronjob trên VPS, mỗi 24h ping SELECT 1 vào Supabase
+Backup:      Cronjob mysqldump hàng đêm trên VPS + đẩy ra ngoài VPS
 Domain:      hub.citedu.vn → A record → IP VPS
 ```
+
+> Đổi từ Supabase Cloud PostgreSQL + Supabase Auth sang MySQL/MariaDB tự host + NextAuth.js — Tháng 8/2026. Lý do: MySQL có sẵn trong gói Hostinger Business, chi phí thấp hơn, đội quen thuộc MySQL hơn PostgreSQL.
 
 ### Deploy script chuẩn (không sửa thứ tự)
 ```bash
@@ -153,7 +155,7 @@ cit-hub/
 │   └── custom/             # Component tự viết cho CiT Hub
 ├── lib/
 │   ├── prisma.ts           # Prisma client singleton + soft delete middleware
-│   ├── supabase.ts         # Supabase client helpers
+│   ├── auth.ts             # Cấu hình NextAuth.js (Credentials + bcrypt)
 │   └── auth-helpers.ts     # requireAdmin() và requireHomeroom()
 ├── prisma/
 │   └── schema.prisma       # Nguồn sự thật duy nhất của database
@@ -253,12 +255,12 @@ CNL là người trực tiếp đứng lớp, chăm sóc học viên trong lớp
 // Dùng 1 trong 2 hàm này ở đầu MỌI API route — không exception
 
 requireAdmin(request)
-// → Lấy session từ Supabase Auth
+// → Lấy session từ NextAuth.js (JWT)
 // → Nếu không phải ADMIN: trả về 401 Unauthorized
 // → Dùng cho: tất cả route trong (admin)/
 
 requireHomeroom(request)
-// → Lấy session từ Supabase Auth
+// → Lấy session từ NextAuth.js (JWT)
 // → Nếu không phải ADMIN hoặc HOMEROOM: trả về 401
 // → Dùng cho: tất cả route trong (cnl)/
 ```
@@ -608,8 +610,8 @@ Khi import:
 
 ### Nhóm 4: Kỹ thuật
 ```
-❌ Tạo bảng Session/Account/VerificationToken trong Prisma → Supabase Auth tự quản lý
-❌ Dùng relationMode="prisma" trong datasource → Dùng FK thật PostgreSQL
+❌ Log hoặc trả `password_hash` ra response/console → Tuyệt đối không lộ, dù ở đâu
+❌ Dùng relationMode="prisma" trong datasource → Dùng FK thật MySQL/MariaDB (InnoDB)
 ❌ Dùng pm2 restart → Dùng pm2 reload (zero-downtime)
 ❌ Dùng npm install --production trong deploy → Dùng npm ci
 ❌ Load Google Fonts → Dùng system-ui
@@ -701,7 +703,7 @@ Khi owner yêu cầu tính năng mới, dùng template sau:
 ```
 [C - CONTEXT]
 Dự án: CiT Hub v3.0 (INSTRUCTIONS_cithub.md)
-Stack: Next.js 14 App Router · TypeScript · Supabase Auth · Prisma · Shadcn UI · Tailwind
+Stack: Next.js 14 App Router · TypeScript · NextAuth.js (Credentials + bcrypt) · Prisma (MySQL/MariaDB) · Shadcn UI · Tailwind
 Brand: Navy #0A1628 · Flame #E8471A · Ink #111111 · Mobile-first · Nút ≥ 44px
 
 [R - RED LINES áp dụng cho tính năng này]

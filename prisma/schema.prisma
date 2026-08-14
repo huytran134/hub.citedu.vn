@@ -157,17 +157,17 @@ enum MakeupAttendance {
 
 // =============================================================================
 // MODEL: User — Profile người dùng hệ thống
-// Liên kết 1-1 với auth.users của Supabase (qua id = Supabase Auth UID)
-// KHÔNG tạo bảng Session/Account/VerificationToken — Supabase Auth tự quản lý
+// Tự quản lý auth (NextAuth.js Credentials + bcrypt) — không còn phụ thuộc Supabase
 // =============================================================================
 model User {
-  id         String   @id // = auth.users.id của Supabase (UUID)
-  email      String   @unique
-  full_name  String
-  role       UserRole
-  is_active  Boolean  @default(true) // User còn hoạt động trong hệ thống
-  phone      String?
-  avatar_url String?  @db.Text
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password_hash String // bcrypt hash — KHÔNG bao giờ trả về client, KHÔNG log
+  full_name     String
+  role          UserRole
+  is_active     Boolean  @default(true) // User còn hoạt động trong hệ thống
+  phone         String?
+  avatar_url    String?  @db.Text
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

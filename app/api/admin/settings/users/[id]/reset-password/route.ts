@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import bcrypt from 'bcryptjs'
 import { requireAdmin } from '@/lib/auth-helpers'
-import { createSupabaseAdminClient } from '@/lib/supabase'
+import { prisma } from '@/lib/prisma'
 
 export async function PATCH(
   request: NextRequest,
@@ -16,12 +17,16 @@ export async function PATCH(
     return NextResponse.json({ error: 'Mật khẩu tối thiểu 8 ký tự' }, { status: 400 })
   }
 
-  const supabase = createSupabaseAdminClient()
-  const { error } = await supabase.auth.admin.updateUserById(params.id, { password })
+  const password_hash = await bcrypt.hash(password, 12)
 
-  if (error) {
-    return NextResponse.json({ error: 'Lỗi đổi mật khẩu: ' + error.message }, { status: 500 })
+  try {
+    await prisma.user.update({
+      where: { id: params.id },
+      data: { password_hash },
+    })
+    return NextResponse.json({ success: true })
+  } catch (err) {
+    console.error('Đổi mật khẩu thất bại:', err)
+    return NextResponse.json({ error: 'Lỗi đổi mật khẩu' }, { status: 500 })
   }
-
-  return NextResponse.json({ success: true })
 }
