@@ -24,11 +24,6 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: Push schema to MariaDB (db push — không dùng migrations)
-        run: npx prisma db push --skip-generate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
       - name: Build
         run: npm run build
         env:
