@@ -1,10 +1,10 @@
 // =============================================================================
 // schema.prisma — CiT Hub · Nguồn sự thật duy nhất cho Database
 // Version: 3.0  |  Cập nhật: Tháng 5/2026
-// Stack: Prisma ORM + Supabase Cloud PostgreSQL
+// Stack: Prisma ORM + MariaDB 11.8
 //
 // QUY TẮC BẮT BUỘC KHI SỬA FILE NÀY:
-//   1. Mỗi thay đổi phải chạy: npx prisma migrate dev --name <ten_thay_doi>
+//   1. Mỗi thay đổi phải chạy: npx prisma db push
 //   2. KHÔNG xóa field đang có dữ liệu — chỉ thêm hoặc đánh dấu @deprecated
 //   3. Mọi thay đổi nghiệp vụ → cập nhật CLAUDE.md trước, schema sau
 //   4. Sau khi sửa: npx prisma generate để cập nhật Prisma Client
@@ -15,12 +15,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-  // Supabase Cloud ho tro FK that cua PostgreSQL — khong can relationMode
-  // DATABASE_URL dung pgbouncer cho app queries
-  // DIRECT_URL dung ket noi thang cho prisma migrate
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 // =============================================================================
@@ -170,8 +166,7 @@ model User {
   full_name  String
   role       UserRole
   phone      String?
-  avatar_url String?
-  is_active  Boolean  @default(true) // false = tạm khóa tài khoản
+  avatar_url String?  @db.Text
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -221,7 +216,7 @@ model Contact {
   email         String?
   zalo_id       String?
   date_of_birth DateTime?
-  address       String?
+  address       String?  @db.Text
   gender        String? // "male" | "female" | "other"
 
   source ContactSource @default(other)
@@ -259,7 +254,7 @@ model ContactNote {
   id         String  @id @default(cuid())
   contact_id String
   contact    Contact @relation(fields: [contact_id], references: [id])
-  content    String
+  content    String  @db.Text
 
   deleted_at    DateTime?
   deleted_by_id String?
@@ -285,7 +280,7 @@ model Lead {
 
   stage       LeadStage   @default(new)
   lost_reason LostReason?
-  lost_note   String?
+  lost_note   String?     @db.Text
 
   assigned_to_id String?
   assigned_to    User?     @relation("LeadAssignedTo", fields: [assigned_to_id], references: [id])
@@ -322,7 +317,7 @@ model LeadNote {
   lead_id String
   lead    Lead   @relation(fields: [lead_id], references: [id])
 
-  content        String
+  content        String  @db.Text
   contact_method ContactMethod
   contact_result ContactResult
 
@@ -349,7 +344,7 @@ model LeadNote {
 model Program {
   id          String        @id @default(cuid())
   name        String
-  description String?
+  description String?       @db.Text
   branch      ProgramBranch
   level       Int?
 
@@ -413,11 +408,11 @@ model Lesson {
 
   session_number       Int
   title                String
-  objectives           String?
-  content              String?
-  materials_url        String?
-  discussion_questions String?
-  notes_for_teacher    String?
+  objectives           String?  @db.Text
+  content              String?  @db.LongText
+  materials_url        String?  @db.Text
+  discussion_questions String?  @db.Text
+  notes_for_teacher    String?  @db.Text
 
   deleted_at    DateTime?
   deleted_by_id String?
@@ -450,13 +445,13 @@ model LessonVersion {
 
   // Snapshot toàn bộ nội dung tại thời điểm lưu
   title                String
-  objectives           String?
-  content              String?
-  materials_url        String?
-  discussion_questions String?
-  notes_for_teacher    String?
+  objectives           String?  @db.Text
+  content              String?  @db.LongText
+  materials_url        String?  @db.Text
+  discussion_questions String?  @db.Text
+  notes_for_teacher    String?  @db.Text
 
-  change_note String? // Ghi chú của Admin về thay đổi lần này (optional)
+  change_note String? @db.Text // Ghi chú của Admin về thay đổi lần này (optional)
 
   created_at    DateTime @default(now())
   created_by_id String
@@ -482,8 +477,8 @@ model Class {
 
   start_date DateTime?
   end_date   DateTime?
-  location   String?
-  zoom_link  String?
+  location   String?  @db.Text
+  zoom_link  String?  @db.Text
 
   homeroom_id String?
   homeroom    User?   @relation("ClassHomeroom", fields: [homeroom_id], references: [id])
@@ -525,10 +520,10 @@ model ClassSession {
   duration_min      Int       @default(120)
   started_at        DateTime?
   ended_at          DateTime?
-  session_zoom_link String?
-  material_url      String?
+  session_zoom_link String?   @db.Text
+  material_url      String?   @db.Text
   is_completed      Boolean   @default(false)
-  notes             String?
+  notes             String?   @db.Text
 
   deleted_at    DateTime?
   deleted_by_id String?
@@ -574,17 +569,17 @@ model Enrollment {
   agreed_price BigInt
 
   suspended_at      DateTime?
-  suspended_reason  String?
+  suspended_reason  String?   @db.Text
   suspended_until   DateTime?
   dropped_at        DateTime?
-  dropped_reason    String?
+  dropped_reason    String?   @db.Text
   joined_late       Boolean   @default(false)
   joined_at_session Int?
 
   deleted_at      DateTime?
   deleted_by_id   String?
   deleted_by      User?     @relation("EnrollmentDeletedBy", fields: [deleted_by_id], references: [id])
-  deletion_reason String?
+  deletion_reason String?   @db.Text
 
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
@@ -616,7 +611,7 @@ model Attendance {
   session       ClassSession @relation(fields: [session_id], references: [id])
 
   status AttendanceStatus @default(absent)
-  note   String?
+  note   String?           @db.Text
 
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
@@ -641,7 +636,7 @@ model Feedback {
   rating_teacher      Int     // Đánh giá phần giảng của giảng viên (1–5)
   rating_assistant    Int     // Đánh giá phần trợ giảng (1–5)
   rating_organization Int     // Đánh giá phần tổ chức lớp (1–5)
-  other_notes         String? // Cảm nghĩ về bài học (không bắt buộc)
+  other_notes         String? @db.Text // Cảm nghĩ về bài học (không bắt buộc)
 
   submitted_at DateTime @default(now())
   ip_address   String?
@@ -671,15 +666,15 @@ model Payment {
   approved_by_id   String?
   approved_by      User?     @relation("PaymentApprovedBy", fields: [approved_by_id], references: [id])
   approved_at      DateTime?
-  rejection_reason String?
+  rejection_reason String?   @db.Text
 
-  note           String?
+  note           String?    @db.Text
   receipt_number String?
 
   deleted_at      DateTime?
   deleted_by_id   String?
   deleted_by      User?     @relation("PaymentDeletedBy", fields: [deleted_by_id], references: [id])
-  deletion_reason String? // BẮT BUỘC khi xóa
+  deletion_reason String?   @db.Text // BẮT BUỘC khi xóa
 
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
@@ -703,13 +698,13 @@ model Refund {
   enrollment    Enrollment @relation(fields: [enrollment_id], references: [id])
 
   amount BigInt
-  reason String
+  reason String  @db.Text
   status RefundStatus @default(pending)
 
   approved_by_id   String?
   approved_by      User?     @relation("RefundApprovedBy", fields: [approved_by_id], references: [id])
   approved_at      DateTime?
-  rejection_reason String?
+  rejection_reason String?   @db.Text
 
   refunded_at   DateTime?
   refund_method PaymentMethod?
@@ -717,7 +712,7 @@ model Refund {
   deleted_at      DateTime?
   deleted_by_id   String?
   deleted_by      User?     @relation("RefundDeletedBy", fields: [deleted_by_id], references: [id])
-  deletion_reason String? // BẮT BUỘC khi xóa
+  deletion_reason String?   @db.Text // BẮT BUỘC khi xóa
 
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
@@ -776,7 +771,7 @@ model MakeupSession {
   original_session_id String           // ClassSession cần bù (lớp A — buổi đã vắng)
   registered_by_id    String           // CNL hoặc Admin đăng ký
   attendance_status   MakeupAttendance @default(scheduled)
-  note                String?
+  note                String?          @db.Text
 
   deleted_at DateTime?
   created_at DateTime  @default(now())
