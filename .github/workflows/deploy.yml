@@ -37,6 +37,7 @@ jobs:
           # Next.js "output: standalone" chỉ copy sẵn node_modules đã rút gọn vào
           # .next/standalone — nhưng KHÔNG tự copy static assets và public/.
           # Phải copy thủ công theo đúng tài liệu chính thức của Next.js.
+          mkdir -p .next/standalone/.next
           cp -r .next/static .next/standalone/.next/static
           if [ -d public ]; then cp -r public .next/standalone/public; fi
           # Đảm bảo Prisma Client (đã generate ở bước trên) có mặt trong bản standalone,
