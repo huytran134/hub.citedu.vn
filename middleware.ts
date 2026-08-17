@@ -1,5 +1,17 @@
+// =============================================================================
+// middleware.ts — Chạy trên Edge Runtime, áp dụng cho gần như mọi route.
+//
+// QUAN TRỌNG: file này và mọi thứ nó import KHÔNG được đụng tới Prisma hay
+// bcryptjs (native binding, crash ngay trên Edge Runtime — lỗi sẽ chỉ hiện
+// "{}" trong log, không có message/stack, rất khó debug). Vì vậy dùng
+// lib/auth.config.ts (bản rút gọn, không có Credentials provider), KHÔNG
+// dùng lib/auth.ts (bản đầy đủ, có Prisma/bcrypt).
+// =============================================================================
+import NextAuth from 'next-auth'
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { authConfig } from '@/lib/auth.config'
+
+const { auth } = NextAuth(authConfig)
 
 const PUBLIC_PATHS = ['/login']
 const PUBLIC_PREFIXES = ['/feedback', '/api/auth']

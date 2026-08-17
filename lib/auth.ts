@@ -1,17 +1,22 @@
 // =============================================================================
-// lib/auth.ts — Cấu hình NextAuth.js (Auth.js v5)
+// lib/auth.ts — Cấu hình NextAuth.js (Auth.js v5) ĐẦY ĐỦ.
 // Thay thế Supabase Auth. Credentials provider (email + password) + bcrypt.
 // Session strategy: JWT — không cần bảng Session/Account/VerificationToken,
 // vì chỉ có 1 provider nội bộ (không OAuth) và hệ thống chỉ 5 người dùng.
+//
+// CHỈ import file này trong API routes / server code chạy Node runtime
+// (lib/auth-helpers.ts, route.ts...). KHÔNG BAO GIỜ import file này trong
+// middleware.ts — vì file này có Prisma + bcrypt, không chạy được trên Edge
+// Runtime. Middleware phải dùng lib/auth.config.ts (bản rút gọn, edge-safe).
 // =============================================================================
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { prisma } from './prisma'
+import { authConfig } from './auth.config'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  session: { strategy: 'jwt' },
-  pages: { signIn: '/login' },
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -38,21 +43,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id
-        token.role = (user as { role: string }).role
-      }
-      return token
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
-        session.user.role = token.role as string
-      }
-      return session
-    },
-  },
-  secret: process.env.NEXTAUTH_SECRET,
 })
