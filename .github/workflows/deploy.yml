@@ -32,8 +32,22 @@ jobs:
           NEXTAUTH_URL: https://hub.citedu.vn
           NEXT_PUBLIC_APP_URL: https://hub.citedu.vn
 
+      - name: Assemble standalone output
+        run: |
+          # Next.js "output: standalone" chỉ copy sẵn node_modules đã rút gọn vào
+          # .next/standalone — nhưng KHÔNG tự copy static assets và public/.
+          # Phải copy thủ công theo đúng tài liệu chính thức của Next.js.
+          cp -r .next/static .next/standalone/.next/static
+          if [ -d public ]; then cp -r public .next/standalone/public; fi
+          # Đảm bảo Prisma Client (đã generate ở bước trên) có mặt trong bản standalone,
+          # vì Next.js file-tracing đôi khi bỏ sót engine binary của Prisma.
+          mkdir -p .next/standalone/node_modules/.prisma
+          cp -r node_modules/.prisma/client .next/standalone/node_modules/.prisma/client
+          mkdir -p .next/standalone/node_modules/@prisma
+          cp -r node_modules/@prisma/client .next/standalone/node_modules/@prisma/client
+
       - name: Package build output
-        run: tar -czf next-build.tar.gz .next
+        run: tar -czf next-build.tar.gz -C .next/standalone .
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -72,9 +86,16 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 65002
           script: |
+            set -e
             cd /home/u969193399/cithub
             tar -xzf next-build.tar.gz
             rm next-build.tar.gz
-            rm -rf /home/u969193399/domains/hub.citedu.vn/nodejs/.next
-            cp -r .next /home/u969193399/domains/hub.citedu.vn/nodejs/
-            touch /home/u969193399/domains/hub.citedu.vn/nodejs/tmp/restart.txt
+            # Toàn bộ app (server.js, package.json, node_modules, .next, public)
+            # đều nằm trong bản standalone — thay hết, chỉ giữ lại thư mục tmp/
+            # (Passenger dùng tmp/restart.txt để reload, không được xoá).
+            APP_DIR=/home/u969193399/domains/hub.citedu.vn/nodejs
+            find "$APP_DIR" -mindepth 1 -maxdepth 1 ! -name tmp -exec rm -rf {} +
+            find . -mindepth 1 -maxdepth 1 -exec cp -r {} "$APP_DIR"/ \;
+            find . -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+            mkdir -p "$APP_DIR/tmp"
+            touch "$APP_DIR/tmp/restart.txt"
