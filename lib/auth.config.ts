@@ -17,6 +17,10 @@ export const authConfig = {
   pages: { signIn: '/login' },
   providers: [], // Credentials provider (cần Prisma/bcrypt) chỉ thêm ở lib/auth.ts
   secret: process.env.NEXTAUTH_SECRET,
+  // Hostinger chạy app Node.js sau lớp reverse proxy (LiteSpeed/Passenger) —
+  // NextAuth v5 mặc định không tin header Host gửi tới, phải khai báo rõ.
+  // Không có dòng này thì MỌI request tới /api/auth/* đều lỗi "UntrustedHost".
+  trustHost: true,
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
