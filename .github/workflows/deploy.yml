@@ -1,0 +1,80 @@
+name: Deploy CiT Hub
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: https://hub.citedu.vn
+          NEXT_PUBLIC_APP_URL: https://hub.citedu.vn
+
+      - name: Package build output
+        run: tar -czf next-build.tar.gz .next
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build
+          path: next-build.tar.gz
+          retention-days: 1
+
+  deploy:
+    runs-on: ubuntu-latest   # Chạy trên GitHub server, không cần self-hosted runner
+    needs: build
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build
+
+      - name: Copy build to VPS
+        run: |
+          echo "${{ secrets.VPS_SSH_KEY }}" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+          scp -P 65002 \
+            -i /tmp/deploy_key \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            next-build.tar.gz \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/home/u969193399/cithub/
+          rm -f /tmp/deploy_key
+
+      - name: Extract & restart app
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 65002
+          script: |
+            cd /home/u969193399/cithub
+            tar -xzf next-build.tar.gz
+            rm next-build.tar.gz
+            rm -rf /home/u969193399/domains/hub.citedu.vn/nodejs/.next
+            cp -r .next /home/u969193399/domains/hub.citedu.vn/nodejs/
+            touch /home/u969193399/domains/hub.citedu.vn/nodejs/tmp/restart.txt
